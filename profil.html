@@ -1,351 +1,507 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Profil • Katran Dergi</title>
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --katran: #0a0808;
-            --karanfil: #e03131;
-            --kagit: #f4efe8;
-            --toz: #a89e94;
-            --muted: #7a7068;
-            --font-serif: 'Playfair Display', serif;
-            --font-sans: 'Inter', sans-serif;
-        }
-        
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: var(--font-sans);
-            background: var(--katran);
-            color: var(--kagit);
-            min-height: 100vh;
-            padding: 2rem 1rem;
-            position: relative;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 20% 30%, rgba(224,49,49,0.06) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(224,49,49,0.04) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-            animation: fadeIn 0.8s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        
-        .back-link {
-            color: var(--toz);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        
-        .back-link:hover { color: var(--karanfil); }
-        
-        .logout-btn {
-            background: transparent;
-            color: var(--toz);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 0.5rem 1.2rem;
-            border-radius: 60px;
-            cursor: pointer;
-            font-family: var(--font-sans);
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-        
-        .logout-btn:hover {
-            background: var(--karanfil);
-            color: var(--kagit);
-            border-color: var(--karanfil);
-        }
-        
-        .profile-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 3rem 2.5rem;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            margin-bottom: 1.5rem;
-        }
-        
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--karanfil), #b71c1c);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--kagit);
-            border: 3px solid rgba(255,255,255,0.1);
-        }
-        
-        .full-name {
-            font-family: var(--font-serif);
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 0.3rem;
-        }
-        
-        .username {
-            color: var(--toz);
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: rgba(224,49,49,0.15);
-            border: 1px solid rgba(224,49,49,0.3);
-            color: var(--karanfil);
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 1.5rem;
-        }
-        
-        .member-since {
-            color: var(--toz);
-            font-size: 0.85rem;
-            font-style: italic;
-        }
-        
-        .section {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .section h2 {
-            font-family: var(--font-serif);
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .section h2::before {
-            content: '❀';
-            color: var(--karanfil);
-            font-size: 0.9rem;
-        }
-        
-        .section p {
-            color: var(--toz);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .stat {
-            text-align: center;
-            padding: 1rem 0.5rem;
-            background: rgba(255,255,255,0.02);
-            border-radius: 12px;
-        }
-        
-        .stat .number {
-            font-family: var(--font-serif);
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--karanfil);
-            display: block;
-        }
-        
-        .stat .label {
-            font-size: 0.75rem;
-            color: var(--toz);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: 0.3rem;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 4rem;
-            color: var(--toz);
-        }
-        
-        .loading .flower {
-            font-size: 3rem;
-            color: var(--karanfil);
-            animation: spin 2s linear infinite;
-            display: inline-block;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 520px) {
-            .profile-card { padding: 2rem 1.5rem; }
-            .full-name { font-size: 1.5rem; }
-            .avatar { width: 80px; height: 80px; font-size: 2rem; }
-            .stats { gap: 0.5rem; }
-            .stat .number { font-size: 1.4rem; }
-        }
-    </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Profil • Katran Dergi</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Inter', -apple-system, sans-serif;
+background: #0a0808;
+color: #f4efe8;
+min-height: 100vh;
+padding: 2rem 1rem;
+}
+.container { max-width: 700px; margin: 0 auto; }
+.top-bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 2rem;
+flex-wrap: wrap;
+gap: 0.5rem;
+}
+.top-links { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.back-link {
+color: #a89e94;
+text-decoration: none;
+font-size: 0.85rem;
+padding: 0.45rem 0.9rem;
+border: 1px solid rgba(255,255,255,0.1);
+border-radius: 60px;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+transition: all 0.2s;
+}
+.back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.back-link:hover { color: #e03131; border-color: #e03131; }
+.logout-btn {
+background: transparent;
+color: #a89e94;
+border: 1px solid rgba(255,255,255,0.1);
+padding: 0.45rem 1rem;
+border-radius: 60px;
+cursor: pointer;
+font-size: 0.85rem;
+font-family: inherit;
+}
+.logout-btn:hover { background: #e03131; color: #f4efe8; border-color: #e03131; }
+.profile-card {
+background: rgba(255,255,255,0.03);
+border: 1px solid rgba(255,255,255,0.06);
+border-radius: 20px;
+padding: 3rem 2.5rem;
+text-align: center;
+margin-bottom: 1.5rem;
+position: relative;
+}
+.avatar {
+width: 100px;
+height: 100px;
+border-radius: 50%;
+background: linear-gradient(135deg, #e03131, #b71c1c);
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 auto 1.5rem;
+font-family: 'Playfair Display', serif;
+font-size: 2.5rem;
+font-weight: 900;
+color: #f4efe8;
+border: 3px solid rgba(255,255,255,0.1);
+position: relative;
+}
+.rank-badge {
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+padding: 0.4rem 1rem;
+border-radius: 60px;
+font-size: 0.75rem;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 1rem;
+}
+.rank-filiz { background: rgba(168,158,148,0.15); color: #a89e94; border: 1px solid rgba(168,158,148,0.3); }
+.rank-karanfil { background: rgba(236,72,153,0.15); color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
+.rank-gergedan { background: rgba(224,49,49,0.15); color: #e03131; border: 1px solid rgba(224,49,49,0.3); }
+.rank-katran { background: rgba(212,168,67,0.15); color: #d4a843; border: 1px solid rgba(212,168,67,0.3); }
+.rank-icon {
+width: 16px;
+height: 16px;
+display: inline-flex;
+align-items: center;
+}
+.rank-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.full-name {
+font-family: 'Playfair Display', serif;
+font-size: 2rem;
+font-weight: 900;
+margin-bottom: 0.3rem;
+}
+.username { color: #a89e94; font-size: 1rem; margin-bottom: 1rem; }
+.member-since { color: #a89e94; font-size: 0.85rem; font-style: italic; }
+.edit-btn {
+position: absolute;
+top: 1rem;
+right: 1rem;
+background: transparent;
+color: #a89e94;
+border: 1px solid rgba(255,255,255,0.1);
+padding: 0.4rem 0.9rem;
+border-radius: 60px;
+font-size: 0.75rem;
+cursor: pointer;
+font-family: inherit;
+display: inline-flex;
+align-items: center;
+gap: 0.35rem;
+transition: all 0.2s;
+}
+.edit-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.edit-btn:hover { color: #e03131; border-color: #e03131; }
+.section {
+background: rgba(255,255,255,0.03);
+border: 1px solid rgba(255,255,255,0.06);
+border-radius: 20px;
+padding: 2rem;
+margin-bottom: 1.5rem;
+}
+.section h2 {
+font-family: 'Playfair Display', serif;
+font-size: 1.3rem;
+margin-bottom: 1rem;
+}
+.section h2::before { content: '❀ '; color: #e03131; }
+.section p { color: #a89e94; font-size: 0.95rem; line-height: 1.7; white-space: pre-wrap; word-wrap: break-word; }
+.stats-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 0.8rem;
+margin-bottom: 1.5rem;
+}
+.stat-box {
+background: rgba(255,255,255,0.03);
+border: 1px solid rgba(255,255,255,0.06);
+border-radius: 16px;
+padding: 1.2rem 0.5rem;
+text-align: center;
+}
+.stat-box .number {
+font-family: 'Playfair Display', serif;
+font-size: 1.8rem;
+font-weight: 900;
+color: #e03131;
+display: block;
+}
+.stat-box .label {
+font-size: 0.7rem;
+color: #a89e94;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-top: 0.3rem;
+}
+.progress-info {
+text-align: center;
+color: #a89e94;
+font-size: 0.85rem;
+margin-top: 0.5rem;
+font-style: italic;
+}
+.my-post {
+background: rgba(255,255,255,0.02);
+border: 1px solid rgba(255,255,255,0.06);
+border-radius: 12px;
+padding: 1rem;
+margin-bottom: 0.7rem;
+cursor: pointer;
+transition: all 0.2s;
+}
+.my-post:hover { border-color: rgba(224,49,49,0.3); }
+.my-post-time { font-size: 0.75rem; color: #7a7068; margin-bottom: 0.5rem; }
+.my-post-content {
+font-size: 0.95rem;
+color: #e8e0d6;
+line-height: 1.6;
+white-space: pre-wrap;
+word-wrap: break-word;
+}
+.my-post-stats {
+display: flex;
+gap: 1rem;
+margin-top: 0.6rem;
+font-size: 0.8rem;
+color: #a89e94;
+align-items: center;
+}
+.my-post-stats svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.my-post-stats span { display: inline-flex; align-items: center; gap: 0.3rem; }
+.loading { text-align: center; padding: 4rem; color: #a89e94; }
+.loading .flower {
+font-size: 3rem;
+color: #e03131;
+animation: spin 2s linear infinite;
+display: inline-block;
+}
+@keyframes spin {
+from { transform: rotate(0deg); }
+to { transform: rotate(360deg); }
+}
+.message-error {
+background: rgba(224,49,49,0.15);
+border: 1px solid rgba(224,49,49,0.4);
+color: #ff8a8a;
+padding: 1rem;
+border-radius: 10px;
+margin-bottom: 1rem;
+text-align: center;
+}
+@media (max-width: 520px) {
+.profile-card { padding: 2rem 1.5rem; }
+.full-name { font-size: 1.5rem; }
+.avatar { width: 80px; height: 80px; font-size: 2rem; }
+}
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="loadingState" class="loading">
-            <div class="flower">❀</div>
-            <p style="margin-top:1rem;">Yükleniyor...</p>
-        </div>
-        
-        <div id="profileContent" style="display:none;">
-            <div class="top-bar">
-                <a href="index.html" class="back-link">← Ana Sayfa</a>
-                <button class="logout-btn" id="logoutBtn">Çıkış Yap</button>
-            </div>
-            
-            <div class="profile-card">
-                <div class="avatar" id="avatar">K</div>
-                <h1 class="full-name" id="fullName">—</h1>
-                <p class="username" id="username">@—</p>
-                <span class="badge" id="badge">Üye</span>
-                <p class="member-since" id="memberSince">—</p>
-            </div>
-            
-            <div class="section">
-                <h2>Hakkımda</h2>
-                <p id="bio">Henüz bir biyografi eklenmemiş.</p>
-            </div>
-            
-            <div class="section">
-                <h2>İstatistikler</h2>
-                <div class="stats">
-                    <div class="stat">
-                        <span class="number">0</span>
-                        <span class="label">Okunan</span>
-                    </div>
-                    <div class="stat">
-                        <span class="number">0</span>
-                        <span class="label">Kaydedilen</span>
-                    </div>
-                    <div class="stat">
-                        <span class="number">0</span>
-                        <span class="label">Görev</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>Yakında</h2>
-                <p>Okuma listesi, kitap takibi, mini dergi oluşturma ve topluluk özellikleri çok yakında eklenecek. Katran'a hoş geldin! 🌸</p>
-            </div>
-        </div>
-    </div>
+<div class="container">
+<div id="loadingState" class="loading">
+<div class="flower">❀</div>
+<p style="margin-top:1rem;">Yükleniyor...</p>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    
-    <script>
-        (async function() {
-            const loadingState = document.getElementById('loadingState');
-            const profileContent = document.getElementById('profileContent');
-            
-            try {
-                // Oturum kontrolü
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                
-                if (!session) {
-                    window.location.href = 'giris.html';
-                    return;
-                }
-                
-                // Profil getir
-                const profile = await getProfile(session.user.id);
-                
-                if (!profile || profile.status !== 'approved') {
-                    window.location.href = 'giris.html';
-                    return;
-                }
-                
-                // Profili göster
-                const initial = (profile.full_name || 'K').charAt(0).toUpperCase();
-                document.getElementById('avatar').textContent = initial;
-                document.getElementById('fullName').textContent = profile.full_name;
-                document.getElementById('username').textContent = '@' + profile.username;
-                
-                if (profile.role === 'admin') {
-                    document.getElementById('badge').textContent = 'Yönetici';
-                } else if (profile.role === 'moderator') {
-                    document.getElementById('badge').textContent = 'Moderatör';
-                } else {
-                    document.getElementById('badge').textContent = 'Üye';
-                }
-                
-                if (profile.bio) {
-                    document.getElementById('bio').textContent = profile.bio;
-                }
-                
-                // Üyelik tarihi
-                const date = new Date(profile.created_at);
-                const months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-                document.getElementById('memberSince').textContent = 
-                    months[date.getMonth()] + ' ' + date.getFullYear() + "'den beri üye";
-                
-                loadingState.style.display = 'none';
-                profileContent.style.display = 'block';
-                
-            } catch (err) {
-                console.error(err);
-                window.location.href = 'giris.html';
-            }
-        })();
-        
-        // Çıkış
-        document.getElementById('logoutBtn').addEventListener('click', async function() {
-            await supabaseClient.auth.signOut();
-            window.location.href = 'index.html';
-        });
-    </script>
+<div id="errorState" style="display:none;">
+<div class="message-error" id="errorMsg"></div>
+<a href="giris.html" class="back-link">← Giriş sayfasına dön</a>
+</div>
 
+<div id="profileContent" style="display:none;">
+<div class="top-bar">
+<div class="top-links">
+<a href="index.html" class="back-link">
+<svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+Ana Sayfa
+</a>
+<a href="akis.html" class="back-link">Akış</a>
+<a href="kitapligim.html" class="back-link">Kitaplığım</a>
+</div>
+<button class="logout-btn" id="logoutBtn">Çıkış Yap</button>
+</div>
+
+<div class="profile-card">
+<button class="edit-btn" id="editBtn">
+<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+Düzenle
+</button>
+<div class="avatar" id="avatar">K</div>
+<h1 class="full-name" id="fullName">—</h1>
+<p class="username" id="username">@—</p>
+<div id="rankContainer"></div>
+<p class="member-since" id="memberSince">—</p>
+</div>
+
+<div class="stats-grid">
+<div class="stat-box">
+<span class="number" id="statRead">0</span>
+<span class="label">Okudum</span>
+</div>
+<div class="stat-box">
+<span class="number" id="statReading">0</span>
+<span class="label">Okuyorum</span>
+</div>
+<div class="stat-box">
+<span class="number" id="statWant">0</span>
+<span class="label">Okuyacağım</span>
+</div>
+</div>
+<div class="progress-info" id="progressInfo"></div>
+
+<div class="section">
+<h2>Hakkımda</h2>
+<p id="bio">Henüz bir biyografi eklenmemiş. <a href="#" id="addBioLink" style="color:#e03131;text-decoration:none;">Ekle →</a></p>
+</div>
+
+<div class="section">
+<h2>Gönderilerim</h2>
+<div id="myPosts"><div style="color:#a89e94;font-size:0.9rem;">Yükleniyor...</div></div>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
+
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var currentUser = null;
+
+// ---------- İKONLAR ----------
+var RANK_ICONS = {
+filiz: '<svg viewBox="0 0 24 24"><path d="M7 20h10"/><path d="M12 20V10"/><path d="M12 10c0-4 4-8 8-8 0 4-4 8-8 8z"/><path d="M12 10c0-4-4-8-8-8 0 4 4 8 8 8z"/></svg>',
+karanfil: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 22a10 10 0 0 1-10-10"/><path d="M2 12a10 10 0 0 1 10-10"/><path d="M22 12a10 10 0 0 1-10 10"/></svg>',
+gergedan: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v4"/><path d="M9 7l3-4 3 4"/><circle cx="10" cy="12" r="0.5" fill="currentColor"/><circle cx="14" cy="12" r="0.5" fill="currentColor"/></svg>',
+katran: '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
+};
+
+var ICON_HEART = '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+var ICON_COMMENT = '<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
+
+var RANK_LABELS = {
+filiz: 'Filiz',
+karanfil: 'Karanfil',
+gergedan: 'Gergedan Böceği',
+katran: 'Katran Kurucusu'
+};
+
+function escapeHtml(str) {
+if (!str) return '';
+return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function timeAgo(dateStr) {
+var d = new Date(dateStr);
+var now = new Date();
+var s = Math.floor((now - d) / 1000);
+if (s < 60) return 'şimdi';
+if (s < 3600) return Math.floor(s/60) + ' dk önce';
+if (s < 86400) return Math.floor(s/3600) + ' sa önce';
+if (s < 604800) return Math.floor(s/86400) + ' gün önce';
+return d.toLocaleDateString('tr-TR');
+}
+
+// ---------- PROFİL YÜKLE ----------
+(async function loadProfile() {
+try {
+var sessionRes = await supabaseClient.auth.getSession();
+var session = sessionRes.data.session;
+
+if (!session) {
+window.location.href = 'giris.html';
+return;
+}
+currentUser = session.user;
+
+var profileRes = await supabaseClient
+.from('profiles')
+.select('*')
+.eq('id', currentUser.id)
+.single();
+
+if (profileRes.error) {
+document.getElementById('loadingState').style.display = 'none';
+document.getElementById('errorState').style.display = 'block';
+document.getElementById('errorMsg').textContent = 'Profil bilgileri alınamadı: ' + profileRes.error.message;
+return;
+}
+
+var profile = profileRes.data;
+
+if (!profile || profile.status !== 'approved') {
+window.location.href = 'giris.html';
+return;
+}
+
+var initial = (profile.full_name || 'K').charAt(0).toUpperCase();
+document.getElementById('avatar').textContent = initial;
+document.getElementById('fullName').textContent = profile.full_name || 'İsimsiz';
+document.getElementById('username').textContent = '@' + (profile.username || 'kullanici');
+
+// Rütbe
+var rank = profile.rank || 'filiz';
+var rankContainer = document.getElementById('rankContainer');
+rankContainer.innerHTML =
+'<div class="rank-badge rank-' + rank + '">' +
+'<span class="rank-icon">' + (RANK_ICONS[rank] || RANK_ICONS.filiz) + '</span>' +
+(RANK_LABELS[rank] || 'Filiz') +
+'</div>';
+
+// Biyografi
+if (profile.bio && profile.bio.trim()) {
+document.getElementById('bio').textContent = profile.bio;
+} else {
+document.getElementById('bio').innerHTML = 'Henüz bir biyografi eklenmemiş. <a href="#" id="addBioLink" style="color:#e03131;text-decoration:none;">Ekle →</a>';
+document.getElementById('addBioLink').addEventListener('click', function(e) {
+e.preventDefault();
+window.location.href = 'profil-duzenle.html';
+});
+}
+
+// Üyelik tarihi
+if (profile.created_at) {
+var date = new Date(profile.created_at);
+var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+document.getElementById('memberSince').textContent =
+months[date.getMonth()] + ' ' + date.getFullYear() + "'den beri üye";
+}
+
+// İstatistikler ve ilerleme
+await loadStats(currentUser.id);
+
+document.getElementById('loadingState').style.display = 'none';
+document.getElementById('profileContent').style.display = 'block';
+
+// Gönderiler
+loadMyPosts(currentUser.id);
+
+} catch (err) {
+console.error(err);
+document.getElementById('loadingState').style.display = 'none';
+document.getElementById('errorState').style.display = 'block';
+document.getElementById('errorMsg').textContent = 'Beklenmedik hata: ' + (err.message || err);
+}
+})();
+
+// ---------- İSTATİSTİKLER ----------
+async function loadStats(userId) {
+var res = await supabaseClient
+.from('user_books')
+.select('status')
+.eq('user_id', userId);
+
+if (res.error) return;
+
+var stats = { read: 0, reading: 0, want: 0 };
+(res.data || []).forEach(function(r) {
+if (r.status === 'read') stats.read++;
+else if (r.status === 'reading') stats.reading++;
+else stats.want++;
+});
+
+document.getElementById('statRead').textContent = stats.read;
+document.getElementById('statReading').textContent = stats.reading;
+document.getElementById('statWant').textContent = stats.want;
+
+// Bir sonraki rütbeye kalan kitap sayısı
+var info = '';
+if (stats.read < 3) {
+info = 'Karanfil olmak için ' + (3 - stats.read) + ' kitap daha oku';
+} else if (stats.read < 10) {
+info = 'Gergedan Böceği olmak için ' + (10 - stats.read) + ' kitap daha oku';
+} else if (stats.read < 25) {
+info = 'Katran Kurucusu olmak için ' + (25 - stats.read) + ' kitap daha oku';
+} else {
+info = 'En yüksek rütbedesin! 🎉';
+}
+document.getElementById('progressInfo').textContent = info;
+}
+
+// ---------- GÖNDERİLERİM ----------
+async function loadMyPosts(userId) {
+var res = await supabaseClient
+.from('posts')
+.select('*')
+.eq('user_id', userId)
+.order('created_at', { ascending: false })
+.limit(20);
+
+var container = document.getElementById('myPosts');
+
+if (res.error) {
+container.innerHTML = '<div style="color:#ff8a8a;font-size:0.85rem;">Yüklenemedi.</div>';
+return;
+}
+
+var posts = res.data || [];
+if (!posts.length) {
+container.innerHTML = '<div style="color:#a89e94;font-size:0.9rem;">Henüz gönderi paylaşmadın.</div>';
+return;
+}
+
+var html = '';
+posts.forEach(function(p) {
+html += '<div class="my-post" onclick="window.location.href=\'akis.html?post=' + p.id + '\'">';
+html += '<div class="my-post-time">' + timeAgo(p.created_at) + '</div>';
+html += '<div class="my-post-content">' + escapeHtml(p.content) + '</div>';
+html += '<div class="my-post-stats">';
+html += '<span>' + ICON_HEART + ' ' + (p.likes_count || 0) + '</span>';
+html += '<span>' + ICON_COMMENT + ' ' + (p.comments_count || 0) + '</span>';
+html += '</div>';
+html += '</div>';
+});
+container.innerHTML = html;
+}
+
+// ---------- DÜZENLE BUTONU ----------
+document.getElementById('editBtn').addEventListener('click', function() {
+window.location.href = 'profil-duzenle.html';
+});
+
+// ---------- ÇIKIŞ ----------
+document.getElementById('logoutBtn').addEventListener('click', async function() {
+await supabaseClient.auth.signOut();
+window.location.href = 'index.html';
+});
+
+})();
+</script>
 </body>
 </html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Admin Panel • Katran Dergi</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Inter', -apple-system, sans-serif;
+background: #0a0808;
+color: #f4efe8;
+min-height: 100vh;
+padding: 2rem 1rem;
+}
+.container {
+max-width: 900px;
+margin: 0 auto;
+}
+.top-bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 2rem;
+flex-wrap: wrap;
+gap: 1rem;
+}
+h1 {
+font-family: 'Playfair Display', serif;
+font-size: 2rem;
+font-weight: 900;
+}
+h1 .red { color: #e03131; }
+.top-actions {
+display: flex;
+gap: 0.5rem;
+align-items: center;
+}
+.back-link {
+color: #a89e94;
+text-decoration: none;
+font-size: 0.9rem;
+padding: 0.5rem 1rem;
+border: 1px solid rgba(255,255,255,0.1);
+border-radius: 60px;
+}
+.back-link:hover { color: #e03131; border-color: #e03131; }
+.logout-btn {
+background: transparent;
+color: #a89e94;
+border: 1px solid rgba(255,255,255,0.1);
+padding: 0.5rem 1.2rem;
+border-radius: 60px;
+cursor: pointer;
+font-size: 0.85rem;
+}
+.logout-btn:hover {
+background: #e03131;
+color: #f4efe8;
+border-color: #e03131;
+}
+.stats {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 1rem;
+margin-bottom: 2rem;
+}
+.stat-box {
+background: rgba(255,255,255,0.03);
+border: 1px solid rgba(255,255,255,0.06);
+border-radius: 16px;
+padding: 1.5rem;
+text-align: center;
+}
+.stat-box .number {
+font-family: 'Playfair Display', serif;
+font-size: 2rem;
+font-weight: 900;
+color: #e03131;
+display: block;
+}
+.stat-box .label {
+font-size: 0.75rem;
+color: #a89e94;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-top: 0.3rem;
+}
+.section {
+background: rgba(255,255,255,0.03);
+border: 1px solid rgba(255,255,255,0.06);
+border-radius: 20px;
+padding: 2rem;
+margin-bottom: 1.5rem;
+}
+.section h2 {
+font-family: 'Playfair Display', serif;
+font-size: 1.4rem;
+margin-bottom: 1.5rem;
+}
+.section h2::before {
+content: '❀ ';
+color: #e03131;
+}
+.app-item {
+background: rgba(255,255,255,0.02);
+border: 1px solid rgba(255,255,255,0.06);
+border-radius: 12px;
+padding: 1.5rem;
+margin-bottom: 1rem;
+}
+.app-item:last-child { margin-bottom: 0; }
+.app-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+gap: 1rem;
+flex-wrap: wrap;
+margin-bottom: 0.8rem;
+}
+.app-name {
+font-weight: 700;
+font-size: 1.1rem;
+}
+.app-username {
+color: #a89e94;
+font-size: 0.85rem;
+}
+.app-email {
+color: #a89e94;
+font-size: 0.85rem;
+margin-bottom: 0.8rem;
+word-break: break-all;
+}
+.app-reason {
+background: rgba(0,0,0,0.2);
+border-left: 3px solid #e03131;
+padding: 0.8rem 1rem;
+border-radius: 6px;
+font-size: 0.9rem;
+line-height: 1.6;
+color: #d4c9bd;
+margin-bottom: 1rem;
+}
+.app-actions {
+display: flex;
+gap: 0.5rem;
+flex-wrap: wrap;
+}
+.btn {
+padding: 0.6rem 1.3rem;
+border: none;
+border-radius: 60px;
+font-weight: 700;
+font-size: 0.85rem;
+cursor: pointer;
+transition: all 0.2s;
+}
+.btn-approve {
+background: #2e7d32;
+color: #fff;
+}
+.btn-approve:hover { background: #1b5e20; }
+.btn-reject {
+background: transparent;
+color: #ff8a8a;
+border: 1px solid rgba(224,49,49,0.4);
+}
+.btn-reject:hover { background: rgba(224,49,49,0.15); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.badge {
+display: inline-block;
+padding: 0.25rem 0.7rem;
+border-radius: 40px;
+font-size: 0.7rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+.badge.pending { background: rgba(255,193,7,0.15); color: #ffc107; }
+.badge.approved { background: rgba(76,175,80,0.15); color: #81c784; }
+.badge.rejected { background: rgba(224,49,49,0.15); color: #ff8a8a; }
+.loading, .empty {
+text-align: center;
+padding: 3rem;
+color: #a89e94;
+}
+.empty .flower { font-size: 2.5rem; color: #e03131; display: block; margin-bottom: 1rem; }
+.error-msg {
+background: rgba(224,49,49,0.15);
+border: 1px solid rgba(224,49,49,0.4);
+color: #ff8a8a;
+padding: 1rem;
+border-radius: 10px;
+text-align: center;
+margin-bottom: 1rem;
+}
+@media (max-width: 600px) {
+.stats { grid-template-columns: 1fr; }
+.app-header { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div id="loadingState" class="loading">Yükleniyor...</div>
+
+<div id="errorState" style="display:none;">
+<div class="error-msg" id="errorMsg"></div>
+<a href="index.html" class="back-link">← Ana Sayfa</a>
+</div>
+
+<div id="adminContent" style="display:none;">
+<div class="top-bar">
+<h1><span class="red">Admin</span> Panel</h1>
+<div class="top-actions">
+<a href="index.html" class="back-link">← Site</a>
+<button class="logout-btn" id="logoutBtn">Çıkış</button>
+</div>
+</div>
+
+<div class="stats">
+<div class="stat-box">
+<span class="number" id="statPending">0</span>
+<span class="label">Bekleyen</span>
+</div>
+<div class="stat-box">
+<span class="number" id="statApproved">0</span>
+<span class="label">Onaylı</span>
+</div>
+<div class="stat-box">
+<span class="number" id="statRejected">0</span>
+<span class="label">Reddedilen</span>
+</div>
+</div>
+
+<div class="section">
+<h2>Bekleyen Başvurular</h2>
+<div id="pendingList"><div class="loading">Yükleniyor...</div></div>
+</div>
+
+<div class="section">
+<h2>Onaylanmış Üyeler</h2>
+<div id="approvedList"><div class="loading">Yükleniyor...</div></div>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
+
+var loadingState = document.getElementById('loadingState');
+var adminContent = document.getElementById('adminContent');
+var errorState = document.getElementById('errorState');
+var errorMsg = document.getElementById('errorMsg');
+
+function showError(msg) {
+loadingState.style.display = 'none';
+errorState.style.display = 'block';
+errorMsg.textContent = msg;
+}
+
+var supabaseClient;
+try {
+supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+showError('Supabase bağlantı hatası: ' + e.message);
+return;
+}
+
+// ---------- ADMIN KONTROLÜ ----------
+async function checkAdmin() {
+var sessionRes = await supabaseClient.auth.getSession();
+var session = sessionRes.data.session;
+
+if (!session) {
+window.location.href = 'giris.html';
+return false;
+}
+
+var profileRes = await supabaseClient
+.from('profiles')
+.select('role, status, full_name')
+.eq('id', session.user.id)
+.single();
+
+if (profileRes.error || !profileRes.data) {
+showError('Profil bilgisi alınamadı.');
+return false;
+}
+
+if (profileRes.data.role !== 'admin') {
+showError('Bu sayfaya erişim yetkiniz yok. Sadece admin kullanabilir.');
+return false;
+}
+
+return true;
+}
+
+// ---------- LİSTELERİ YÜKLE ----------
+async function loadApplications() {
+var res = await supabaseClient
+.from('applications')
+.select('*')
+.order('created_at', { ascending: false });
+
+if (res.error) {
+console.error(res.error);
+return;
+}
+
+var apps = res.data || [];
+var pending = apps.filter(function(a) { return a.status === 'pending' || !a.status; });
+var approved = apps.filter(function(a) { return a.status === 'approved'; });
+var rejected = apps.filter(function(a) { return a.status === 'rejected'; });
+
+document.getElementById('statPending').textContent = pending.length;
+document.getElementById('statApproved').textContent = approved.length;
+document.getElementById('statRejected').textContent = rejected.length;
+
+renderList('pendingList', pending, true);
+renderList('approvedList', approved, false);
+}
+
+function renderList(elementId, items, showActions) {
+var el = document.getElementById(elementId);
+
+if (!items.length) {
+el.innerHTML = '<div class="empty"><span class="flower">❀</span>Kayıt yok.</div>';
+return;
+}
+
+var html = '';
+items.forEach(function(app) {
+var statusBadge = '';
+if (app.status === 'pending' || !app.status) {
+statusBadge = '<span class="badge pending">Bekliyor</span>';
+} else if (app.status === 'approved') {
+statusBadge = '<span class="badge approved">Onaylı</span>';
+} else if (app.status === 'rejected') {
+statusBadge = '<span class="badge rejected">Reddedildi</span>';
+}
+
+html += '<div class="app-item" data-id="' + app.id + '">';
+html += '<div class="app-header">';
+html += '<div>';
+html += '<div class="app-name">' + escapeHtml(app.full_name || 'İsimsiz') + '</div>';
+html += '<div class="app-username">@' + escapeHtml(app.username || 'kullanici') + '</div>';
+html += '</div>';
+html += statusBadge;
+html += '</div>';
+html += '<div class="app-email">📧 ' + escapeHtml(app.email) + '</div>';
+
+if (app.reason) {
+html += '<div class="app-reason">' + escapeHtml(app.reason) + '</div>';
+}
+
+if (showActions) {
+html += '<div class="app-actions">';
+html += '<button class="btn btn-approve" onclick="approveApp(\'' + app.id + '\')">✓ Onayla</button>';
+html += '<button class="btn btn-reject" onclick="rejectApp(\'' + app.id + '\')">✕ Reddet</button>';
+html += '</div>';
+}
+
+html += '</div>';
+});
+
+el.innerHTML = html;
+}
+
+function escapeHtml(str) {
+if (!str) return '';
+return String(str)
+.replace(/&/g, '&amp;')
+.replace(/</g, '&lt;')
+.replace(/>/g, '&gt;')
+.replace(/"/g, '&quot;')
+.replace(/'/g, '&#39;');
+}
+
+// ---------- ONAYLA ----------
+window.approveApp = async function(appId) {
+var confirmed = confirm('Bu başvuruyu onaylamak istediğine emin misin?');
+if (!confirmed) return;
+
+var res = await supabaseClient
+.from('applications')
+.select('*')
+.eq('id', appId)
+.single();
+
+if (res.error || !res.data) {
+alert('Başvuru bulunamadı.');
+return;
+}
+
+var app = res.data;
+
+// applications status = approved
+var updateRes = await supabaseClient
+.from('applications')
+.update({ status: 'approved' })
+.eq('id', appId);
+
+if (updateRes.error) {
+alert('Güncellenemedi: ' + updateRes.error.message);
+return;
+}
+
+// profiles tablosunda var mı kontrol et
+var existing = await supabaseClient
+.from('profiles')
+.select('id')
+.eq('email', app.email)
+.single();
+
+if (existing.data) {
+// Güncelle
+await supabaseClient
+.from('profiles')
+.update({ status: 'approved' })
+.eq('email', app.email);
+} else {
+// Yeni kayıt — auth.users'tan id al
+var usersRes = await supabaseClient
+.from('profiles')
+.select('id')
+.eq('email', app.email);
+
+// Auth kullanıcısının id'sini bulmak için başka yol yok (RLS izin vermez)
+// Bu yüzden sadece applications'ı onayladık, kullanıcı signUp zaten yapmıştı
+alert('Başvuru onaylandı! Ancak profiles kaydı yoksa kullanıcı giriş yapamayabilir.\n\nManuel ekleme gerekebilir.');
+}
+
+alert('✅ Başvuru onaylandı!');
+loadApplications();
+};
+
+// ---------- REDDET ----------
+window.rejectApp = async function(appId) {
+var confirmed = confirm('Bu başvuruyu reddetmek istediğine emin misin?');
+if (!confirmed) return;
+
+var res = await supabaseClient
+.from('applications')
+.update({ status: 'rejected' })
+.eq('id', appId);
+
+if (res.error) {
+alert('Reddedilemedi: ' + res.error.message);
+return;
+}
+
+alert('❌ Başvuru reddedildi.');
+loadApplications();
+};
+
+// ---------- ÇIKIŞ ----------
+document.getElementById('logoutBtn').addEventListener('click', async function() {
+await supabaseClient.auth.signOut();
+window.location.href = 'index.html';
+});
+
+// ---------- BAŞLAT ----------
+(async function init() {
+var isAdmin = await checkAdmin();
+if (!isAdmin) return;
+
+loadingState.style.display = 'none';
+adminContent.style.display = 'block';
+
+await loadApplications();
+})();
+
+})();
+</script>
+</body>
+</html>
