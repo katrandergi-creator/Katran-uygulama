@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Profil • Katran Dergi</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --katran: #0a0808;
+            --karanfil: #e03131;
+            --kagit: #f4efe8;
+            --toz: #a89e94;
+            --muted: #7a7068;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--katran);
+            color: var(--kagit);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(224,49,49,0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(224,49,49,0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .back-link {
+            color: var(--toz);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-link:hover { color: var(--karanfil); }
+        
+        .logout-btn {
+            background: transparent;
+            color: var(--toz);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: var(--karanfil);
+            color: var(--kagit);
+            border-color: var(--karanfil);
+        }
+        
+        .profile-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            margin-bottom: 1.5rem;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--karanfil), #b71c1c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--kagit);
+            border: 3px solid rgba(255,255,255,0.1);
+        }
+        
+        .full-name {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.3rem;
+        }
+        
+        .username {
+            color: var(--toz);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(224,49,49,0.15);
+            border: 1px solid rgba(224,49,49,0.3);
+            color: var(--karanfil);
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+        }
+        
+        .member-since {
+            color: var(--toz);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+        
+        .section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section h2 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section h2::before {
+            content: '❀';
+            color: var(--karanfil);
+            font-size: 0.9rem;
+        }
+        
+        .section p {
+            color: var(--toz);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 1rem 0.5rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+        }
+        
+        .stat .number {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--karanfil);
+            display: block;
+        }
+        
+        .stat .label {
+            font-size: 0.75rem;
+            color: var(--toz);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.3rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--toz);
+        }
+        
+        .loading .flower {
+            font-size: 3rem;
+            color: var(--karanfil);
+            animation: spin 2s linear infinite;
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 520px) {
+            .profile-card { padding: 2rem 1.5rem; }
+            .full-name { font-size: 1.5rem; }
+            .avatar { width: 80px; height: 80px; font-size: 2rem; }
+            .stats { gap: 0.5rem; }
+            .stat .number { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="loadingState" class="loading">
+            <div class="flower">❀</div>
+            <p style="margin-top:1rem;">Yükleniyor...</p>
+        </div>
+        
+        <div id="profileContent" style="display:none;">
+            <div class="top-bar">
+                <a href="index.html" class="back-link">← Ana Sayfa</a>
+                <button class="logout-btn" id="logoutBtn">Çıkış Yap</button>
+            </div>
+            
+            <div class="profile-card">
+                <div class="avatar" id="avatar">K</div>
+                <h1 class="full-name" id="fullName">—</h1>
+                <p class="username" id="username">@—</p>
+                <span class="badge" id="badge">Üye</span>
+                <p class="member-since" id="memberSince">—</p>
+            </div>
+            
+            <div class="section">
+                <h2>Hakkımda</h2>
+                <p id="bio">Henüz bir biyografi eklenmemiş.</p>
+            </div>
+            
+            <div class="section">
+                <h2>İstatistikler</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="number">0</span>
+                        <span class="label">Okunan</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">0</span>
+                        <span class="label">Kaydedilen</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">0</span>
+                        <span class="label">Görev</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>Yakında</h2>
+                <p>Okuma listesi, kitap takibi, mini dergi oluşturma ve topluluk özellikleri çok yakında eklenecek. Katran'a hoş geldin! 🌸</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    
+    <script>
+        (async function() {
+            const loadingState = document.getElementById('loadingState');
+            const profileContent = document.getElementById('profileContent');
+            
+            try {
+                // Oturum kontrolü
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                
+                if (!session) {
+                    window.location.href = 'giris.html';
+                    return;
+                }
+                
+                // Profil getir
+                const profile = await getProfile(session.user.id);
+                
+                if (!profile || profile.status !== 'approved') {
+                    window.location.href = 'giris.html';
+                    return;
+                }
+                
+                // Profili göster
+                const initial = (profile.full_name || 'K').charAt(0).toUpperCase();
+                document.getElementById('avatar').textContent = initial;
+                document.getElementById('fullName').textContent = profile.full_name;
+                document.getElementById('username').textContent = '@' + profile.username;
+                
+                if (profile.role === 'admin') {
+                    document.getElementById('badge').textContent = 'Yönetici';
+                } else if (profile.role === 'moderator') {
+                    document.getElementById('badge').textContent = 'Moderatör';
+                } else {
+                    document.getElementById('badge').textContent = 'Üye';
+                }
+                
+                if (profile.bio) {
+                    document.getElementById('bio').textContent = profile.bio;
+                }
+                
+                // Üyelik tarihi
+                const date = new Date(profile.created_at);
+                const months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+                document.getElementById('memberSince').textContent = 
+                    months[date.getMonth()] + ' ' + date.getFullYear() + "'den beri üye";
+                
+                loadingState.style.display = 'none';
+                profileContent.style.display = 'block';
+                
+            } catch (err) {
+                console.error(err);
+                window.location.href = 'giris.html';
+            }
+        })();
+        
+        // Çıkış
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        });
+    </script>
+
+</body>
+</html>
