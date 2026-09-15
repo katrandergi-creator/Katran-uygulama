@@ -14,7 +14,6 @@
             --font-serif: 'Playfair Display', serif;
             --font-sans: 'Inter', sans-serif;
         }
-        @import url('https://googleapis.com');
         body {
             font-family: var(--font-sans);
             background: var(--katran);
@@ -111,20 +110,22 @@
         <a href="index.html" class="back-link">← Ana Sayfa</a>
     </div>
 
-    <!-- DOSYALARIN DOĞRU YÜKLENME SIRASI -->
-    <script src="https://jsdelivr.net"></script>
+    <!-- SUPABASE SCRIPTS - DOĞRU SIRA -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="auth.js"></script>
     
+    <!-- FORM MANTIĞI -->
     <script>
     window.addEventListener('DOMContentLoaded', function() {
-        const msgDiv = document.getElementById('message');
-        const form = document.getElementById('applyForm');
+        console.log('🔵 Kayıt sayfası hazır');
         
-        if (!form) return;
-
+        const form = document.getElementById('applyForm');
+        const msgDiv = document.getElementById('message');
+        
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
+            console.log('🟢 Form gönderiliyor...');
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
@@ -141,21 +142,24 @@
                 reason: document.getElementById('reason').value.trim()
             };
             
+            console.log('📋 Form verisi:', formData);
+            
             try {
-                // auth.js dosyasındaki güncel fonksiyonu tetikliyoruz
                 const result = await applyAsMember(formData);
+                console.log('📤 Sonuç:', result);
                 
                 if (result.success) {
                     msgDiv.className = 'message success';
-                    msgDiv.innerHTML = `<strong>${result.message}</strong>`;
+                    msgDiv.innerHTML = '<strong>✅ ' + result.message + '</strong>';
                     form.reset();
                 } else {
                     msgDiv.className = 'message error';
-                    msgDiv.textContent = result.message;
+                    msgDiv.textContent = '❌ ' + result.message;
                 }
             } catch (err) {
+                console.error('❌ İstisna:', err);
                 msgDiv.className = 'message error';
-                msgDiv.textContent = 'Sistem Hatası: ' + err.message;
+                msgDiv.textContent = '❌ Sistem Hatası: ' + err.message;
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Başvuruyu Gönder';
@@ -164,4 +168,4 @@
     });
     </script>
 </body>
-</html>
+                                                        </html>
