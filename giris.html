@@ -240,8 +240,10 @@
         <a href="index.html" class="back-link">← Ana Sayfa</a>
     </div>
 
+    <!-- SCRIPTS BAĞLANTILARI (SIRASI DÜZELTİLDİ) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
+    <script src="auth.js"></script> <!-- auth.js yüklendi -->
     
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -251,71 +253,49 @@
             const messageDiv = document.getElementById('message');
             
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Giriş yapılıyor...';
-            messageDiv.className = 'message';
+            submitBtn.textContent = 'Giriş yapılmakta...';
             messageDiv.style.display = 'none';
+            messageDiv.className = 'message';
             
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             
             try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
+                // İşlemi doğrudan auth.js içindeki güvenli signIn fonksiyonuna devrediyoruz
+                const result = await signIn(email, password);
                 
-                if (error) throw new Error(translateError(error.message));
-                
-                // Profil kontrolü
-                const profile = await getProfile(data.user.id);
-                
-                if (!profile) {
-                    await supabaseClient.auth.signOut();
-                    throw new Error('Profil bulunamadı. Lütfen başvurunuzu yapın.');
+                if (result.success) {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = 'Giriş başarılı! Profilinize yönlendiriliyorsunuz...';
+                    setTimeout(() => {
+                        window.location.href = 'profil.html';
+                    }, 1000);
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.textContent = result.message;
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Giriş Yap';
                 }
-                
-                if (profile.status === 'pending') {
-                    await supabaseClient.auth.signOut();
-                    throw new Error('Başvurun henüz onaylanmadı. Yönetim inceledikten sonra e-posta ile bilgilendirileceksin.');
-                }
-                
-                if (profile.status === 'banned') {
-                    await supabaseClient.auth.signOut();
-                    throw new Error('Hesabınız topluluk kuralları ihlali nedeniyle askıya alınmıştır.');
-                }
-                
-                // Başarılı → profile yönlendir
-                messageDiv.className = 'message success';
-                messageDiv.textContent = 'Giriş başarılı! Yönlendiriliyorsun...';
-                
-                setTimeout(() => {
-                    window.location.href = 'profil.html';
-                }, 800);
                 
             } catch (err) {
                 messageDiv.className = 'message error';
-                messageDiv.textContent = err.message;
+                messageDiv.textContent = 'Sistem Hatası: ' + err.message;
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Giriş Yap';
             }
         });
         
-        // Şifremi unuttum
+        // Şifremi unuttum tetikleyicisi
         document.getElementById('forgotBtn').addEventListener('click', async function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             if (!email) {
-                alert('Lütfen önce e-posta adresini gir.');
+                alert('Lütfen önce yukarıdaki kutuya e-posta adresinizi yazın.');
                 return;
             }
-            const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + '/giris.html'
-            });
-            if (error) {
-                alert('Hata: ' + error.message);
-            } else {
-                alert('Şifre sıfırlama bağlantısı e-postana gönderildi.');
-            }
+            
+            const result = await resetPassword(email);
+            alert(result.message);
         });
     </script>
 
