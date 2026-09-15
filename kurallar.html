@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Topluluk Kuralları • Katran Dergi</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --katran: #0a0808;
+            --karanfil: #e03131;
+            --kagit: #f4efe8;
+            --toz: #a89e94;
+            --muted: #7a7068;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--kagit);
+            color: var(--katran);
+            line-height: 1.8;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px -20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--karanfil); }
+        
+        .flower {
+            font-size: 3rem;
+            color: var(--karanfil);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 2.8rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            font-style: italic;
+            margin-bottom: 3rem;
+            font-size: 1.05rem;
+        }
+        
+        .intro {
+            background: rgba(224, 49, 49, 0.04);
+            border-left: 4px solid var(--karanfil);
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            font-size: 1rem;
+            color: var(--katran);
+        }
+        
+        ol {
+            list-style: none;
+            counter-reset: rule;
+            padding: 0;
+        }
+        
+        ol li {
+            counter-increment: rule;
+            padding: 1.5rem 0 1.5rem 4rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            position: relative;
+            font-size: 1.02rem;
+        }
+        
+        ol li::before {
+            content: counter(rule);
+            position: absolute;
+            left: 0;
+            top: 1.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--katran);
+            color: var(--kagit);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+        }
+        
+        ol li strong {
+            color: var(--karanfil);
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+        }
+        
+        .footer-note {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--katran);
+            color: var(--kagit);
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .footer-note p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .footer-note .signature {
+            font-family: var(--font-serif);
+            font-style: italic;
+            margin-top: 1rem;
+            color: var(--karanfil);
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 640px) {
+            body { padding: 1rem; }
+            .container { padding: 2rem 1.5rem; }
+            h1 { font-size: 2rem; }
+            ol li { padding-left: 3.5rem; font-size: 0.95rem; }
+            ol li::before { width: 2rem; height: 2rem; font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="back-link">← Ana Sayfa</a>
+        
+        <div class="flower">❀</div>
+        <h1>Topluluk Kuralları</h1>
+        <p class="subtitle">Katran, saygı ve özgür düşünce üzerine kuruludur.</p>
+        
+        <div class="intro">
+            Katran, edebiyat ve düşüncenin buluştuğu; herkesin kendini güvende ve özgür hissettiği bir topluluktur.
+            Aşağıdaki kurallar bu ortamı korumak için vardır. Başvuru yaparak bu kuralları kabul etmiş olursun.
+        </div>
+        
+        <ol>
+            <li>
+                <strong>Saygı esastır.</strong>
+                Küfür, hakaret, aşağılama, alay etme yasaktır. Fikirler tartışılır, kişiler değil.
+            </li>
+            <li>
+                <strong>Siyaset ve inanç dayatması yasaktır.</strong>
+                Siyasi propaganda, tarikat/cemaat daveti, ideolojik dayatma kabul edilmez. Herkes kendi düşüncesini özgürce ifade eder, kimse kimseye dayatmaz.
+            </li>
+            <li>
+                <strong>Flört ve tanışma amaçlı iletişim yasaktır.</strong>
+                Katran bir edebiyat topluluğudur, izdivaç platformu değildir. Özel mesajlaşma sadece edebi ve fikri paylaşım içindir.
+            </li>
+            <li>
+                <strong>Reklam, spam ve dolandırıcılık yasaktır.</strong>
+                Ticari reklam, kripto/finans dolandırıcılığı, yasadışı link paylaşımı anında ban sebebidir.
+            </li>
+            <li>
+                <strong>Ayrımcılık yasaktır.</strong>
+                Irk, cinsiyet, din, dil, etnik köken, cinsel yönelim temelli ayrımcılık kabul edilmez.
+            </li>
+            <li>
+                <strong>Özgün içerik paylaşın.</strong>
+                Başkasının yazısını kendi adınıza paylaşmayın. Alıntı yapıyorsanız kaynak belirtin.
+            </li>
+            <li>
+                <strong>İçerikten siz sorumlusunuz.</strong>
+                Paylaştığınız her yazı, yorum, görsel için hukuki ve ahlaki sorumluluk size aittir.
+            </li>
+            <li>
+                <strong>Üç uyarı kuralı.</strong>
+                Kural ihlalinde önce uyarı alırsınız. Üç uyarı sonrası kalıcı olarak banlanırsınız.
+            </li>
+            <li>
+                <strong>Ağır ihlalde anında ban.</strong>
+                Hakaret, spam, propaganda, dolandırıcılık gibi ağır ihlallerde uyarı yapılmadan kalıcı ban uygulanır.
+            </li>
+            <li>
+                <strong>Yönetim hakkı saklıdır.</strong>
+                Katran yönetimi, kuralları değiştirme, üyelikleri iptal etme ve içerik kaldırma hakkını saklı tutar.
+            </li>
+        </ol>
+        
+        <div class="footer-note">
+            <p>Bu kurallar Katran'ı Katran yapan şeydir. Onları koruyalım.</p>
+            <p class="signature">— Katran Kolektifi</p>
+        </div>
+    </div>
+
+</body>
+</html>
