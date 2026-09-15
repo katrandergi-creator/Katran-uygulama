@@ -1,6 +1,14 @@
 // ============================================================
-// KATRAN DERGİ — GİRİŞ / KAYIT / ÇIKIŞ İŞLEMLERİ
+// KATRAN DERGİ — GİRİŞ / KAYIT / ÇIKIŞ İŞLEMLERİ (GÜNCELLENDİ)
 // ============================================================
+
+// Hataları Türkçe'ye çeviren yardımcı fonksiyon (Eksikse sistem kilitlenmesin diye eklendi)
+function translateError(msg) {
+    if (!msg) return 'Bilinmeyen bir hata oluştu.';
+    if (msg.includes('Email not confirmed')) return 'E-posta adresiniz henüz doğrulanmamış. Lütfen gelen kutunuzu kontrol edin.';
+    if (msg.includes('Invalid login credentials')) return 'E-posta veya şifre hatalı.';
+    return msg;
+}
 
 // ----- KAYIT OL (Başvuru Formu) -----
 async function applyAsMember(formData) {
@@ -24,7 +32,7 @@ async function applyAsMember(formData) {
         return { success: false, message: 'Başvuru kaydedilemedi: ' + appError.message };
     }
     
-    // 2. Auth kullanıcısı oluştur (henüz onaylanmadı, sadece hesap açıldı)
+    // 2. Auth kullanıcısı oluştur
     const { data: authData, error: authError } = await supabaseClient.auth.signUp({
         email: email,
         password: password,
@@ -43,7 +51,7 @@ async function applyAsMember(formData) {
     
     return { 
         success: true, 
-        message: 'Başvurun alındı! E-postanı kontrol et ve hesabını doğrula. Yönetim onayından sonra giriş yapabilirsin.'
+        message: 'Başvurun başarıyla alındı! E-postana bir doğrulama linki gönderildi. Lütfen e-postanı kontrol et ve hesabını doğrula. Yönetim onayından sonra giriş yapabilirsin.'
     };
 }
 
@@ -58,31 +66,35 @@ async function signIn(email, password) {
         return { success: false, message: translateError(error.message) };
     }
     
-    // Kullanıcı profilini kontrol et (onaylı mı?)
-    const profile = await getProfile(data.user.id);
+    // Düzenleme: Profil yerine kullanıcının başvuru durumunu 'applications' tablosundan kontrol ediyoruz
+    const { data: appData, error: appFetchError } = await supabaseClient
+        .from('applications')
+        .select('status')
+        .eq('email', email)
+        .single();
     
-    if (!profile) {
+    if (appFetchError || !appData) {
         await supabaseClient.auth.signOut();
-        return { success: false, message: 'Profil bulunamadı. Lütfen başvurunuzu yapın.' };
+        return { success: false, message: 'Başvuru kaydınız bulunamadı. Lütfen önce kayıt olun.' };
     }
     
-    if (profile.status === 'pending') {
+    if (appData.status === 'pending') {
         await supabaseClient.auth.signOut();
         return { 
             success: false, 
-            message: 'Başvurun henüz onaylanmadı. Yönetim inceledikten sonra e-posta ile bilgilendirileceksin.' 
+            message: 'Başvurun henüz onaylanmadı. Yönetim inceledikten sonra giriş yapabilirsin.' 
         };
     }
     
-    if (profile.status === 'banned') {
+    if (appData.status === 'banned' || appData.status === 'rejected') {
         await supabaseClient.auth.signOut();
-        return { success: false, message: 'Hesabınız topluluk kuralları ihlali nedeniyle askıya alınmıştır.' };
+        return { success: false, message: 'Hesabınız onaylanmadı veya topluluk kuralları nedeniyle askıya alındı.' };
     }
     
-    return { success: true, profile: profile };
+    return { success: true, user: data.user, status: appData.status };
 }
 
-// ----- ŞİFRE SIFIRLAMA E-POSTASI -----
+// ----- ŞİFRE SIFIRLAMA -----
 async function resetPassword(email) {
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
         redirectTo: window.location.origin + '/sifre-yenile.html'
@@ -100,23 +112,80 @@ async function checkAuthState() {
     return session;
 }
 
-// ----- KULLANICIYI YÖNLENDİR (yetki kontrolü) -----
+// ----- REQURE AUTH (Yönlendirme) -----
 async function requireAuth(redirectTo = 'giris.html') {
     const session = await checkAuthState();
     if (!session) {
         window.location.href = redirectTo;
         return null;
     }
-    const profile = await getProfile(session.user.id);
-    if (!profile || profile.status !== 'approved') {
+    
+    const { data: appData } = await supabaseClient
+        .from('applications')
+        .select('status')
+        .eq('email', session.user.email)
+        .single();
+        
+    if (!appData || appData.status !== 'approved') {
         window.location.href = 'giris.html';
         return null;
     }
-    return profile;
+    return session.user;
 }
 
 // ----- ÇIKIŞ YAP -----
 async function logOut() {
     await supabaseClient.auth.signOut();
     window.location.href = 'index.html';
-      }
+}
+
+// ============================================================
+// OTOMATİK TARAYICI TETİKLEYİCİLERİ (Arayüz Bağlantıları)
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Kayıt Formu Tetikleyicisi
+    const registerForm = document.querySelector('form#kayitFormu') || document.querySelector('form[action*="kayit"]');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+            
+            const formData = {
+                email: registerForm.querySelector('#email')?.value || registerForm.querySelector('input[type="email"]')?.value,
+                password: registerForm.querySelector('#password')?.value || registerForm.querySelector('input[type="password"]')?.value,
+                full_name: registerForm.querySelector('#full_name')?.value || registerForm.querySelector('input[name="full_name"]')?.value || '',
+                username: registerForm.querySelector('#username')?.value || registerForm.querySelector('input[name="username"]')?.value || '',
+                reason: registerForm.querySelector('#reason')?.value || registerForm.querySelector('textarea')?.value || ''
+            };
+
+            const result = await applyAsMember(formData);
+            alert(result.message);
+            if (submitBtn) submitBtn.disabled = false;
+            if (result.success) registerForm.reset();
+        });
+    }
+
+    // 2. Giriş Formu Tetikleyicisi
+    const loginForm = document.querySelector('form#girisFormu') || document.querySelector('form[action*="giris"]');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+
+            const email = loginForm.querySelector('#email')?.value || loginForm.querySelector('input[type="email"]')?.value;
+            const password = loginForm.querySelector('#password')?.value || loginForm.querySelector('input[type="password"]')?.value;
+
+            const result = await signIn(email, password);
+            if (result.success) {
+                alert('Giriş başarılı! Profilinize yönlendiriliyorsunuz.');
+                window.location.href = 'profil.html';
+            } else {
+                alert(result.message);
+            }
+            if (submitBtn) submitBtn.disabled = false;
+        });
+    }
+});
+        
