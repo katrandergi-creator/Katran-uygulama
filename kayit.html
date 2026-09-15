@@ -111,31 +111,27 @@
         <a href="index.html" class="back-link">← Ana Sayfa</a>
     </div>
 
-    <!-- SUPABASE SCRIPTS - EN ÖNEMLİ KISIM -->
+    <!-- SCRIPTS BAĞLANTILARI -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
+    <script src="auth.js"></script> <!-- DÜZELTME: auth.js dosyası buraya eklendi -->
     
     <script>
-    // Sayfa yüklendiğinde script'lerin yüklendiğini kontrol et
     window.addEventListener('DOMContentLoaded', function() {
         const msgDiv = document.getElementById('message');
         
-        // Supabase kontrol
         if (typeof supabaseClient === 'undefined') {
             msgDiv.className = 'message error';
             msgDiv.textContent = 'KRİTİK HATA: Supabase yüklenemedi! supabase-config.js bulunamadı.';
             return;
         }
         
-        // Form submit
         document.getElementById('applyForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitBtn');
-            
             submitBtn.disabled = true;
             submitBtn.textContent = 'Gönderiliyor...';
-            msgDiv.className = 'message';
             msgDiv.style.display = 'none';
             
             const formData = {
@@ -146,45 +142,21 @@
                 reason: document.getElementById('reason').value.trim()
             };
             
+            // DÜZELTME: İşlemleri doğrudan auth.js içindeki applyAsMember fonksiyonuna devrediyoruz
             try {
-                // 1. Başvuruyu kaydet
-                const { error: appError } = await supabaseClient
-                    .from('applications')
-                    .insert([{
-                        full_name: formData.full_name,
-                        username: formData.username,
-                        email: formData.email,
-                        reason: formData.reason
-                    }]);
+                const result = await applyAsMember(formData);
                 
-                if (appError) {
-                    throw new Error('Başvuru kaydedilemedi: ' + appError.message);
+                if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.innerHTML = `<strong>${result.message}</strong>`;
+                    document.getElementById('applyForm').reset();
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
                 }
-                
-                // 2. Auth kullanıcısı oluştur
-                const { error: authError } = await supabaseClient.auth.signUp({
-                    email: formData.email,
-                    password: formData.password,
-                    options: {
-                        data: {
-                            full_name: formData.full_name,
-                            username: formData.username
-                        }
-                    }
-                });
-                
-                if (authError) {
-                    throw new Error(translateError(authError.message));
-                }
-                
-                // Başarılı
-                msgDiv.className = 'message success';
-                msgDiv.innerHTML = '<strong>Başvurun alındı! 🎉</strong><br>Yönetim onayından sonra giriş yapabilirsin.';
-                document.getElementById('applyForm').reset();
-                
             } catch (err) {
                 msgDiv.className = 'message error';
-                msgDiv.textContent = err.message;
+                msgDiv.textContent = 'Sistemsel bir hata oluştu: ' + err.message;
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Başvuruyu Gönder';
@@ -192,6 +164,5 @@
         });
     });
     </script>
-
 </body>
 </html>
