@@ -14,7 +14,7 @@
             --font-serif: 'Playfair Display', serif;
             --font-sans: 'Inter', sans-serif;
         }
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://googleapis.com');
         body {
             font-family: var(--font-sans);
             background: var(--katran);
@@ -111,28 +111,27 @@
         <a href="index.html" class="back-link">← Ana Sayfa</a>
     </div>
 
-    <!-- SCRIPTS BAĞLANTILARI -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- DOSYALARIN DOĞRU YÜKLENME SIRASI -->
+    <script src="https://jsdelivr.net"></script>
     <script src="supabase-config.js"></script>
-    <script src="auth.js"></script> <!-- DÜZELTME: auth.js dosyası buraya eklendi -->
+    <script src="auth.js"></script>
     
     <script>
     window.addEventListener('DOMContentLoaded', function() {
         const msgDiv = document.getElementById('message');
+        const form = document.getElementById('applyForm');
         
-        if (typeof supabaseClient === 'undefined') {
-            msgDiv.className = 'message error';
-            msgDiv.textContent = 'KRİTİK HATA: Supabase yüklenemedi! supabase-config.js bulunamadı.';
-            return;
-        }
-        
-        document.getElementById('applyForm').addEventListener('submit', async function(e) {
+        if (!form) return;
+
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Gönderiliyor...';
+            
             msgDiv.style.display = 'none';
+            msgDiv.className = 'message';
             
             const formData = {
                 full_name: document.getElementById('full_name').value.trim(),
@@ -142,21 +141,21 @@
                 reason: document.getElementById('reason').value.trim()
             };
             
-            // DÜZELTME: İşlemleri doğrudan auth.js içindeki applyAsMember fonksiyonuna devrediyoruz
             try {
+                // auth.js dosyasındaki güncel fonksiyonu tetikliyoruz
                 const result = await applyAsMember(formData);
                 
                 if (result.success) {
                     msgDiv.className = 'message success';
                     msgDiv.innerHTML = `<strong>${result.message}</strong>`;
-                    document.getElementById('applyForm').reset();
+                    form.reset();
                 } else {
                     msgDiv.className = 'message error';
                     msgDiv.textContent = result.message;
                 }
             } catch (err) {
                 msgDiv.className = 'message error';
-                msgDiv.textContent = 'Sistemsel bir hata oluştu: ' + err.message;
+                msgDiv.textContent = 'Sistem Hatası: ' + err.message;
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Başvuruyu Gönder';
