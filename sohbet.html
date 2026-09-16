@@ -10,20 +10,30 @@
   } catch (e) {}
 })();
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>Sohbet • Katran Dergi</title>
 <link rel="stylesheet" href="tema.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+height: 100%;
+}
+
 body {
 font-family: 'Inter', -apple-system, sans-serif;
 background: var(--bg, #0a0808);
 color: var(--text, #f4efe8);
 height: 100vh;
+height: 100dvh;
 display: flex;
 flex-direction: column;
 overflow: hidden;
+padding-bottom: 0 !important;
+margin-bottom: 0 !important;
 }
+
+/* ÜST NAV */
 .top-nav {
 background: var(--nav-bg, rgba(10,8,8,0.95));
 backdrop-filter: blur(20px);
@@ -75,9 +85,12 @@ flex-shrink: 0;
 }
 .color-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .color-btn:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.25)); }
+
+/* MESAJLAR */
 .messages {
-flex: 1;
+flex: 1 1 auto;
 overflow-y: auto;
+-webkit-overflow-scrolling: touch;
 padding: 1rem;
 display: flex;
 flex-direction: column;
@@ -85,6 +98,7 @@ gap: 0.5rem;
 max-width: 700px;
 margin: 0 auto;
 width: 100%;
+min-height: 0;
 }
 .date-label {
 text-align: center;
@@ -117,17 +131,21 @@ border-bottom-left-radius: 4px;
 }
 .msg-time { font-size: 0.65rem; opacity: 0.65; margin-top: 0.2rem; }
 .msg.sent .msg-time { text-align: right; }
+
+/* COMPOSER — HER ZAMAN GÖRÜNÜR */
 .composer {
+display: flex !important;
 padding: 0.7rem 1rem;
+padding-bottom: calc(0.7rem + env(safe-area-inset-bottom));
 border-top: 1px solid var(--border, rgba(255,255,255,0.06));
 background: var(--nav-bg, rgba(10,8,8,0.95));
 backdrop-filter: blur(20px);
-display: flex;
 gap: 0.5rem;
 max-width: 700px;
 margin: 0 auto;
 width: 100%;
 flex-shrink: 0;
+z-index: 20;
 }
 .composer input {
 flex: 1;
@@ -138,6 +156,7 @@ padding: 0.75rem 1.2rem;
 color: var(--text, #f4efe8);
 font-family: inherit;
 font-size: 0.92rem;
+min-width: 0;
 }
 .composer input::placeholder { color: var(--text-dim, #7a7068); }
 .composer input:focus { outline: none; border-color: var(--chat-color, #8b2e3e); }
@@ -153,10 +172,12 @@ font-family: inherit;
 display: flex;
 align-items: center;
 transition: all 0.2s;
+flex-shrink: 0;
 }
 .composer button svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .composer button:hover { opacity: 0.9; }
 .composer button:disabled { opacity: 0.5; }
+
 .loading { text-align: center; padding: 3rem; color: var(--text-muted, #a89e94); }
 
 /* RENK PALETİ MODAL */
@@ -229,7 +250,7 @@ transition: all 0.2s;
 
 <div class="messages" id="messages"></div>
 
-<div class="composer" id="composer" style="display:none;">
+<div class="composer" id="composer">
 <input type="text" id="msgInput" placeholder="Mesaj yaz..." maxlength="1000" autocomplete="off">
 <button id="sendBtn">
 <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -342,7 +363,6 @@ renderPalette();
 await supabaseClient.from('messages').update({ is_read: true }).eq('sender_id', otherId).eq('receiver_id', currentUser.id).eq('is_read', false);
 
 await loadMessages();
-document.getElementById('composer').style.display = 'flex';
 
 document.getElementById('sendBtn').addEventListener('click', sendMessage);
 document.getElementById('msgInput').addEventListener('keydown', function(e) {
