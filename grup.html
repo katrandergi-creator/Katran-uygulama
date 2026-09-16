@@ -314,6 +314,14 @@ if (groupData.type === 'rank') {
 if (!canAccessRank(groupData.min_rank)) { showNoAccess(); return; }
 }
 
+// Rütbe odasıysa ve erişim varsa otomatik üye yap
+if (groupData.type === 'rank' && canAccessRank(groupData.min_rank)) {
+  var checkMem = await supabaseClient.from('group_members').select('role').eq('group_id', groupId).eq('user_id', currentUser.id).maybeSingle();
+  if (!checkMem.data) {
+    await supabaseClient.from('group_members').insert([{ group_id: groupId, user_id: currentUser.id, role: 'member' }]);
+  }
+}
+
 var memRes = await supabaseClient.from('group_members').select('role').eq('group_id', groupId).eq('user_id', currentUser.id).maybeSingle();
 isMember = !!memRes.data;
 isAdmin = memRes.data && memRes.data.role === 'admin';
