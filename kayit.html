@@ -409,12 +409,17 @@ throw new Error(authRes.error.message);
 }
 
 messageDiv.className = 'message success';
-messageDiv.innerHTML = '<strong>Başvurun alındı! 🎉</strong><br>Yönetim onayından sonra giriş yapabilirsin.';
+messageDiv.innerHTML = '<strong>Başvurun alındı! 🎉</strong><br>Giriş ekranına yönlendiriliyorsun...';
 document.getElementById('applyForm').reset();
 usernameStatus.textContent = '';
 emailStatus.textContent = '';
 usernameAvailable = false;
 emailAvailable = false;
+
+// 3 saniye sonra giriş ekranına yönlendir
+setTimeout(function() {
+window.location.href = 'giris.html';
+}, 3000);
 
 } catch (err) {
 messageDiv.className = 'message error';
