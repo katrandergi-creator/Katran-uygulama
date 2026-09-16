@@ -109,7 +109,7 @@
   function init() {
     addSwitcher();
     var path = window.location.pathname.split('/').pop() || 'index.html';
-    var skip = ['index.html', 'giris.html', 'kayit.html', 'kurallar.html', ''];
+    var skip = ['index.html', 'giris.html', 'kayit.html', 'kurallar.html', 'sohbet.html', 'mesajlar.html', 'grup.html', ''];
     if (skip.indexOf(path) === -1) {
       addBottomNav();
     }
