@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Grup • Katran Dergi</title>
+<link rel="stylesheet" href="tema.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Inter', -apple-system, sans-serif;
+background: var(--bg);
+color: var(--text);
+height: 100vh;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+}
+.top-nav {
+background: var(--nav-bg);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--border);
+padding: 0.7rem 1rem;
+display: flex;
+align-items: center;
+gap: 0.6rem;
+flex-shrink: 0;
+z-index: 10;
+}
+.back-link {
+color: var(--text-muted);
+text-decoration: none;
+display: inline-flex;
+align-items: center;
+padding: 0.4rem;
+border-radius: 50%;
+transition: all 0.2s;
+flex-shrink: 0;
+}
+.back-link svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.back-link:hover { color: var(--bordo); background: var(--bordo-glow); }
+.chat-info { flex: 1; display: flex; align-items: center; gap: 0.7rem; min-width: 0; }
+.chat-avatar {
+width: 40px;
+height: 40px;
+border-radius: 14px;
+background: var(--bordo);
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 900;
+color: #fff;
+font-size: 1rem;
+font-family: 'Playfair Display', serif;
+flex-shrink: 0;
+}
+.chat-avatar.rank-green { background: #10b981; }
+.chat-avatar.rank-blue { background: #3b82f6; }
+.chat-avatar.rank-red { background: #e03131; }
+.chat-avatar.rank-gold { background: #d4a843; }
+.chat-name-wrap { min-width: 0; }
+.chat-name { font-weight: 700; font-size: 0.95rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-meta { color: var(--text-muted); font-size: 0.75rem; }
+.icon-btn {
+background: var(--bg-elev);
+border: 1px solid var(--border);
+color: var(--text-muted);
+width: 38px;
+height: 38px;
+border-radius: 50%;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.2s;
+flex-shrink: 0;
+}
+.icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn:hover { color: var(--bordo); border-color: var(--bordo); background: var(--bordo-glow); }
+.messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; max-width: 700px; margin: 0 auto; width: 100%; }
+.date-label { text-align: center; font-size: 0.72rem; color: var(--text-dim); margin: 0.8rem 0; font-style: italic; }
+.msg-group { display: flex; flex-direction: column; gap: 0.15rem; margin-bottom: 0.4rem; }
+.msg-group.sent { align-items: flex-end; }
+.msg-group.received { align-items: flex-start; }
+.msg-sender { font-size: 0.72rem; color: var(--bordo); font-weight: 700; padding: 0 0.5rem; margin-bottom: 0.15rem; }
+.msg-group.sent .msg-sender { display: none; }
+.msg {
+max-width: 78%;
+padding: 0.6rem 0.95rem;
+border-radius: 16px;
+font-size: 0.92rem;
+line-height: 1.5;
+word-wrap: break-word;
+white-space: pre-wrap;
+}
+.msg.sent { background: var(--bordo); color: #fff; border-bottom-right-radius: 4px; }
+.msg.received { background: var(--bg-elev-2); color: var(--text); border-bottom-left-radius: 4px; }
+.msg-time { font-size: 0.65rem; opacity: 0.6; margin-top: 0.2rem; text-align: right; }
+.composer {
+padding: 0.7rem 1rem;
+border-top: 1px solid var(--border);
+background: var(--nav-bg);
+backdrop-filter: blur(20px);
+display: flex;
+gap: 0.5rem;
+max-width: 700px;
+margin: 0 auto;
+width: 100%;
+flex-shrink: 0;
+}
+.composer input {
+flex: 1;
+background: var(--bg-elev-2);
+border: 1px solid var(--border);
+border-radius: 60px;
+padding: 0.75rem 1.2rem;
+color: var(--text);
+font-family: inherit;
+font-size: 0.92rem;
+}
+.composer input::placeholder { color: var(--text-dim); }
+.composer input:focus { outline: none; border-color: var(--bordo); }
+.composer button {
+background: var(--bordo);
+color: #fff;
+border: none;
+border-radius: 60px;
+padding: 0 1.3rem;
+font-weight: 700;
+cursor: pointer;
+font-family: inherit;
+display: flex;
+align-items: center;
+}
+.composer button svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.composer button:hover { opacity: 0.9; }
+.composer button:disabled { opacity: 0.5; }
+.modal-backdrop {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.7);
+backdrop-filter: blur(6px);
+z-index: 9998;
+display: none;
+align-items: center;
+justify-content: center;
+padding: 1rem;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+background: var(--bg);
+border: 1px solid var(--border);
+border-radius: 20px;
+max-width: 440px;
+width: 100%;
+max-height: 80vh;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+box-shadow: var(--shadow-lg);
+}
+.modal-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text); }
+.modal-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 0.4rem; border-radius: 50%; display: flex; transition: all 0.2s; }
+.modal-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.modal-close:hover { color: var(--bordo); background: var(--bordo-glow); }
+.modal-body { padding: 0.5rem 0; overflow-y: auto; flex: 1; }
+.modal-section-title { padding: 0.8rem 1.5rem 0.4rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+.member-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.7rem 1.5rem; text-decoration: none; color: inherit; transition: background 0.15s; }
+.member-item:hover { background: var(--bordo-glow); }
+.member-info { flex: 1; min-width: 0; }
+.member-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+.member-username { color: var(--text-muted); font-size: 0.78rem; }
+.member-badge { background: var(--bordo); color: #fff; font-size: 0.65rem; padding: 2px 8px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+.modal-footer button {
+flex: 1;
+padding: 0.7rem;
+border-radius: 60px;
+border: none;
+font-weight: 700;
+font-size: 0.85rem;
+cursor: pointer;
+font-family: inherit;
+transition: all 0.2s;
+}
+.btn-leave { background: transparent; color: #ff8a8a; border: 1px solid rgba(224,49,49,0.3); }
+.btn-leave:hover { background: rgba(224,49,49,0.15); }
+.btn-close { background: var(--bordo); color: #fff; }
+.btn-close:hover { background: var(--bordo-dark); }
+.loading, .empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9rem; }
+.spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--bordo); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.no-access { text-align: center; padding: 4rem 2rem; color: var(--text-muted); max-width: 400px; margin: 0 auto; }
+.no-access .lock-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--bg-elev-2); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; color: var(--text-dim); }
+.no-access .lock-icon svg { width: 32px; height: 32px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.no-access h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--text); margin-bottom: 0.5rem; }
+@media (max-width: 640px) { .msg { max-width: 85%; } }
+</style>
+</head>
+<body>
+
+<div class="top-nav" id="topNav">
+<div class="loading" style="padding:0;font-size:0.85rem;">Yükleniyor...</div>
+</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="composer" id="composer" style="display:none;">
+<input type="text" id="msgInput" placeholder="Mesaj yaz..." maxlength="1000" autocomplete="off">
+<button id="sendBtn">
+<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+</button>
+</div>
+
+<div class="modal-backdrop" id="membersModal">
+<div class="modal">
+<div class="modal-header">
+<h3 id="modalTitle">Grup Üyeleri</h3>
+<button class="modal-close" id="modalClose">
+<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+</div>
+<div class="modal-body" id="modalBody"></div>
+<div class="modal-footer" id="modalFooter">
+<button class="btn-leave" id="leaveBtn">Gruptan Ayrıl</button>
+<button class="btn-close" id="closeBtn">Kapat</button>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+<script src="avatares.js"></script>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
+
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var currentUser = null;
+var currentProfile = null;
+var groupId = null;
+var groupData = null;
+var isMember = false;
+var isAdmin = false;
+var profileCache = {};
+
+var RANK_ORDER = ['filiz', 'karanfil', 'gergedan', 'katran'];
+var RANK_COLORS = { filiz: 'green', karanfil: 'blue', gergedan: 'red', katran: 'gold' };
+
+function escapeHtml(str) {
+if (!str) return '';
+return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function formatTime(dateStr) {
+var d = new Date(dateStr);
+return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+}
+
+function formatDateLabel(dateStr) {
+var d = new Date(dateStr);
+var today = new Date();
+var yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+if (d.toDateString() === today.toDateString()) return 'Bugün';
+if (d.toDateString() === yesterday.toDateString()) return 'Dün';
+var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function canAccessRank(minRank) {
+if (!currentProfile) return false;
+var myRank = currentProfile.rank || 'filiz';
+return RANK_ORDER.indexOf(myRank) >= RANK_ORDER.indexOf(minRank);
+}
+
+function getAvatar(profile, size) {
+  if (window.renderAvatar) return window.renderAvatar(profile, size || 32);
+  var initial = (profile.full_name || 'K').charAt(0).toUpperCase();
+  return '<div style="width:' + (size || 32) + 'px;height:' + (size || 32) + 'px;border-radius:50%;background:linear-gradient(135deg, var(--bordo), var(--bordo-dark));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:' + Math.round((size || 32) * 0.42) + 'px;">' + initial + '</div>';
+}
+
+(async function init() {
+var urlParams = new URLSearchParams(window.location.search);
+groupId = urlParams.get('id');
+if (!groupId) { window.location.href = 'gruplar.html'; return; }
+
+var sessionRes = await supabaseClient.auth.getSession();
+if (!sessionRes.data.session) { window.location.href = 'giris.html'; return; }
+currentUser = sessionRes.data.session.user;
+
+var profRes = await supabaseClient.from('profiles').select('id, full_name, username, rank, avatar, status').eq('id', currentUser.id).single();
+if (!profRes.data || profRes.data.status !== 'approved') { window.location.href = 'giris.html'; return; }
+currentProfile = profRes.data;
+
+var groupRes = await supabaseClient.from('groups').select('*').eq('id', groupId).single();
+if (groupRes.error || !groupRes.data) { showError('Grup bulunamadı.'); return; }
+groupData = groupRes.data;
+
+if (groupData.type === 'rank') {
+if (!canAccessRank(groupData.min_rank)) { showNoAccess(); return; }
+}
+
+var memRes = await supabaseClient.from('group_members').select('role').eq('group_id', groupId).eq('user_id', currentUser.id).maybeSingle();
+isMember = !!memRes.data;
+isAdmin = memRes.data && memRes.data.role === 'admin';
+
+renderHeader();
+
+if (isMember) {
+await loadMessages();
+document.getElementById('composer').style.display = 'flex';
+document.getElementById('sendBtn').addEventListener('click', sendMessage);
+document.getElementById('msgInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') sendMessage(); });
+} else {
+showJoinScreen();
+}
+
+document.getElementById('topNav').addEventListener('click', function(e) {
+if (e.target.closest('#membersBtn')) openMembersModal();
+});
+document.getElementById('modalClose').addEventListener('click', closeMembersModal);
+document.getElementById('closeBtn').addEventListener('click', closeMembersModal);
+document.getElementById('membersModal').addEventListener('click', function(e) { if (e.target === this) closeMembersModal(); });
+
+supabaseClient.channel('group-messages-' + groupId)
+.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'group_messages', filter: 'group_id=eq.' + groupId }, function() {
+if (isMember) loadMessages();
+})
+.subscribe();
+})();
+
+function showError(msg) {
+document.getElementById('topNav').innerHTML = '';
+document.getElementById('messages').innerHTML = '<div class="empty">' + msg + '</div>';
+}
+
+function showNoAccess() {
+var rankLabel = { filiz: 'Filiz', karanfil: 'Karanfil', gergedan: 'Gergedan Böceği', katran: 'Katran Kurucusu' }[groupData.min_rank] || groupData.min_rank;
+document.getElementById('topNav').innerHTML = '<a href="gruplar.html" class="back-link"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a><div class="chat-info"><div class="chat-name-wrap"><div class="chat-name">' + escapeHtml(groupData.name) + '</div></div></div>';
+document.getElementById('messages').innerHTML = '<div class="no-access"><div class="lock-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h2>Bu oda kilitli</h2><p style="font-size:0.9rem;line-height:1.6;">' + rankLabel + ' rütbesine ulaşman gerekiyor.</p><p style="font-size:0.85rem;margin-top:1rem;color:var(--text-dim);font-style:italic;">Kitaplarını oku, rütben yükselince açılır.</p></div>';
+}
+
+function showJoinScreen() {
+document.getElementById('messages').innerHTML = '<div class="no-access"><div class="lock-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h2>' + escapeHtml(groupData.name) + '</h2><p style="font-size:0.9rem;line-height:1.6;margin-bottom:1.5rem;">' + (groupData.description ? escapeHtml(groupData.description) : 'Bu gruba katılarak sohbete başla.') + '</p><button id="joinBtn" style="background:var(--bordo);color:#fff;border:none;border-radius:60px;padding:0.8rem 2rem;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:inherit;">Gruba Katıl</button></div>';
+document.getElementById('joinBtn').addEventListener('click', joinGroup);
+}
+
+async function joinGroup() {
+var res = await supabaseClient.from('group_members').insert([{ group_id: groupId, user_id: currentUser.id, role: 'member' }]);
+if (res.error) { alert('Hata: ' + res.error.message); return; }
+isMember = true;
+window.location.reload();
+}
+
+function renderHeader() {
+var initial = (groupData.name || '?').charAt(0).toUpperCase();
+var colorClass = '';
+if (groupData.type === 'rank') colorClass = 'rank-' + (RANK_COLORS[groupData.min_rank] || 'green');
+document.getElementById('topNav').innerHTML =
+'<a href="gruplar.html" class="back-link"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a>' +
+'<div class="chat-info"><div class="chat-avatar ' + colorClass + '">' + initial + '</div><div class="chat-name-wrap"><div class="chat-name">' + escapeHtml(groupData.name) + '</div><div class="chat-meta" id="memberCountText">yükleniyor...</div></div></div>' +
+'<button class="icon-btn" id="membersBtn" title="Üyeler"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>';
+updateMemberCount();
+}
+
+async function updateMemberCount() {
+var res = await supabaseClient.from('group_members').select('id', { count: 'exact', head: true }).eq('group_id', groupId);
+var el = document.getElementById('memberCountText');
+if (el) el.textContent = (res.count || 0) + ' üye';
+}
+
+async function loadMessages() {
+var res = await supabaseClient.from('group_messages').select('*').eq('group_id', groupId).order('created_at', { ascending: true }).limit(200);
+var container = document.getElementById('messages');
+var msgs = res.data || [];
+if (!msgs.length) { container.innerHTML = '<div class="empty">Henüz mesaj yok. İlk mesajı sen yaz!</div>'; return; }
+
+var senderIds = msgs.map(function(m) { return m.sender_id; });
+var uniqueIds = senderIds.filter(function(v, i, a) { return a.indexOf(v) === i; });
+var missingIds = uniqueIds.filter(function(id) { return !profileCache[id]; });
+if (missingIds.length) {
+var profRes = await supabaseClient.from('profiles').select('id, full_name, username, avatar').in('id', missingIds);
+(profRes.data || []).forEach(function(p) { profileCache[p.id] = p; });
+}
+
+var html = '';
+var lastDate = '';
+var lastSender = null;
+msgs.forEach(function(m) {
+var dateLabel = formatDateLabel(m.created_at);
+if (dateLabel !== lastDate) { html += '<div class="date-label">' + dateLabel + '</div>'; lastDate = dateLabel; lastSender = null; }
+var sender = profileCache[m.sender_id] || { full_name: 'İsimsiz' };
+var isSent = m.sender_id === currentUser.id;
+var showSender = !isSent && lastSender !== m.sender_id;
+html += '<div class="msg-group ' + (isSent ? 'sent' : 'received') + '">';
+if (showSender) html += '<div class="msg-sender">' + escapeHtml(sender.full_name) + '</div>';
+html += '<div class="msg ' + (isSent ? 'sent' : 'received') + '">' + escapeHtml(m.content) + '<div class="msg-time">' + formatTime(m.created_at) + '</div></div>';
+html += '</div>';
+lastSender = m.sender_id;
+});
+container.innerHTML = html;
+container.scrollTop = container.scrollHeight;
+}
+
+async function sendMessage() {
+var input = document.getElementById('msgInput');
+var content = input.value.trim();
+if (!content) return;
+var btn = document.getElementById('sendBtn');
+btn.disabled = true;
+var res = await supabaseClient.from('group_messages').insert([{ group_id: groupId, sender_id: currentUser.id, content: content }]);
+btn.disabled = false;
+if (res.error) { alert('Hata: ' + res.error.message); return; }
+input.value = '';
+await loadMessages();
+}
+
+async function openMembersModal() {
+document.getElementById('membersModal').classList.add('open');
+document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>Yükleniyor...</div>';
+
+var res = await supabaseClient.from('group_members').select('user_id, role, joined_at').eq('group_id', groupId).order('joined_at', { ascending: true });
+var members = res.data || [];
+var userIds = members.map(function(m) { return m.user_id; });
+var profRes = await supabaseClient.from('profiles').select('id, full_name, username, avatar').in('id', userIds);
+var profileMap = {};
+(profRes.data || []).forEach(function(p) { profileMap[p.id] = p; });
+
+var admins = members.filter(function(m) { return m.role === 'admin'; });
+var regulars = members.filter(function(m) { return m.role !== 'admin'; });
+
+var html = '';
+if (admins.length) { html += '<div class="modal-section-title">Yönetici</div>'; admins.forEach(function(m) { html += renderMemberRow(m, profileMap[m.user_id]); }); }
+if (regulars.length) { html += '<div class="modal-section-title">Üyeler (' + regulars.length + ')</div>'; regulars.forEach(function(m) { html += renderMemberRow(m, profileMap[m.user_id]); }); }
+document.getElementById('modalBody').innerHTML = html;
+
+var leaveBtn = document.getElementById('leaveBtn');
+if (isMember) { leaveBtn.style.display = 'block'; leaveBtn.onclick = leaveGroup; }
+else leaveBtn.style.display = 'none';
+}
+
+function renderMemberRow(m, profile) {
+if (!profile) profile = { full_name: 'İsimsiz', username: 'kullanici', avatar: 'harf' };
+var badge = m.role === 'admin' ? '<span class="member-badge">Admin</span>' : '';
+var isSelf = m.user_id === currentUser.id ? ' (sen)' : '';
+return '<a class="member-item" href="kullanici.html?id=' + m.user_id + '">' + getAvatar(profile, 38) + '<div class="member-info"><div class="member-name">' + escapeHtml(profile.full_name) + isSelf + '</div><div class="member-username">@' + escapeHtml(profile.username) + '</div></div>' + badge + '</a>';
+}
+
+function closeMembersModal() { document.getElementById('membersModal').classList.remove('open'); }
+
+async function leaveGroup() {
+if (!confirm('Bu gruptan ayrılmak istediğine emin misin?')) return;
+var res = await supabaseClient.from('group_members').delete().eq('group_id', groupId).eq('user_id', currentUser.id);
+if (res.error) { alert('Hata: ' + res.error.message); return; }
+window.location.href = 'gruplar.html';
+}
+})();
+</script>
+</body>
+</html>

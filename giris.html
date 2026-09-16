@@ -1,303 +1,343 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Giriş Yap • Katran Dergi</title>
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --katran: #0a0808;
-            --karanfil: #e03131;
-            --kagit: #f4efe8;
-            --toz: #a89e94;
-            --font-serif: 'Playfair Display', serif;
-            --font-sans: 'Inter', sans-serif;
-        }
-        
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: var(--font-sans);
-            background: var(--katran);
-            color: var(--kagit);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 20% 30%, rgba(224,49,49,0.08) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(224,49,49,0.05) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 440px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 3rem 2.5rem;
-            backdrop-filter: blur(20px);
-            position: relative;
-            z-index: 1;
-            animation: fadeIn 0.8s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .flower {
-            font-size: 2.5rem;
-            color: var(--karanfil);
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        
-        h1 {
-            font-family: var(--font-serif);
-            font-size: 2rem;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: var(--toz);
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-            font-style: italic;
-        }
-        
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-        
-        label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--toz);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        
-        input {
-            width: 100%;
-            padding: 0.9rem 1.2rem;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            color: var(--kagit);
-            font-family: var(--font-sans);
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: var(--karanfil);
-            background: rgba(224,49,49,0.05);
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 1rem;
-            background: var(--karanfil);
-            color: var(--kagit);
-            border: none;
-            border-radius: 60px;
-            font-family: var(--font-sans);
-            font-size: 0.95rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 0.5rem;
-        }
-        
-        .btn:hover:not(:disabled) {
-            background: #b71c1c;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px -8px rgba(224,49,49,0.4);
-        }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .message {
-            padding: 1rem 1.2rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            display: none;
-        }
-        
-        .message.error {
-            background: rgba(224,49,49,0.1);
-            border: 1px solid rgba(224,49,49,0.3);
-            color: #ff8a8a;
-            display: block;
-        }
-        
-        .message.success {
-            background: rgba(76,175,80,0.1);
-            border: 1px solid rgba(76,175,80,0.3);
-            color: #a5d6a7;
-            display: block;
-        }
-        
-        .forgot-link {
-            text-align: right;
-            margin-top: -0.5rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.8rem;
-        }
-        
-        .forgot-link a {
-            color: var(--toz);
-            text-decoration: none;
-        }
-        
-        .forgot-link a:hover {
-            color: var(--karanfil);
-        }
-        
-        .register-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            color: var(--toz);
-        }
-        
-        .register-link a {
-            color: var(--karanfil);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 1.5rem;
-            color: var(--toz);
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-        
-        .back-link:hover { color: var(--karanfil); }
-        
-        @media (max-width: 440px) {
-            .container { padding: 2rem 1.5rem; }
-            h1 { font-size: 1.6rem; }
-        }
-    </style>
+<meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Giriş Yap • Katran Dergi</title>
+<link rel="icon" type="image/svg+xml" href="gergedan.svg">
+<link rel="stylesheet" href="tema.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+font-family: 'Inter', -apple-system, sans-serif;
+background: var(--bg);
+color: var(--text);
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 2rem 1rem;
+transition: background 0.3s ease, color 0.3s ease;
+}
+
+.container {
+width: 100%;
+max-width: 440px;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 20px;
+padding: 3rem 2.5rem;
+position: relative;
+transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.logo-mark {
+display: block;
+width: 70px;
+height: 70px;
+margin: 0 auto 1.2rem;
+color: var(--bordo);
+transition: color 0.3s;
+}
+.logo-mark svg {
+width: 100%;
+height: 100%;
+stroke: currentColor;
+fill: none;
+stroke-width: 1.6;
+stroke-linecap: round;
+stroke-linejoin: round;
+}
+
+h1 {
+font-family: 'Playfair Display', serif;
+font-size: 1.8rem;
+font-weight: 900;
+text-align: center;
+margin-bottom: 0.4rem;
+color: var(--text);
+}
+.subtitle {
+text-align: center;
+color: var(--text-muted);
+font-size: 0.88rem;
+margin-bottom: 2rem;
+font-style: italic;
+}
+
+.form-group { margin-bottom: 1.2rem; }
+label {
+display: block;
+font-size: 0.82rem;
+color: var(--text-muted);
+margin-bottom: 0.5rem;
+font-weight: 600;
+letter-spacing: 0.02em;
+}
+input {
+width: 100%;
+padding: 0.9rem 1.2rem;
+background: var(--bg-elev-2);
+border: 1px solid var(--border);
+border-radius: 12px;
+color: var(--text);
+font-family: inherit;
+font-size: 0.95rem;
+transition: all 0.2s;
+}
+input::placeholder { color: var(--text-dim); }
+input:focus {
+outline: none;
+border-color: var(--bordo);
+background: var(--bordo-glow);
+}
+
+.btn {
+width: 100%;
+padding: 1rem;
+background: var(--bordo);
+color: #fff;
+border: none;
+border-radius: 60px;
+font-size: 0.95rem;
+font-weight: 700;
+cursor: pointer;
+font-family: inherit;
+margin-top: 0.5rem;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 0.5rem;
+transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn:hover:not(:disabled) {
+background: var(--bordo-dark);
+transform: translateY(-2px);
+box-shadow: 0 12px 30px -8px var(--bordo-glow);
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.message {
+padding: 1rem 1.2rem;
+border-radius: 12px;
+margin-bottom: 1.5rem;
+font-size: 0.9rem;
+line-height: 1.6;
+display: none;
+}
+.message.error {
+background: rgba(224,49,49,0.15);
+border: 1px solid rgba(224,49,49,0.4);
+color: #ff8a8a;
+display: block;
+}
+.message.success {
+background: rgba(16,185,129,0.12);
+border: 1px solid rgba(16,185,129,0.35);
+color: #6ee7b7;
+display: block;
+}
+.message.info {
+background: var(--bg-elev-2);
+border: 1px solid var(--border);
+color: var(--text-muted);
+display: block;
+}
+
+.forgot-link {
+text-align: right;
+margin-top: -0.5rem;
+margin-bottom: 1.5rem;
+font-size: 0.8rem;
+}
+.forgot-link a {
+color: var(--text-muted);
+text-decoration: none;
+transition: color 0.2s;
+}
+.forgot-link a:hover { color: var(--bordo); }
+
+.register-link {
+text-align: center;
+margin-top: 1.5rem;
+font-size: 0.9rem;
+color: var(--text-muted);
+}
+.register-link a {
+color: var(--bordo);
+text-decoration: none;
+font-weight: 700;
+}
+.register-link a:hover { text-decoration: underline; }
+
+.back-link {
+display: block;
+text-align: center;
+margin-top: 1.5rem;
+color: var(--text-muted);
+text-decoration: none;
+font-size: 0.85rem;
+transition: color 0.2s;
+}
+.back-link:hover { color: var(--bordo); }
+
+@media (max-width: 520px) {
+.container { padding: 2rem 1.5rem; }
+h1 { font-size: 1.5rem; }
+.logo-mark { width: 56px; height: 56px; margin-bottom: 1rem; }
+}
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="flower">❀</div>
-        <h1>Tekrar Hoş Geldin</h1>
-        <p class="subtitle">Kaldığın yerden devam et</p>
-        
-        <div id="message" class="message"></div>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">E-posta</label>
-                <input type="email" id="email" required placeholder="ornek@mail.com">
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Şifre</label>
-                <input type="password" id="password" required placeholder="••••••••">
-            </div>
-            
-            <p class="forgot-link"><a href="#" id="forgotBtn">Şifremi unuttum</a></p>
-            
-            <button type="submit" class="btn" id="submitBtn">Giriş Yap</button>
-        </form>
-        
-        <p class="register-link">Hesabın yok mu? <a href="kayit.html">Başvur</a></p>
-        <a href="index.html" class="back-link">← Ana Sayfa</a>
-    </div>
+<div class="container">
 
-    <!-- SCRIPTS BAĞLANTILARI (SIRASI DÜZELTİLDİ) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    <script src="auth.js"></script> <!-- auth.js yüklendi -->
-    
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const messageDiv = document.getElementById('message');
-            
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Giriş yapılmakta...';
-            messageDiv.style.display = 'none';
-            messageDiv.className = 'message';
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            
-            try {
-                // İşlemi doğrudan auth.js içindeki güvenli signIn fonksiyonuna devrediyoruz
-                const result = await signIn(email, password);
-                
-                if (result.success) {
-                    messageDiv.className = 'message success';
-                    messageDiv.textContent = 'Giriş başarılı! Profilinize yönlendiriliyorsunuz...';
-                    setTimeout(() => {
-                        window.location.href = 'profil.html';
-                    }, 1000);
-                } else {
-                    messageDiv.className = 'message error';
-                    messageDiv.textContent = result.message;
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Giriş Yap';
-                }
-                
-            } catch (err) {
-                messageDiv.className = 'message error';
-                messageDiv.textContent = 'Sistem Hatası: ' + err.message;
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Giriş Yap';
-            }
-        });
-        
-        // Şifremi unuttum tetikleyicisi
-        document.getElementById('forgotBtn').addEventListener('click', async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            if (!email) {
-                alert('Lütfen önce yukarıdaki kutuya e-posta adresinizi yazın.');
-                return;
-            }
-            
-            const result = await resetPassword(email);
-            alert(result.message);
-        });
-    </script>
+<div style="text-align: center; margin-bottom: 1.5rem;">
+  <span style="font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900; letter-spacing: 0.3em; color: var(--bordo);">KATRAN</span>
+</div>
 
+<h1>Tekrar Hoş Geldin</h1>
+<p class="subtitle">Kaldığın yerden devam et</p>
+
+<div id="message" class="message"></div>
+
+<form id="loginForm">
+<div class="form-group">
+<label for="email">E-posta</label>
+<input type="email" id="email" required placeholder="ornek@mail.com" autocomplete="email">
+</div>
+<div class="form-group">
+<label for="password">Şifre</label>
+<input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
+</div>
+<p class="forgot-link"><a href="#" id="forgotBtn">Şifremi unuttum</a></p>
+<button type="submit" class="btn" id="submitBtn">Giriş Yap</button>
+</form>
+
+<p class="register-link">Hesabın yok mu? <a href="kayit.html">Başvur</a></p>
+<a href="index.html" class="back-link">← Ana Sayfa</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
+
+var messageDiv = document.getElementById('message');
+var submitBtn = document.getElementById('submitBtn');
+
+function showError(msg) {
+messageDiv.className = 'message error';
+messageDiv.style.display = 'block';
+messageDiv.textContent = msg;
+}
+function showSuccess(msg) {
+messageDiv.className = 'message success';
+messageDiv.style.display = 'block';
+messageDiv.textContent = msg;
+}
+function showInfo(msg) {
+messageDiv.className = 'message info';
+messageDiv.style.display = 'block';
+messageDiv.textContent = msg;
+}
+
+function translateError(message) {
+if (!message) return 'Bilinmeyen bir hata oluştu.';
+var errors = {
+'Invalid login credentials': 'E-posta veya şifre hatalı.',
+'Email not confirmed': 'E-posta adresiniz henüz doğrulanmamış.',
+'User already registered': 'Bu e-posta adresi ile zaten kayıt olunmuş.',
+'Password should be at least 6 characters': 'Şifre en az 6 karakter olmalıdır.',
+'Email rate limit exceeded': 'Çok fazla istek gönderildi. Lütfen bekleyin.'
+};
+return errors[message] || message;
+}
+
+var supabaseClient;
+try {
+supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+showError('❌ Supabase bağlantısı kurulamadı: ' + e.message);
+return;
+}
+
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+e.preventDefault();
+
+submitBtn.disabled = true;
+submitBtn.textContent = 'Giriş yapılmakta...';
+showInfo('⏳ Giriş yapılıyor...');
+
+var email = document.getElementById('email').value.trim();
+var password = document.getElementById('password').value;
+
+if (!email || !password) {
+showError('❌ E-posta ve şifre gerekli.');
+submitBtn.disabled = false;
+submitBtn.textContent = 'Giriş Yap';
+return;
+}
+
+try {
+var result = await supabaseClient.auth.signInWithPassword({
+email: email,
+password: password
+});
+
+if (result.error) {
+showError('❌ ' + translateError(result.error.message));
+submitBtn.disabled = false;
+submitBtn.textContent = 'Giriş Yap';
+return;
+}
+
+showSuccess('✅ Giriş başarılı! Yönlendiriliyorsunuz...');
+setTimeout(function() {
+window.location.href = 'akis.html';
+}, 1000);
+
+} catch (err) {
+showError('💥 Sistem Hatası: ' + (err.message || err));
+submitBtn.disabled = false;
+submitBtn.textContent = 'Giriş Yap';
+}
+});
+
+document.getElementById('forgotBtn').addEventListener('click', async function(e) {
+e.preventDefault();
+var email = document.getElementById('email').value.trim();
+if (!email) { alert('Lütfen önce e-posta adresinizi yazın.'); return; }
+
+try {
+var res = await supabaseClient.auth.resetPasswordForEmail(email, {
+redirectTo: window.location.origin + '/giris.html'
+});
+if (res.error) {
+alert('❌ ' + translateError(res.error.message));
+} else {
+alert('✅ Şifre sıfırlama bağlantısı e-postana gönderildi.');
+}
+} catch (err) {
+alert('💥 Hata: ' + err.message);
+}
+});
+
+})();
+</script>
 </body>
 </html>

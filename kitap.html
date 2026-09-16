@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kitap • Katran Dergi</title>
+<link rel="stylesheet" href="tema.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Inter', -apple-system, sans-serif;
+background: var(--bg, #0a0808);
+color: var(--text, #f4efe8);
+min-height: 100vh;
+padding: 1.5rem 1rem 100px;
+transition: background 0.3s ease, color 0.3s ease;
+}
+.container { max-width: 700px; margin: 0 auto; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.back-link {
+color: var(--text-muted, #a89e94);
+text-decoration: none;
+font-size: 0.85rem;
+padding: 0.4rem 0.9rem;
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 60px;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+transition: all 0.2s;
+background: var(--bg-elev, rgba(255,255,255,0.03));
+}
+.back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.back-link:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.25)); }
+
+.book-header {
+background: var(--bg-elev, rgba(255,255,255,0.03));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 20px;
+padding: 1.5rem;
+margin-bottom: 1rem;
+display: grid;
+grid-template-columns: 120px 1fr;
+gap: 1.2rem;
+align-items: start;
+}
+.book-cover { width: 120px; height: 180px; border-radius: 6px 8px 8px 6px; background: var(--bg-elev-2, rgba(255,255,255,0.06)); object-fit: cover; box-shadow: 0 8px 24px -6px rgba(0,0,0,0.5); }
+.book-cover-placeholder {
+width: 120px;
+height: 180px;
+border-radius: 6px 8px 8px 6px;
+background: linear-gradient(135deg, var(--bordo, #8b2e3e), var(--bordo-dark, #6b1f2e));
+display: flex;
+align-items: center;
+justify-content: center;
+color: #fff;
+font-family: 'Playfair Display', serif;
+font-size: 3rem;
+font-weight: 900;
+box-shadow: 0 8px 24px -6px rgba(0,0,0,0.5);
+}
+.book-details { min-width: 0; }
+.book-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; line-height: 1.25; margin-bottom: 0.4rem; color: var(--text, #f4efe8); }
+.book-author { color: var(--text-muted, #a89e94); font-size: 0.9rem; margin-bottom: 0.7rem; }
+.book-meta-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.7rem; }
+.book-meta-chip { background: var(--bg-elev-2, rgba(255,255,255,0.06)); color: var(--text-muted, #a89e94); font-size: 0.72rem; padding: 0.25rem 0.65rem; border-radius: 60px; }
+.book-meta-chip.category { background: var(--bordo-glow, rgba(139,46,62,0.25)); color: var(--bordo, #8b2e3e); }
+
+.rating-display { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; }
+.stars { display: flex; gap: 0.15rem; }
+.star { width: 20px; height: 20px; fill: none; stroke: var(--text-dim, #7a7068); stroke-width: 1.5; transition: all 0.2s; }
+.star.filled { fill: #f5a623; stroke: #f5a623; }
+.rating-text { color: var(--text-muted, #a89e94); font-size: 0.85rem; }
+.rating-text strong { color: var(--text, #f4efe8); font-weight: 700; }
+
+.shelf-buttons { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.shelf-btn {
+background: transparent;
+color: var(--text-muted, #a89e94);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 60px;
+padding: 0.55rem 1rem;
+font-size: 0.78rem;
+cursor: pointer;
+font-family: inherit;
+font-weight: 600;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+transition: all 0.2s;
+}
+.shelf-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.shelf-btn:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.shelf-btn.active { background: var(--bordo, #8b2e3e); color: #fff; border-color: var(--bordo, #8b2e3e); }
+
+.section { background: var(--bg-elev, rgba(255,255,255,0.03)); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 16px; padding: 1.3rem; margin-bottom: 1rem; }
+.section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8rem; }
+.section h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text, #f4efe8); }
+.section-link {
+color: var(--bordo, #8b2e3e);
+font-size: 0.75rem;
+text-decoration: none;
+transition: color 0.2s;
+font-weight: 600;
+cursor: pointer;
+background: transparent;
+border: none;
+font-family: inherit;
+padding: 0;
+}
+.section-link:hover { text-decoration: underline; }
+.section p { color: var(--text-muted, #a89e94); font-size: 0.92rem; line-height: 1.7; white-space: pre-wrap; word-wrap: break-word; }
+.desc-source {
+display: inline-block;
+font-size: 0.7rem;
+color: var(--text-dim, #7a7068);
+font-style: italic;
+margin-top: 0.6rem;
+}
+.desc-source.tr { color: var(--bordo, #8b2e3e); font-style: normal; font-weight: 600; }
+
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-bottom: 1rem; }
+.stat-box {
+background: var(--bg-elev, rgba(255,255,255,0.03));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 14px;
+padding: 1rem 0.4rem;
+text-align: center;
+cursor: pointer;
+transition: all 0.25s;
+}
+.stat-box:hover { border-color: var(--bordo, #8b2e3e); transform: translateY(-2px); }
+.stat-box .number { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--bordo, #8b2e3e); display: block; line-height: 1; }
+.stat-box .label { font-size: 0.7rem; color: var(--text-muted, #a89e94); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem; }
+
+.quote-item { background: var(--bg-elev-2, rgba(255,255,255,0.06)); border-left: 3px solid var(--bordo, #8b2e3e); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 0.7rem; cursor: pointer; transition: all 0.2s; }
+.quote-item:last-child { margin-bottom: 0; }
+.quote-item:hover { background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.92rem; line-height: 1.6; color: var(--text, #f4efe8); margin-bottom: 0.5rem; }
+.quote-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted, #a89e94); gap: 0.5rem; flex-wrap: wrap; }
+.quote-user { font-weight: 600; color: var(--bordo, #8b2e3e); text-decoration: none; }
+.quote-user:hover { text-decoration: underline; }
+
+.user-row { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)); text-decoration: none; color: inherit; transition: all 0.15s; }
+.user-row:last-child { border-bottom: none; padding-bottom: 0; }
+.user-row:first-child { padding-top: 0; }
+.user-row:hover { padding-left: 0.5rem; }
+.user-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--bordo, #8b2e3e), var(--bordo-dark, #6b1f2e)); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; flex-shrink: 0; font-size: 0.85rem; }
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-weight: 700; font-size: 0.88rem; color: var(--text, #f4efe8); }
+.user-username { color: var(--text-muted, #a89e94); font-size: 0.78rem; }
+
+/* MODAL */
+.modal-backdrop {
+position: fixed; inset: 0;
+background: rgba(0,0,0,0.75);
+backdrop-filter: blur(6px);
+z-index: 9998;
+display: none;
+align-items: center;
+justify-content: center;
+padding: 1rem;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+background: var(--bg, #0a0808);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 20px;
+max-width: 500px;
+width: 100%;
+max-height: 90vh;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.5));
+}
+.modal-header {
+padding: 1.2rem 1.5rem;
+border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text, #f4efe8); }
+.modal-close {
+background: transparent;
+border: none;
+color: var(--text-muted, #a89e94);
+cursor: pointer;
+padding: 0.4rem;
+border-radius: 50%;
+display: flex;
+transition: all 0.2s;
+}
+.modal-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.modal-close:hover { color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.25)); }
+.modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; }
+.field { margin-bottom: 1rem; }
+.field label { display: block; font-size: 0.8rem; color: var(--text-muted, #a89e94); margin-bottom: 0.4rem; font-weight: 600; }
+.field input,
+.field textarea {
+width: 100%;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 12px;
+padding: 0.8rem 1rem;
+color: var(--text, #f4efe8);
+font-family: inherit;
+font-size: 0.95rem;
+transition: all 0.2s;
+}
+.field input::placeholder,
+.field textarea::placeholder { color: var(--text-dim, #7a7068); }
+.field input:focus,
+.field textarea:focus { outline: none; border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.field textarea { min-height: 140px; resize: vertical; line-height: 1.7; }
+.field-hint { font-size: 0.75rem; color: var(--text-dim, #7a7068); margin-top: 0.3rem; font-style: italic; }
+.char-count { text-align: right; color: var(--text-dim, #7a7068); font-size: 0.72rem; margin-top: 0.3rem; }
+.modal-footer {
+padding: 1rem 1.5rem;
+border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+display: flex;
+gap: 0.5rem;
+justify-content: flex-end;
+}
+.btn {
+padding: 0.75rem 1.5rem;
+border-radius: 60px;
+border: none;
+font-weight: 700;
+font-size: 0.9rem;
+cursor: pointer;
+font-family: inherit;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+transition: all 0.2s;
+}
+.btn-primary { background: var(--bordo, #8b2e3e); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--bordo-dark, #6b1f2e); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-cancel {
+background: transparent;
+color: var(--text-muted, #a89e94);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+}
+.btn-cancel:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); }
+
+/* PUAN MODAL */
+.rating-stars { display: flex; justify-content: center; gap: 0.5rem; margin: 1rem 0; }
+.rating-star { width: 42px; height: 42px; cursor: pointer; fill: none; stroke: var(--text-dim, #7a7068); stroke-width: 1.5; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.rating-star:hover, .rating-star.active { fill: #f5a623; stroke: #f5a623; transform: scale(1.15); }
+.rating-hint { text-align: center; color: var(--text-muted, #a89e94); font-size: 0.85rem; margin-top: 0.5rem; }
+
+.loading, .empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted, #a89e94); font-size: 0.9rem; }
+.spinner {
+width: 32px;
+height: 32px;
+border: 3px solid var(--border, rgba(255,255,255,0.08));
+border-top-color: var(--bordo, #8b2e3e);
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.toast {
+position: fixed;
+bottom: 100px;
+left: 50%;
+transform: translateX(-50%) translateY(100px);
+background: var(--bordo, #8b2e3e);
+color: #fff;
+padding: 0.8rem 1.5rem;
+border-radius: 60px;
+font-weight: 600;
+font-size: 0.9rem;
+transition: transform 0.3s;
+z-index: 9999;
+max-width: 90%;
+text-align: center;
+box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.5));
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { background: #e03131; }
+
+@media (max-width: 520px) {
+.container { padding: 1rem 0.8rem; }
+.book-header { grid-template-columns: 90px 1fr; gap: 0.9rem; padding: 1.2rem; }
+.book-cover, .book-cover-placeholder { width: 90px; height: 135px; }
+.book-cover-placeholder { font-size: 2.2rem; }
+.book-title { font-size: 1.1rem; }
+.star { width: 18px; height: 18px; }
+.rating-star { width: 36px; height: 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="top-bar">
+<a href="kitapligim.html" class="back-link">
+<svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+Geri
+</a>
+</div>
+
+<div id="content">
+<div class="loading"><div class="spinner"></div>Yükleniyor...</div>
+</div>
+</div>
+
+<!-- PUAN MODAL -->
+<div class="modal-backdrop" id="ratingModal">
+<div class="modal">
+<div class="modal-header">
+<h3>Puan Ver</h3>
+<button class="modal-close" id="ratingClose">
+<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+</div>
+<div class="modal-body">
+<p style="text-align:center;color:var(--text-muted);font-size:0.9rem;">Bu kitaba kaç yıldız verirsin?</p>
+<div class="rating-stars" id="ratingStars">
+<svg class="rating-star" data-value="1" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+<svg class="rating-star" data-value="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+<svg class="rating-star" data-value="3" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+<svg class="rating-star" data-value="4" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+<svg class="rating-star" data-value="5" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+</div>
+<p class="rating-hint" id="ratingHint">Bir yıldız seç</p>
+</div>
+</div>
+</div>
+
+<!-- AÇIKLAMA EKLE MODAL -->
+<div class="modal-backdrop" id="descModal">
+<div class="modal">
+<div class="modal-header">
+<h3 id="descModalTitle">Türkçe Açıklama Ekle</h3>
+<button class="modal-close" id="descClose">
+<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+</div>
+<div class="modal-body">
+<p style="color:var(--text-muted);font-size:0.88rem;line-height:1.6;margin-bottom:1.2rem;">
+Bu kitabın <strong>Türkçe açıklaması</strong> yok veya eksik. Lütfen kendi cümlelerinle bir açıklama yaz. Bu katkı <strong>tüm Katran okuyucuları</strong> için geçerli olacak. 🙏
+</p>
+
+<div class="field">
+<label for="descText">Açıklama <span style="color:var(--bordo)">*</span></label>
+<textarea id="descText" maxlength="1000" placeholder="Kitap ne hakkında? Kısaca anlat..." style="min-height: 120px; font-family: 'Inter', sans-serif; font-style: normal;"></textarea>
+<div class="char-count" id="descCount">0 / 1000</div>
+<div class="field-hint">Min. 50 karakter olmalı.</div>
+</div>
+
+<div class="field">
+<label for="catText">Kategoriler (opsiyonel)</label>
+<input type="text" id="catText" maxlength="200" placeholder="Örn: Roman, Polisiye, Klasik">
+<div class="field-hint">Virgülle ayır. En fazla 4 kategori.</div>
+</div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-cancel" id="descCancel">İptal</button>
+<button class="btn btn-primary" id="descSave">Katkıyı Gönder</button>
+</div>
+</div>
+</div>
+
+<!-- KULLANICI LİSTESİ MODAL -->
+<div class="modal-backdrop" id="userListModal">
+<div class="modal">
+<div class="modal-header">
+<h3 id="userListTitle">Kullanıcılar</h3>
+<button class="modal-close" id="userListClose">
+<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+</div>
+<div class="modal-body" id="userListBody"></div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
+
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var currentUser = null;
+var currentProfile = null;
+var bookId = null;
+var bookData = null;
+var myUserBook = null;
+var myRating = 0;
+
+var ICONS = {
+bookOpen: '<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+bookmark: '<svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>',
+checkCircle: '<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+star: '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+pencil: '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
+};
+
+function escapeHtml(str) {
+if (!str) return '';
+return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function toast(msg, isError) {
+var t = document.getElementById('toast');
+t.textContent = msg;
+t.className = 'toast show' + (isError ? ' error' : '');
+setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+// ---------- AÇIKLAMANIN TÜRKÇE OLUP OLMADIĞINI KONTROL ET ----------
+function looksTurkish(text) {
+  if (!text) return false;
+  var lower = text.toLowerCase();
+  // Türkçe'ye özgü karakterler veya sık kullanılan kelimeler
+  var turkishChars = /[çğıöşüÇĞİÖŞÜ]/;
+  var turkishWords = /\b(ve|ile|bir|bu|için|olarak|daha|çok|kitap|yazar|roman|hikaye|kişi|zaman|yer|olarak)\b/;
+  return turkishChars.test(text) || turkishWords.test(lower);
+}
+
+// BAŞLAT
+(async function init() {
+var urlParams = new URLSearchParams(window.location.search);
+bookId = urlParams.get('id');
+if (!bookId) {
+document.getElementById('content').innerHTML = '<div class="empty">Kitap belirtilmedi.</div>';
+return;
+}
+
+var sessionRes = await supabaseClient.auth.getSession();
+if (sessionRes.data.session) {
+currentUser = sessionRes.data.session.user;
+var profRes = await supabaseClient.from('profiles').select('status, rank').eq('id', currentUser.id).single();
+if (profRes.data && profRes.data.status === 'approved') currentProfile = profRes.data;
+}
+
+var bookRes = await supabaseClient.from('books').select('*').eq('id', bookId).single();
+if (bookRes.error || !bookRes.data) {
+document.getElementById('content').innerHTML = '<div class="empty">Kitap bulunamadı.</div>';
+return;
+}
+bookData = bookRes.data;
+
+// Eğer Türkçe açıklama yoksa ve orijinal açıklama varsa, otomatik Open Library'den çek (fallback)
+if (!bookData.description_tr && !bookData.description && bookData.external_id && bookData.source === 'openlibrary') {
+try {
+var olRes = await fetch('https://openlibrary.org/works/' + bookData.external_id + '.json');
+if (olRes.ok) {
+var olData = await olRes.json();
+var desc = olData.description;
+if (desc && typeof desc === 'object') desc = desc.value;
+var subj = olData.subjects ? olData.subjects.slice(0, 5).join(', ') : null;
+if (desc || subj) {
+await supabaseClient.from('books').update({ description: desc, subjects: subj }).eq('id', bookId);
+bookData.description = desc;
+bookData.subjects = subj;
+}
+}
+} catch (e) { console.warn(e); }
+}
+
+if (currentUser) {
+var ubRes = await supabaseClient.from('user_books').select('*').eq('user_id', currentUser.id).eq('book_id', bookId).maybeSingle();
+myUserBook = ubRes.data;
+if (myUserBook && myUserBook.rating) myRating = myUserBook.rating;
+}
+
+renderBook();
+})();
+
+function renderBook() {
+var container = document.getElementById('content');
+
+var coverHtml = bookData.cover_url
+? '<img class="book-cover" src="' + escapeHtml(bookData.cover_url) + '" alt="" onerror="this.outerHTML=\'<div class=&quot;book-cover-placeholder&quot;>' + escapeHtml((bookData.title || '?').charAt(0).toUpperCase()) + '</div>\'">'
+: '<div class="book-cover-placeholder">' + escapeHtml((bookData.title || '?').charAt(0).toUpperCase()) + '</div>';
+
+var metaChips = [];
+if (bookData.published_year) metaChips.push('<span class="book-meta-chip">' + bookData.published_year + '</span>');
+if (bookData.page_count) metaChips.push('<span class="book-meta-chip">' + bookData.page_count + ' sayfa</span>');
+
+// Kategori: önce Türkçe, sonra orijinal
+var catsText = bookData.subjects_tr || bookData.subjects;
+var categoryChips = '';
+if (catsText) {
+var cats = catsText.split(',').map(function(s) { return s.trim(); }).filter(Boolean).slice(0, 4);
+categoryChips = cats.map(function(c) { return '<span class="book-meta-chip category">' + escapeHtml(c) + '</span>'; }).join('');
+}
+
+var avgRating = bookData.rating_count > 0 ? (bookData.rating_sum / bookData.rating_count).toFixed(1) : 0;
+var starsHtml = '';
+for (var i = 1; i <= 5; i++) {
+var filled = avgRating >= i ? 'filled' : '';
+starsHtml += '<svg class="star ' + filled + '" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+}
+
+// AÇIKLAMA KONTROLÜ
+var descText = bookData.description_tr || bookData.description;
+var isTr = bookData.description_tr ? true : looksTurkish(descText);
+var hasDesc = descText && descText.trim();
+
+var html = '';
+html += '<div class="book-header">';
+html += coverHtml;
+html += '<div class="book-details">';
+html += '<h1 class="book-title">' + escapeHtml(bookData.title || 'İsimsiz') + '</h1>';
+html += '<p class="book-author">' + escapeHtml(bookData.author || 'Bilinmeyen yazar') + '</p>';
+if (metaChips.length || categoryChips) {
+html += '<div class="book-meta-list">' + metaChips.join('') + categoryChips + '</div>';
+}
+html += '<div class="rating-display">';
+html += '<div class="stars">' + starsHtml + '</div>';
+html += '<span class="rating-text">' + (avgRating > 0 ? '<strong>' + avgRating + '</strong> (' + bookData.rating_count + ' oy)' : 'Henüz puan yok') + '</span>';
+html += '</div>';
+html += '<div class="shelf-buttons" id="shelfButtons"></div>';
+html += '</div></div>';
+
+html += '<div class="stats-row">';
+html += '<div class="stat-box" onclick="showUserList(\'read\')"><span class="number" id="statRead">0</span><span class="label">Okudu</span></div>';
+html += '<div class="stat-box" onclick="showUserList(\'reading\')"><span class="number" id="statReading">0</span><span class="label">Okuyor</span></div>';
+html += '<div class="stat-box" onclick="showUserList(\'want\')"><span class="number" id="statWant">0</span><span class="label">Okuyacak</span></div>';
+html += '</div>';
+
+// AÇIKLAMA BÖLÜMÜ
+html += '<div class="section">';
+html += '<div class="section-header">';
+html += '<h2>Açıklama</h2>';
+if (currentUser) {
+html += '<button class="section-link" onclick="openDescModal()">' + (hasDesc && isTr ? 'Düzenle' : 'Türkçe Açıklama Ekle') + '</button>';
+}
+html += '</div>';
+
+if (!hasDesc) {
+html += '<p style="color:var(--text-dim);font-style:italic;">Bu kitap için henüz açıklama yok. ' + (currentUser ? 'İlk ekleyen sen ol!' : '') + '</p>';
+} else {
+html += '<p>' + escapeHtml(descText) + '</p>';
+if (bookData.description_tr) {
+html += '<span class="desc-source tr">✓ Türkçe (topluluk katkısı' + (bookData.contribution_count > 0 ? ' · ' + bookData.contribution_count + ' katkı' : '') + ')</span>';
+} else if (!isTr) {
+html += '<span class="desc-source">Çeviri: Open Library (İngilizce orijinal).Türkçe açıklama ekleyerek bize destek ol.</span>';
+}
+}
+
+html += '</div>';
+
+// ALINTILAR
+html += '<div class="section">';
+html += '<div class="section-header"><h2>Bu Kitaptan Alıntılar</h2></div>';
+html += '<div id="quotesContainer"><div class="loading" style="padding:1rem;font-size:0.85rem;">Yükleniyor...</div></div>';
+html += '</div>';
+
+container.innerHTML = html;
+
+renderShelfButtons();
+loadStats();
+loadQuotes();
+}
+
+function renderShelfButtons() {
+var container = document.getElementById('shelfButtons');
+if (!currentUser) {
+container.innerHTML = '<a href="giris.html" class="shelf-btn">' + ICONS.bookmark + ' Rafıma Ekle</a>';
+return;
+}
+
+var status = myUserBook ? myUserBook.status : null;
+var html = '';
+html += '<button class="shelf-btn ' + (status === 'want' ? 'active' : '') + '" onclick="setStatus(\'want\')">' + ICONS.bookmark + ' Okuyacağım</button>';
+html += '<button class="shelf-btn ' + (status === 'reading' ? 'active' : '') + '" onclick="setStatus(\'reading\')">' + ICONS.bookOpen + ' Okuyorum</button>';
+html += '<button class="shelf-btn ' + (status === 'read' ? 'active' : '') + '" onclick="setStatus(\'read\')">' + ICONS.checkCircle + ' Okudum</button>';
+if (status === 'read') {
+html += '<button class="shelf-btn ' + (myRating > 0 ? 'active' : '') + '" onclick="openRating()">' + ICONS.star + ' ' + (myRating > 0 ? myRating + ' yıldız' : 'Puan Ver') + '</button>';
+html += '<a href="analiz.html?book=' + bookId + '" class="shelf-btn" style="text-decoration:none;">' + ICONS.pencil + ' Analiz Yaz</a>';
+}
+container.innerHTML = html;
+}
+
+window.setStatus = async function(status) {
+if (!currentUser) { toast('Giriş yapmalısın'); return; }
+var existing = myUserBook ? myUserBook.status : null;
+
+if (existing === status) {
+await supabaseClient.from('user_books').delete().eq('user_id', currentUser.id).eq('book_id', bookId);
+myUserBook = null;
+myRating = 0;
+toast('Rafından kaldırıldı');
+renderShelfButtons();
+loadStats();
+return;
+}
+
+if (status === 'read') {
+// Okudum olarak kaydet
+if (existing) {
+  await supabaseClient.from('user_books').update({ status: 'read', finished_at: new Date().toISOString() }).eq('id', myUserBook.id);
+  myUserBook.status = 'read';
+} else {
+  var insRes = await supabaseClient.from('user_books').insert([{ user_id: currentUser.id, book_id: bookId, status: 'read', finished_at: new Date().toISOString() }]).select().single();
+  if (insRes.data) myUserBook = insRes.data;
+}
+toast('✅ Okundu olarak işaretlendi');
+renderShelfButtons();
+loadStats();
+// Analiz yazmak ister misin?
+setTimeout(function() {
+  if (confirm('Bu kitap hakkında analiz yazmak ister misin?')) {
+    window.location.href = 'analiz.html?book=' + bookId;
+  }
+}, 500);
+return;
+}
+
+if (existing) {
+await supabaseClient.from('user_books').update({ status: status, updated_at: new Date().toISOString() }).eq('id', myUserBook.id);
+myUserBook.status = status;
+} else {
+var insertRes = await supabaseClient.from('user_books').insert([{ user_id: currentUser.id, book_id: bookId, status: status }]).select().single();
+if (insertRes.data) myUserBook = insertRes.data;
+}
+toast(status === 'reading' ? '📖 Okunuyor' : '🔖 Okunacaklara eklendi');
+renderShelfButtons();
+loadStats();
+};
+
+// PUAN
+window.openRating = function() {
+document.getElementById('ratingModal').classList.add('open');
+updateRatingStars(myRating);
+};
+
+function updateRatingStars(value) {
+document.querySelectorAll('#ratingStars .rating-star').forEach(function(s) {
+var v = parseInt(s.getAttribute('data-value'));
+s.classList.toggle('active', v <= value);
+});
+var hints = ['Bir yıldız seç', 'Berbat', 'Fena değil', 'İyi', 'Çok iyi', 'Muhteşem!'];
+document.getElementById('ratingHint').textContent = hints[value] || 'Bir yıldız seç';
+}
+
+document.getElementById('ratingStars').addEventListener('click', async function(e) {
+var star = e.target.closest('.rating-star');
+if (!star) return;
+var value = parseInt(star.getAttribute('data-value'));
+myRating = value;
+updateRatingStars(value);
+
+if (myUserBook) {
+await supabaseClient.from('user_books').update({ rating: value }).eq('id', myUserBook.id);
+} else {
+await supabaseClient.from('user_books').insert([{ user_id: currentUser.id, book_id: bookId, status: 'read', rating: value }]);
+}
+
+var sumRes = await supabaseClient.from('user_books').select('rating').eq('book_id', bookId).not('rating', 'is', null);
+var ratings = (sumRes.data || []).map(function(r) { return r.rating; });
+var sum = ratings.reduce(function(a, b) { return a + b; }, 0);
+var count = ratings.length;
+await supabaseClient.from('books').update({ rating_sum: sum, rating_count: count }).eq('id', bookId);
+bookData.rating_sum = sum;
+bookData.rating_count = count;
+
+setTimeout(function() {
+document.getElementById('ratingModal').classList.remove('open');
+toast('Puanın kaydedildi: ' + value + ' yıldız');
+renderBook();
+}, 400);
+});
+
+document.getElementById('ratingClose').addEventListener('click', function() {
+document.getElementById('ratingModal').classList.remove('open');
+});
+document.getElementById('ratingModal').addEventListener('click', function(e) {
+if (e.target === this) this.classList.remove('open');
+});
+
+// AÇIKLAMA MODAL
+window.openDescModal = function() {
+if (!currentUser) { toast('Katkı için giriş yapmalısın', true); return; }
+document.getElementById('descText').value = bookData.description_tr || '';
+document.getElementById('catText').value = bookData.subjects_tr || '';
+document.getElementById('descCount').textContent = (bookData.description_tr || '').length + ' / 1000';
+document.getElementById('descModal').classList.add('open');
+setTimeout(function() { document.getElementById('descText').focus(); }, 100);
+};
+
+document.getElementById('descText').addEventListener('input', function() {
+document.getElementById('descCount').textContent = this.value.length + ' / 1000';
+});
+
+document.getElementById('descClose').addEventListener('click', function() {
+document.getElementById('descModal').classList.remove('open');
+});
+document.getElementById('descCancel').addEventListener('click', function() {
+document.getElementById('descModal').classList.remove('open');
+});
+document.getElementById('descModal').addEventListener('click', function(e) {
+if (e.target === this) this.classList.remove('open');
+});
+
+document.getElementById('descSave').addEventListener('click', async function() {
+if (!currentUser) return;
+var desc = document.getElementById('descText').value.trim();
+var cats = document.getElementById('catText').value.trim();
+
+if (desc.length < 50) {
+toast('❌ Açıklama en az 50 karakter olmalı', true);
+return;
+}
+
+var btn = this;
+btn.disabled = true;
+btn.textContent = 'Kaydediliyor...';
+
+var updates = {
+description_tr: desc,
+subjects_tr: cats || null,
+contributed_by: currentUser.id,
+contribution_count: (bookData.contribution_count || 0) + 1
+};
+
+var res = await supabaseClient.from('books').update(updates).eq('id', bookId);
+if (res.error) {
+toast('Hata: ' + res.error.message, true);
+btn.disabled = false;
+btn.textContent = 'Katkıyı Gönder';
+return;
+}
+
+bookData.description_tr = desc;
+bookData.subjects_tr = cats || null;
+bookData.contribution_count = updates.contribution_count;
+
+document.getElementById('descModal').classList.remove('open');
+toast('✅ Katkın için teşekkürler!');
+btn.disabled = false;
+btn.textContent = 'Katkıyı Gönder';
+renderBook();
+});
+
+// İSTATİSTİKLER
+async function loadStats() {
+var readRes = await supabaseClient.from('user_books').select('id', { count: 'exact', head: true }).eq('book_id', bookId).eq('status', 'read');
+var readingRes = await supabaseClient.from('user_books').select('id', { count: 'exact', head: true }).eq('book_id', bookId).eq('status', 'reading');
+var wantRes = await supabaseClient.from('user_books').select('id', { count: 'exact', head: true }).eq('book_id', bookId).eq('status', 'want');
+var el;
+if ((el = document.getElementById('statRead'))) el.textContent = readRes.count || 0;
+if ((el = document.getElementById('statReading'))) el.textContent = readingRes.count || 0;
+if ((el = document.getElementById('statWant'))) el.textContent = wantRes.count || 0;
+}
+
+// KULLANICI LİSTESİ
+window.showUserList = async function(type) {
+var titles = { read: 'Okuyanlar', reading: 'Okuyanlar', want: 'Okuyacaklar' };
+document.getElementById('userListTitle').textContent = titles[type] || 'Kullanıcılar';
+document.getElementById('userListBody').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Yükleniyor...</div>';
+document.getElementById('userListModal').classList.add('open');
+var res = await supabaseClient.from('user_books').select('user_id, finished_at').eq('book_id', bookId).eq('status', type);
+var userIds = (res.data || []).map(function(r) { return r.user_id; });
+if (!userIds.length) {
+document.getElementById('userListBody').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.9rem;">Henüz kimse yok.</div>';
+return;
+}
+var profRes = await supabaseClient.from('profiles').select('id, full_name, username').in('id', userIds);
+var profiles = profRes.data || [];
+var html = '';
+profiles.forEach(function(p) {
+var initial = (p.full_name || 'K').charAt(0).toUpperCase();
+html += '<a class="user-row" href="kullanici.html?id=' + p.id + '">';
+html += '<div class="user-avatar">' + initial + '</div>';
+html += '<div class="user-info"><div class="user-name">' + escapeHtml(p.full_name) + '</div><div class="user-username">@' + escapeHtml(p.username) + '</div></div></a>';
+});
+document.getElementById('userListBody').innerHTML = html;
+};
+
+document.getElementById('userListClose').addEventListener('click', function() {
+document.getElementById('userListModal').classList.remove('open');
+});
+document.getElementById('userListModal').addEventListener('click', function(e) {
+if (e.target === this) this.classList.remove('open');
+});
+
+// ALINTILAR
+async function loadQuotes() {
+var res = await supabaseClient.from('posts').select('id, content, quote_page, user_id, created_at').eq('book_id', bookId).not('content', 'is', null).order('created_at', { ascending: false }).limit(20);
+var container = document.getElementById('quotesContainer');
+var quotes = (res.data || []).filter(function(q) { return q.content && q.content.trim(); });
+if (!quotes.length) {
+container.innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem;font-style:italic;text-align:center;padding:0.8rem;">Henüz alıntı paylaşılmamış.</p>';
+return;
+}
+var userIds = quotes.map(function(q) { return q.user_id; }).filter(function(v, i, a) { return a.indexOf(v) === i; });
+var profRes = await supabaseClient.from('profiles').select('id, full_name, username').in('id', userIds);
+var profileMap = {};
+(profRes.data || []).forEach(function(p) { profileMap[p.id] = p; });
+var html = '';
+quotes.forEach(function(q) {
+var user = profileMap[q.user_id] || { full_name: 'İsimsiz', username: 'kullanici' };
+html += '<div class="quote-item" onclick="window.location.href=\'akis.html?post=' + q.id + '\'">';
+html += '<div class="quote-text">&#8220;' + escapeHtml(q.content) + '&#8221;</div>';
+html += '<div class="quote-meta">';
+html += '<a href="kullanici.html?id=' + q.user_id + '" class="quote-user" onclick="event.stopPropagation();">' + escapeHtml(user.full_name) + '</a>';
+if (q.quote_page) html += '<span>s. ' + q.quote_page + '</span>';
+html += '</div></div>';
+});
+container.innerHTML = html;
+}
+})();
+</script>
+</body>
+</html>

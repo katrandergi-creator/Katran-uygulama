@@ -1,171 +1,431 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Başvuru • Katran Dergi</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --katran: #0a0808;
-            --karanfil: #e03131;
-            --kagit: #f4efe8;
-            --toz: #a89e94;
-            --font-serif: 'Playfair Display', serif;
-            --font-sans: 'Inter', sans-serif;
-        }
-        body {
-            font-family: var(--font-sans);
-            background: var(--katran);
-            color: var(--kagit);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-        }
-        .container {
-            width: 100%;
-            max-width: 520px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            padding: 3rem 2.5rem;
-        }
-        .flower { font-size: 2.5rem; color: var(--karanfil); text-align: center; margin-bottom: 1rem; }
-        h1 { font-family: var(--font-serif); font-size: 2rem; font-weight: 900; text-align: center; margin-bottom: 0.5rem; }
-        .subtitle { text-align: center; color: var(--toz); font-size: 0.9rem; margin-bottom: 2rem; font-style: italic; }
-        .form-group { margin-bottom: 1.2rem; }
-        label { display: block; font-size: 0.85rem; color: var(--toz); margin-bottom: 0.5rem; font-weight: 500; }
-        input, textarea {
-            width: 100%; padding: 0.9rem 1.2rem;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px; color: var(--kagit);
-            font-family: var(--font-sans); font-size: 0.95rem;
-        }
-        input:focus, textarea:focus { outline: none; border-color: var(--karanfil); }
-        textarea { resize: vertical; min-height: 100px; font-family: var(--font-sans); }
-        .rules-check { display: flex; align-items: flex-start; gap: 0.7rem; margin: 1.5rem 0; font-size: 0.85rem; color: var(--toz); }
-        .rules-check input { width: auto; margin-top: 0.2rem; }
-        .rules-check a { color: var(--karanfil); }
-        .btn {
-            width: 100%; padding: 1rem;
-            background: var(--karanfil); color: var(--kagit);
-            border: none; border-radius: 60px;
-            font-family: var(--font-sans); font-size: 0.95rem;
-            font-weight: 700; cursor: pointer;
-            margin-top: 0.5rem;
-        }
-        .btn:hover:not(:disabled) { background: #b71c1c; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .message { padding: 1rem 1.2rem; border-radius: 10px; margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.6; display: none; }
-        .message.error { background: rgba(224,49,49,0.1); border: 1px solid rgba(224,49,49,0.3); color: #ff8a8a; display: block; }
-        .message.success { background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.3); color: #a5d6a7; display: block; }
-        .login-link { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--toz); }
-        .login-link a { color: var(--karanfil); text-decoration: none; font-weight: 600; }
-        .back-link { display: block; text-align: center; margin-top: 1.5rem; color: var(--toz); text-decoration: none; font-size: 0.85rem; }
-    </style>
+<meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Başvuru • Katran Dergi</title>
+<link rel="icon" type="image/svg+xml" href="gergedan.svg">
+<link rel="stylesheet" href="tema.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+font-family: 'Inter', -apple-system, sans-serif;
+background: var(--bg);
+color: var(--text);
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 2rem 1rem;
+transition: background 0.3s ease, color 0.3s ease;
+}
+
+.container {
+width: 100%;
+max-width: 520px;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 20px;
+padding: 3rem 2.5rem;
+transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.brand-top {
+text-align: center;
+margin-bottom: 1.5rem;
+}
+.brand-top .brand-name {
+font-family: 'Playfair Display', serif;
+font-size: 1.4rem;
+font-weight: 900;
+letter-spacing: 0.25em;
+color: var(--text);
+}
+.brand-top .brand-name .red { color: var(--bordo); }
+
+h1 {
+font-family: 'Playfair Display', serif;
+font-size: 1.8rem;
+font-weight: 900;
+text-align: center;
+margin-bottom: 0.4rem;
+color: var(--text);
+}
+.subtitle {
+text-align: center;
+color: var(--text-muted);
+font-size: 0.88rem;
+margin-bottom: 2rem;
+font-style: italic;
+}
+
+.form-group { margin-bottom: 1.2rem; }
+label {
+display: block;
+font-size: 0.82rem;
+color: var(--text-muted);
+margin-bottom: 0.5rem;
+font-weight: 600;
+letter-spacing: 0.02em;
+}
+input, textarea {
+width: 100%;
+padding: 0.9rem 1.2rem;
+background: var(--bg-elev-2);
+border: 1px solid var(--border);
+border-radius: 12px;
+color: var(--text);
+font-family: inherit;
+font-size: 0.95rem;
+transition: all 0.2s;
+}
+input::placeholder, textarea::placeholder { color: var(--text-dim); }
+input:focus, textarea:focus {
+outline: none;
+border-color: var(--bordo);
+background: var(--bordo-glow);
+}
+textarea {
+resize: vertical;
+min-height: 100px;
+line-height: 1.6;
+}
+
+.rules-check {
+display: flex;
+align-items: flex-start;
+gap: 0.7rem;
+margin: 1.5rem 0;
+font-size: 0.85rem;
+color: var(--text-muted);
+line-height: 1.5;
+}
+.rules-check input {
+width: 18px;
+height: 18px;
+margin-top: 0.15rem;
+accent-color: var(--bordo);
+cursor: pointer;
+flex-shrink: 0;
+}
+.rules-check label { margin: 0; cursor: pointer; }
+.rules-check a {
+color: var(--bordo);
+text-decoration: none;
+font-weight: 600;
+}
+.rules-check a:hover { text-decoration: underline; }
+
+.btn {
+width: 100%;
+padding: 1rem;
+background: var(--bordo);
+color: #fff;
+border: none;
+border-radius: 60px;
+font-size: 0.95rem;
+font-weight: 700;
+cursor: pointer;
+font-family: inherit;
+transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn:hover:not(:disabled) {
+background: var(--bordo-dark);
+transform: translateY(-2px);
+box-shadow: 0 12px 30px -8px var(--bordo-glow);
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.message {
+padding: 1rem 1.2rem;
+border-radius: 12px;
+margin-bottom: 1.5rem;
+font-size: 0.9rem;
+line-height: 1.6;
+display: none;
+}
+.message.error {
+background: rgba(224,49,49,0.15);
+border: 1px solid rgba(224,49,49,0.4);
+color: #ff8a8a;
+display: block;
+}
+.message.success {
+background: rgba(16,185,129,0.12);
+border: 1px solid rgba(16,185,129,0.35);
+color: #6ee7b7;
+display: block;
+}
+
+.login-link {
+text-align: center;
+margin-top: 1.5rem;
+font-size: 0.9rem;
+color: var(--text-muted);
+}
+.login-link a {
+color: var(--bordo);
+text-decoration: none;
+font-weight: 700;
+}
+.login-link a:hover { text-decoration: underline; }
+
+.back-link {
+display: block;
+text-align: center;
+margin-top: 1.5rem;
+color: var(--text-muted);
+text-decoration: none;
+font-size: 0.85rem;
+transition: color 0.2s;
+}
+.back-link:hover { color: var(--bordo); }
+
+.field-status {
+display: block;
+margin-top: 0.4rem;
+font-size: 0.8rem;
+min-height: 1rem;
+}
+
+@media (max-width: 520px) {
+.container { padding: 2rem 1.5rem; }
+h1 { font-size: 1.5rem; }
+.brand-top .brand-name { font-size: 1.2rem; }
+}
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="flower">❀</div>
-        <h1>Katran'a Başvur</h1>
-        <p class="subtitle">Kırmızı karanfil ektik, katranın bağrına</p>
-        
-        <div id="message" class="message"></div>
-        
-        <form id="applyForm">
-            <div class="form-group">
-                <label for="full_name">Adın Soyadın</label>
-                <input type="text" id="full_name" required placeholder="Örn: Ahmet Yılmaz">
-            </div>
-            <div class="form-group">
-                <label for="username">Kullanıcı Adın</label>
-                <input type="text" id="username" required placeholder="Örn: ahmet_y">
-            </div>
-            <div class="form-group">
-                <label for="email">E-posta Adresin</label>
-                <input type="email" id="email" required placeholder="ornek@mail.com">
-            </div>
-            <div class="form-group">
-                <label for="password">Şifre (en az 6 karakter)</label>
-                <input type="password" id="password" required minlength="6" placeholder="••••••••">
-            </div>
-            <div class="form-group">
-                <label for="reason">Neden Katran'a katılmak istiyorsun?</label>
-                <textarea id="reason" required minlength="30" placeholder="Kısaca kendinden bahset..."></textarea>
-            </div>
-            <div class="rules-check">
-                <input type="checkbox" id="rules" required>
-                <label for="rules" style="margin:0; cursor:pointer;">
-                    <a href="kurallar.html" target="_blank">Topluluk kurallarını</a> okudum ve kabul ediyorum.
-                </label>
-            </div>
-            <button type="submit" class="btn" id="submitBtn">Başvuruyu Gönder</button>
-        </form>
-        
-        <p class="login-link">Zaten hesabın var mı? <a href="giris.html">Giriş yap</a></p>
-        <a href="index.html" class="back-link">← Ana Sayfa</a>
-    </div>
+<div class="container">
 
-    <!-- SUPABASE SCRIPTS - DOĞRU SIRA -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    <script src="auth.js"></script>
-    
-    <!-- FORM MANTIĞI -->
-    <script>
-    window.addEventListener('DOMContentLoaded', function() {
-        console.log('🔵 Kayıt sayfası hazır');
-        
-        const form = document.getElementById('applyForm');
-        const msgDiv = document.getElementById('message');
-        
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            console.log('🟢 Form gönderiliyor...');
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Gönderiliyor...';
-            
-            msgDiv.style.display = 'none';
-            msgDiv.className = 'message';
-            
-            const formData = {
-                full_name: document.getElementById('full_name').value.trim(),
-                username: document.getElementById('username').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value,
-                reason: document.getElementById('reason').value.trim()
-            };
-            
-            console.log('📋 Form verisi:', formData);
-            
-            try {
-                const result = await applyAsMember(formData);
-                console.log('📤 Sonuç:', result);
-                
-                if (result.success) {
-                    msgDiv.className = 'message success';
-                    msgDiv.innerHTML = '<strong>✅ ' + result.message + '</strong>';
-                    form.reset();
-                } else {
-                    msgDiv.className = 'message error';
-                    msgDiv.textContent = '❌ ' + result.message;
-                }
-            } catch (err) {
-                console.error('❌ İstisna:', err);
-                msgDiv.className = 'message error';
-                msgDiv.textContent = '❌ Sistem Hatası: ' + err.message;
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Başvuruyu Gönder';
-            }
-        });
-    });
-    </script>
+<div class="brand-top">
+<div class="brand-name"><span class="red">KATRAN</span> DERGİ</div>
+</div>
+
+<h1>Katran'a Başvur</h1>
+<p class="subtitle">Kırmızı karanfil ektik, katranın bağrına</p>
+
+<div id="message" class="message"></div>
+
+<form id="applyForm">
+<div class="form-group">
+<label for="full_name">Adın Soyadın</label>
+<input type="text" id="full_name" required placeholder="Örn: Ahmet Yılmaz" autocomplete="name">
+</div>
+
+<div class="form-group">
+<label for="username">Kullanıcı Adın</label>
+<input type="text" id="username" required placeholder="Örn: ahmet_y" pattern="[a-zA-Z0-9_]{3,20}" autocomplete="off">
+<small class="field-status" id="usernameStatus"></small>
+</div>
+
+<div class="form-group">
+<label for="email">E-posta Adresin</label>
+<input type="email" id="email" required placeholder="ornek@mail.com" autocomplete="off">
+<small class="field-status" id="emailStatus"></small>
+</div>
+
+<div class="form-group">
+<label for="password">Şifre (en az 6 karakter)</label>
+<input type="password" id="password" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+</div>
+
+<div class="form-group">
+<label for="reason">Neden Katran'a katılmak istiyorsun?</label>
+<textarea id="reason" required minlength="30" placeholder="Kısaca kendinden ve Katran'a neden katılmak istediğinden bahset..."></textarea>
+</div>
+
+<div class="rules-check">
+<input type="checkbox" id="rules" required>
+<label for="rules">
+<a href="kurallar.html" target="_blank">Topluluk kurallarını</a> okudum ve kabul ediyorum.
+</label>
+</div>
+
+<button type="submit" class="btn" id="submitBtn">Başvuruyu Gönder</button>
+</form>
+
+<p class="login-link">Zaten hesabın var mı? <a href="giris.html">Giriş yap</a></p>
+<a href="index.html" class="back-link">← Ana Sayfa</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
+
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+var messageDiv = document.getElementById('message');
+var submitBtn = document.getElementById('submitBtn');
+
+// KULLANICI ADI KONTROL
+var usernameEl = document.getElementById('username');
+var usernameStatus = document.getElementById('usernameStatus');
+var usernameTimer = null;
+var usernameAvailable = false;
+
+usernameEl.addEventListener('input', function() {
+var val = usernameEl.value.trim();
+usernameAvailable = false;
+if (!val) { usernameStatus.textContent = ''; return; }
+
+if (!/^[a-zA-Z0-9_]{3,20}$/.test(val)) {
+usernameStatus.textContent = '⚠ Sadece harf, rakam ve _ (3-20 karakter)';
+usernameStatus.style.color = '#ffc107';
+return;
+}
+
+usernameStatus.textContent = '⏳ Kontrol ediliyor...';
+usernameStatus.style.color = 'var(--text-muted)';
+
+clearTimeout(usernameTimer);
+usernameTimer = setTimeout(async function() {
+var res = await supabaseClient.from('profiles').select('id').eq('username', val).limit(1);
+if (res.data && res.data.length > 0) {
+usernameStatus.textContent = '❌ Bu kullanıcı adı alınmış';
+usernameStatus.style.color = '#ff8a8a';
+usernameAvailable = false;
+} else {
+usernameStatus.textContent = '✓ Kullanılabilir';
+usernameStatus.style.color = '#81c784';
+usernameAvailable = true;
+}
+}, 500);
+});
+
+// EMAIL KONTROL
+var emailEl = document.getElementById('email');
+var emailStatus = document.getElementById('emailStatus');
+var emailTimer = null;
+var emailAvailable = false;
+
+emailEl.addEventListener('input', function() {
+var val = emailEl.value.trim().toLowerCase();
+emailAvailable = false;
+if (!val) { emailStatus.textContent = ''; return; }
+
+if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+emailStatus.textContent = '⚠ Geçerli bir e-posta gir';
+emailStatus.style.color = '#ffc107';
+return;
+}
+
+emailStatus.textContent = '⏳ Kontrol ediliyor...';
+emailStatus.style.color = 'var(--text-muted)';
+
+clearTimeout(emailTimer);
+emailTimer = setTimeout(async function() {
+var res = await supabaseClient.from('applications').select('id').eq('email', val).limit(1);
+if (res.data && res.data.length > 0) {
+emailStatus.textContent = '❌ Bu e-posta ile zaten başvuru yapılmış';
+emailStatus.style.color = '#ff8a8a';
+emailAvailable = false;
+} else {
+emailStatus.textContent = '✓ Kullanılabilir';
+emailStatus.style.color = '#81c784';
+emailAvailable = true;
+}
+}, 500);
+});
+
+// FORM GÖNDERİMİ
+document.getElementById('applyForm').addEventListener('submit', async function(e) {
+e.preventDefault();
+
+submitBtn.disabled = true;
+submitBtn.textContent = 'Gönderiliyor...';
+messageDiv.className = 'message';
+messageDiv.style.display = 'none';
+
+var formData = {
+full_name: document.getElementById('full_name').value.trim(),
+username: usernameEl.value.trim(),
+email: emailEl.value.trim().toLowerCase(),
+password: document.getElementById('password').value,
+reason: document.getElementById('reason').value.trim()
+};
+
+if (!usernameAvailable) {
+messageDiv.className = 'message error';
+messageDiv.textContent = '❌ Lütfen geçerli ve müsait bir kullanıcı adı seç.';
+submitBtn.disabled = false;
+submitBtn.textContent = 'Başvuruyu Gönder';
+return;
+}
+
+if (!emailAvailable) {
+messageDiv.className = 'message error';
+messageDiv.textContent = '❌ Lütfen geçerli ve kullanılmamış bir e-posta gir.';
+submitBtn.disabled = false;
+submitBtn.textContent = 'Başvuruyu Gönder';
+return;
+}
+
+try {
+var appRes = await supabaseClient.from('applications').insert([{
+email: formData.email,
+full_name: formData.full_name,
+username: formData.username,
+reason: formData.reason,
+status: 'pending'
+}]);
+
+if (appRes.error) {
+if (appRes.error.code === '23505') {
+throw new Error('Bu e-posta veya kullanıcı adı ile zaten bir başvuru var.');
+}
+throw new Error('Başvuru kaydedilemedi: ' + appRes.error.message);
+}
+
+var authRes = await supabaseClient.auth.signUp({
+email: formData.email,
+password: formData.password,
+options: {
+data: {
+full_name: formData.full_name,
+username: formData.username
+}
+}
+});
+
+if (authRes.error) {
+throw new Error(authRes.error.message);
+}
+
+messageDiv.className = 'message success';
+messageDiv.innerHTML = '<strong>Başvurun alındı! 🎉</strong><br>Yönetim onayından sonra giriş yapabilirsin.';
+document.getElementById('applyForm').reset();
+usernameStatus.textContent = '';
+emailStatus.textContent = '';
+usernameAvailable = false;
+emailAvailable = false;
+
+} catch (err) {
+messageDiv.className = 'message error';
+messageDiv.textContent = err.message;
+} finally {
+submitBtn.disabled = false;
+submitBtn.textContent = 'Başvuruyu Gönder';
+}
+});
+
+})();
+</script>
 </body>
-                                                        </html>
+</html>

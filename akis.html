@@ -2,99 +2,81 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Akış • Katran Dergi</title>
+<link rel="stylesheet" href="tema.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
 font-family: 'Inter', -apple-system, sans-serif;
-background: #0a0808;
-color: #f4efe8;
+background: var(--bg, #0a0808);
+color: var(--text, #f4efe8);
 min-height: 100vh;
-padding-bottom: 4rem;
+padding-bottom: 100px;
+transition: background 0.3s ease, color 0.3s ease;
+overflow-x: hidden;
 }
 .top-nav {
 position: sticky;
 top: 0;
-background: rgba(10,8,8,0.9);
-backdrop-filter: blur(20px);
-border-bottom: 1px solid rgba(255,255,255,0.06);
+background: var(--nav-bg, rgba(10,8,8,0.92));
+backdrop-filter: blur(24px);
+border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
 z-index: 100;
-padding: 1rem 0;
+padding: 0.85rem 0;
 }
-.nav-inner {
-max-width: 600px;
-margin: 0 auto;
-padding: 0 1rem;
+.nav-inner { max-width: 600px; margin: 0 auto; padding: 0 1rem; display: flex; justify-content: space-between; align-items: center; }
+.nav-home {
+text-decoration: none;
+color: var(--text, #f4efe8);
 display: flex;
-justify-content: space-between;
 align-items: center;
-}
-.nav-logo {
+gap: 0.5rem;
 font-family: 'Playfair Display', serif;
-font-size: 1.4rem;
+font-size: 1.25rem;
 font-weight: 900;
-text-decoration: none;
-color: #f4efe8;
 }
-.nav-logo .red { color: #e03131; }
-.nav-right { display: flex; gap: 0.4rem; align-items: center; }
-.nav-btn {
-background: transparent;
-color: #a89e94;
-border: 1px solid rgba(255,255,255,0.1);
-padding: 0.5rem 0.75rem;
-border-radius: 60px;
-text-decoration: none;
-font-size: 0.8rem;
-cursor: pointer;
-position: relative;
+.nav-home .home-icon {
+width: 32px; height: 32px;
+border-radius: 50%;
+background: var(--bordo-glow, rgba(139,46,62,0.25));
 display: flex;
 align-items: center;
 justify-content: center;
-transition: all 0.2s;
-font-family: inherit;
+color: var(--bordo, #8b2e3e);
 }
-.nav-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.nav-btn:hover { color: #e03131; border-color: #e03131; }
-.nav-btn.primary {
-background: #e03131;
-color: #f4efe8;
-border-color: #e03131;
-font-weight: 700;
-padding: 0.5rem 1rem;
-}
-.nav-btn.primary:hover { background: #b71c1c; color: #f4efe8; }
-.notif-badge {
-position: absolute;
-top: -6px;
-right: -6px;
-background: #e03131;
-color: #fff;
-font-size: 0.65rem;
-padding: 2px 6px;
-border-radius: 20px;
-font-weight: 700;
-min-width: 18px;
-text-align: center;
-}
-.container {
-max-width: 600px;
-margin: 0 auto;
-padding: 1.5rem 1rem;
-}
-.tabs {
+.nav-home .home-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.nav-home .red { color: var(--bordo, #8b2e3e); }
+.notif-btn {
+position: relative;
+background: var(--bg-elev, rgba(255,255,255,0.03));
+color: var(--text-muted, #a89e94);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+padding: 0.55rem 0.7rem;
+border-radius: 60px;
+cursor: pointer;
 display: flex;
-gap: 0.4rem;
-margin-bottom: 1.5rem;
-border-bottom: 1px solid rgba(255,255,255,0.06);
-padding-bottom: 0.5rem;
+align-items: center;
+text-decoration: none;
 }
+.notif-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.notif-btn:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.25)); }
+.notif-badge { position: absolute; top: -6px; right: -6px; background: var(--accent, #e03131); color: #fff; font-size: 0.62rem; padding: 2px 6px; border-radius: 20px; font-weight: 700; min-width: 18px; text-align: center; }
+.container { max-width: 600px; margin: 0 auto; padding: 1.2rem 1rem; }
+.tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)); padding-bottom: 0.5rem; }
 .tab {
 background: transparent;
-color: #a89e94;
+color: var(--text-muted, #a89e94);
 border: none;
-padding: 0.6rem 1.2rem;
+padding: 0.55rem 1.1rem;
 font-size: 0.85rem;
 font-weight: 600;
 cursor: pointer;
@@ -102,106 +84,70 @@ border-radius: 60px;
 font-family: inherit;
 display: inline-flex;
 align-items: center;
-gap: 0.4rem;
+gap: 0.45rem;
 transition: all 0.2s;
 }
 .tab svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.tab.active { background: rgba(224,49,49,0.15); color: #e03131; }
+.tab.active { background: var(--bordo-glow, rgba(139,46,62,0.25)); color: var(--bordo, #8b2e3e); }
+.tab:hover:not(.active) { color: var(--text, #f4efe8); background: var(--bg-elev, rgba(255,255,255,0.03)); }
 .compose-box {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(255,255,255,0.08);
+background: var(--bg-elev, rgba(255,255,255,0.03));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
 border-radius: 20px;
-padding: 1.2rem 1.5rem;
-margin-bottom: 1.5rem;
+padding: 1rem 1.3rem;
+margin-bottom: 1.2rem;
 display: flex;
 align-items: center;
 gap: 1rem;
 cursor: pointer;
 transition: all 0.2s;
 }
-.compose-box:hover {
-border-color: rgba(224,49,49,0.4);
-background: rgba(224,49,49,0.03);
-}
-.compose-avatar, .post-avatar, .comment-avatar {
-border-radius: 50%;
-background: linear-gradient(135deg, #e03131, #b71c1c);
-display: flex;
-align-items: center;
-justify-content: center;
-color: #f4efe8;
-flex-shrink: 0;
-font-weight: 900;
-}
-.compose-avatar { width: 42px; height: 42px; font-size: 1rem; }
-.post-avatar { width: 42px; height: 42px; font-size: 1rem; }
-.comment-avatar { width: 32px; height: 32px; font-size: 0.75rem; }
-.compose-placeholder { color: #a89e94; font-size: 0.95rem; }
+.compose-box:hover { border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.compose-placeholder { color: var(--text-muted, #a89e94); font-size: 0.9rem; }
 .post-card {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(255,255,255,0.06);
+background: var(--bg-elev, rgba(255,255,255,0.03));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
 border-radius: 20px;
-padding: 1.5rem;
-margin-bottom: 1rem;
-transition: all 0.2s;
+padding: 1.2rem 1.3rem;
+margin-bottom: 0.8rem;
+transition: all 0.25s;
 position: relative;
 }
-.post-card:hover { border-color: rgba(255,255,255,0.12); }
-.post-card.highlight {
-border-color: #e03131;
-box-shadow: 0 0 0 2px rgba(224,49,49,0.3);
-animation: pulse 2s ease;
-}
-@keyframes pulse {
-0%, 100% { box-shadow: 0 0 0 2px rgba(224,49,49,0.3); }
-50% { box-shadow: 0 0 0 6px rgba(224,49,49,0.15); }
-}
-.post-header {
-display: flex;
-align-items: center;
-gap: 0.8rem;
-margin-bottom: 1rem;
-}
-.post-avatar-link {
-text-decoration: none;
-color: inherit;
-}
+.post-card:hover { border-color: var(--border-strong, rgba(255,255,255,0.15)); }
+.post-card.highlight { border-color: var(--bordo, #8b2e3e); box-shadow: 0 0 0 2px var(--bordo-glow, rgba(139,46,62,0.25)); }
+.post-header { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.9rem; }
+.post-avatar-link { text-decoration: none; color: inherit; transition: transform 0.2s; }
+.post-avatar-link:hover { transform: scale(1.05); }
 .post-meta { flex: 1; min-width: 0; }
-.post-name { font-weight: 700; font-size: 0.95rem; }
-.post-username { color: #a89e94; font-size: 0.8rem; }
-.post-time { color: #7a7068; font-size: 0.75rem; white-space: nowrap; }
+.post-name { font-weight: 700; font-size: 0.92rem; color: var(--text, #f4efe8); }
+.post-username { color: var(--text-muted, #a89e94); font-size: 0.78rem; }
+.post-time { color: var(--text-dim, #7a7068); font-size: 0.72rem; white-space: nowrap; }
 .post-menu {
 background: transparent;
 border: none;
-color: #7a7068;
+color: var(--text-dim, #7a7068);
 cursor: pointer;
-padding: 0.4rem 0.6rem;
+padding: 0.4rem 0.5rem;
 border-radius: 50%;
-transition: all 0.2s;
 display: flex;
 align-items: center;
 }
 .post-menu svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.post-menu:hover { background: rgba(224,49,49,0.15); color: #e03131; }
+.post-menu:hover { background: var(--bordo-glow, rgba(139,46,62,0.25)); color: var(--bordo, #8b2e3e); }
 .post-content {
-font-size: 1rem;
-line-height: 1.7;
-color: #e8e0d6;
-margin-bottom: 1rem;
+font-size: 0.98rem;
+line-height: 1.65;
+color: var(--text, #f4efe8);
+margin-bottom: 0.9rem;
 white-space: pre-wrap;
 word-wrap: break-word;
 }
-.post-actions {
-display: flex;
-gap: 0.5rem;
-border-top: 1px solid rgba(255,255,255,0.06);
-padding-top: 0.8rem;
-}
+.post-actions { display: flex; gap: 0.4rem; border-top: 1px solid var(--border, rgba(255,255,255,0.08)); padding-top: 0.7rem; }
 .action-btn {
 background: transparent;
 border: none;
-color: #a89e94;
-font-size: 0.85rem;
+color: var(--text-muted, #a89e94);
+font-size: 0.83rem;
 padding: 0.5rem 1rem;
 border-radius: 60px;
 cursor: pointer;
@@ -210,91 +156,182 @@ align-items: center;
 gap: 0.4rem;
 transition: all 0.2s;
 font-family: inherit;
+font-weight: 500;
 }
-.action-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: all 0.2s; }
-.action-btn:hover { background: rgba(224,49,49,0.1); color: #e03131; }
-.action-btn.liked { color: #e03131; }
-.action-btn.liked svg { fill: #e03131; stroke: #e03131; }
-.comments-section {
-margin-top: 1rem;
-border-top: 1px solid rgba(255,255,255,0.06);
-padding-top: 1rem;
-display: none;
-}
-.comments-section.open { display: block; }
-.comment {
-display: flex;
-gap: 0.7rem;
-padding: 0.7rem 0;
-position: relative;
-}
-.comment-body {
-flex: 1;
-background: rgba(255,255,255,0.03);
-border-radius: 12px;
-padding: 0.6rem 2rem 0.6rem 0.9rem;
-position: relative;
-}
-.comment-name { font-weight: 700; font-size: 0.82rem; margin-bottom: 0.15rem; text-decoration: none; color: inherit; display: inline-block; }
-.comment-name:hover { color: #e03131; }
-.comment-text { font-size: 0.9rem; color: #e8e0d6; line-height: 1.5; word-wrap: break-word; }
-.comment-delete {
-position: absolute;
-top: 0.4rem;
-right: 0.5rem;
-background: transparent;
-border: none;
-color: #7a7068;
-cursor: pointer;
-padding: 0.3rem;
-border-radius: 50%;
+.action-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.action-btn:hover { background: var(--bordo-glow, rgba(139,46,62,0.25)); color: var(--bordo, #8b2e3e); }
+.action-btn.liked { color: var(--bordo, #8b2e3e); }
+.action-btn.liked svg { fill: var(--bordo, #8b2e3e); stroke: var(--bordo, #8b2e3e); }
+
+/* REPOST */
+.repost-badge {
 display: flex;
 align-items: center;
+gap: 0.4rem;
+font-size: 0.72rem;
+color: var(--text-dim, #7a7068);
+margin-bottom: 0.7rem;
+padding-left: 0.2rem;
 }
-.comment-delete svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.comment-delete:hover { color: #e03131; background: rgba(224,49,49,0.15); }
-.comment-form { display: flex; gap: 0.6rem; margin-top: 0.5rem; }
+.repost-badge svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.repost-badge strong { color: var(--text-muted, #a89e94); font-weight: 600; }
+.original-post {
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 14px;
+padding: 0.9rem;
+margin-bottom: 0.9rem;
+cursor: pointer;
+transition: all 0.2s;
+}
+.original-post:hover { border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.original-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.original-name { font-weight: 700; font-size: 0.82rem; color: var(--text, #f4efe8); }
+.original-time { color: var(--text-dim, #7a7068); font-size: 0.7rem; }
+.original-content { font-size: 0.88rem; color: var(--text-muted, #a89e94); line-height: 1.55; white-space: pre-wrap; word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* READ / ANALYSIS / QUOTE */
+.read-card {
+background: linear-gradient(135deg, var(--bordo-glow, rgba(139,46,62,0.1)), var(--bg-elev, rgba(255,255,255,0.03)));
+border-color: var(--bordo, #8b2e3e);
+}
+.read-action {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+font-size: 0.82rem;
+color: var(--text-muted, #a89e94);
+margin-bottom: 1rem;
+padding: 0.6rem 0.8rem;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border-radius: 10px;
+line-height: 1.5;
+}
+.read-action strong { color: var(--text, #f4efe8); font-weight: 700; }
+.read-action em { color: var(--bordo, #8b2e3e); font-style: italic; font-weight: 600; }
+.read-icon { width: 18px; height: 18px; stroke: var(--bordo, #8b2e3e); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.book-preview {
+display: flex;
+gap: 0.9rem;
+padding: 0.8rem;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border-radius: 12px;
+margin-bottom: 1rem;
+text-decoration: none;
+color: inherit;
+transition: all 0.2s;
+}
+.book-preview:hover { background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.book-preview-cover { width: 55px; height: 82px; border-radius: 4px 6px 6px 4px; object-fit: cover; flex-shrink: 0; box-shadow: 0 4px 12px -3px rgba(0,0,0,0.4); }
+.book-preview-placeholder {
+background: linear-gradient(135deg, var(--bordo, #8b2e3e), var(--bordo-dark, #6b1f2e));
+display: flex;
+align-items: center;
+justify-content: center;
+color: #fff;
+font-family: 'Playfair Display', serif;
+font-size: 1.4rem;
+font-weight: 900;
+}
+.book-preview-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.book-preview-title { font-weight: 700; font-size: 0.9rem; color: var(--text, #f4efe8); line-height: 1.3; margin-bottom: 0.15rem; }
+.book-preview-author { color: var(--text-muted, #a89e94); font-size: 0.8rem; }
+.book-preview-date { color: var(--text-dim, #7a7068); font-size: 0.72rem; margin-top: 0.25rem; font-style: italic; }
+.read-quote {
+position: relative;
+padding: 0.6rem 0 0.6rem 1rem;
+border-left: 3px solid var(--bordo, #8b2e3e);
+margin-bottom: 1rem;
+}
+.read-quote-mark {
+position: absolute;
+top: -0.5rem;
+left: -0.2rem;
+font-family: 'Playfair Display', serif;
+font-size: 2.5rem;
+line-height: 1;
+color: var(--bordo, #8b2e3e);
+opacity: 0.3;
+font-weight: 900;
+pointer-events: none;
+}
+.read-quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.95rem; line-height: 1.7; color: var(--text, #f4efe8); position: relative; }
+.read-quote-page { font-size: 0.72rem; color: var(--text-dim, #7a7068); text-align: right; margin-top: 0.3rem; }
+
+/* ANALİZ */
+.analysis-title {
+font-family: 'Playfair Display', serif;
+font-size: 1.15rem;
+font-weight: 900;
+color: var(--text, #f4efe8);
+margin-bottom: 0.6rem;
+line-height: 1.3;
+}
+.analysis-preview {
+font-size: 0.92rem;
+color: var(--text-muted, #a89e94);
+line-height: 1.7;
+white-space: pre-wrap;
+word-wrap: break-word;
+margin-bottom: 0.6rem;
+}
+.read-more-link {
+color: var(--bordo, #8b2e3e);
+text-decoration: none;
+font-weight: 600;
+font-size: 0.85rem;
+display: inline-block;
+margin-bottom: 1rem;
+transition: color 0.2s;
+}
+.read-more-link:hover { text-decoration: underline; }
+
+/* YORUMLAR */
+.comments-section { margin-top: 0.9rem; border-top: 1px solid var(--border, rgba(255,255,255,0.08)); padding-top: 0.9rem; display: none; }
+.comments-section.open { display: block; }
+.comment { display: flex; gap: 0.6rem; padding: 0.5rem 0; position: relative; }
+.comment-body { flex: 1; background: var(--bg-elev-2, rgba(255,255,255,0.06)); border-radius: 14px; padding: 0.55rem 2rem 0.55rem 0.85rem; position: relative; }
+.comment-name { font-weight: 700; font-size: 0.8rem; margin-bottom: 0.15rem; text-decoration: none; color: var(--text, #f4efe8); display: inline-block; }
+.comment-name:hover { color: var(--bordo, #8b2e3e); }
+.comment-text { font-size: 0.88rem; color: var(--text-muted, #a89e94); line-height: 1.5; word-wrap: break-word; }
+.comment-delete { position: absolute; top: 0.4rem; right: 0.5rem; background: transparent; border: none; color: var(--text-dim, #7a7068); cursor: pointer; padding: 0.3rem; border-radius: 50%; display: flex; }
+.comment-delete svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.comment-delete:hover { color: var(--accent, #e03131); background: var(--accent-glow, rgba(224,49,49,0.15)); }
+.comment-form { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
 .comment-input {
 flex: 1;
-background: rgba(255,255,255,0.05);
-border: 1px solid rgba(255,255,255,0.1);
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
 border-radius: 60px;
-padding: 0.7rem 1.2rem;
-color: #f4efe8;
+padding: 0.65rem 1.1rem;
+color: var(--text, #f4efe8);
 font-family: inherit;
-font-size: 0.9rem;
+font-size: 0.88rem;
 }
-.comment-input:focus { outline: none; border-color: #e03131; }
-.comment-send {
-background: #e03131;
-color: #f4efe8;
-border: none;
-border-radius: 60px;
-padding: 0.7rem 1.2rem;
-font-weight: 700;
-cursor: pointer;
-font-size: 0.85rem;
-font-family: inherit;
-}
+.comment-input:focus { outline: none; border-color: var(--bordo, #8b2e3e); }
+.comment-send { background: var(--bordo, #8b2e3e); color: #fff; border: none; border-radius: 60px; padding: 0.65rem 1.1rem; font-weight: 700; cursor: pointer; font-size: 0.83rem; font-family: inherit; }
 .comment-send:disabled { opacity: 0.5; }
+
+/* DROPDOWN */
 .dropdown {
 position: absolute;
 top: 3.2rem;
 right: 1rem;
-background: #1a1412;
-border: 1px solid rgba(255,255,255,0.1);
-border-radius: 12px;
+background: var(--bg, #0a0808);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 14px;
 padding: 0.3rem;
 z-index: 10;
-box-shadow: 0 8px 30px rgba(0,0,0,0.5);
 display: none;
+min-width: 200px;
+box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.5));
 }
 .dropdown.open { display: block; }
 .dropdown button {
 background: transparent;
 border: none;
-color: #ff8a8a;
-padding: 0.7rem 1.2rem;
+color: var(--text, #f4efe8);
+padding: 0.7rem 1rem;
 border-radius: 8px;
 cursor: pointer;
 font-size: 0.85rem;
@@ -304,31 +341,129 @@ font-family: inherit;
 display: flex;
 align-items: center;
 gap: 0.6rem;
+font-weight: 500;
 }
 .dropdown button svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.dropdown button:hover { background: rgba(224,49,49,0.15); }
-.loading, .empty {
-text-align: center;
-padding: 3rem 1rem;
-color: #a89e94;
+.dropdown button:hover { background: var(--bordo-glow, rgba(139,46,62,0.25)); }
+.dropdown button.danger { color: var(--accent, #e03131); }
+.dropdown button.danger:hover { background: var(--accent-glow, rgba(224,49,49,0.15)); }
+
+/* MODAL */
+.modal-backdrop {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.75);
+backdrop-filter: blur(6px);
+z-index: 9998;
+display: none;
+align-items: center;
+justify-content: center;
+padding: 1rem;
 }
-.empty .flower { font-size: 2.5rem; color: #e03131; display: block; margin-bottom: 1rem; }
+.modal-backdrop.open { display: flex; }
+.modal {
+background: var(--bg, #0a0808);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 20px;
+max-width: 440px;
+width: 100%;
+max-height: 80vh;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.5));
+}
+.modal-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text, #f4efe8); }
+.modal-close { background: transparent; border: none; color: var(--text-muted, #a89e94); cursor: pointer; padding: 0.4rem; border-radius: 50%; display: flex; transition: all 0.2s; }
+.modal-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.modal-close:hover { color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.25)); }
+.modal-body { padding: 0.5rem 0; overflow-y: auto; flex: 1; }
+.user-item {
+display: flex;
+align-items: center;
+gap: 0.8rem;
+padding: 0.8rem 1.5rem;
+text-decoration: none;
+color: inherit;
+transition: background 0.15s;
+cursor: pointer;
+border: none;
+background: transparent;
+width: 100%;
+text-align: left;
+font-family: inherit;
+}
+.user-item:hover { background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.user-item-info { flex: 1; min-width: 0; }
+.user-item-name { font-weight: 700; font-size: 0.9rem; color: var(--text, #f4efe8); }
+.user-item-username { color: var(--text-muted, #a89e94); font-size: 0.8rem; }
+
+.field { margin-bottom: 1rem; padding: 0 1.5rem; }
+.field label { display: block; font-size: 0.8rem; color: var(--text-muted, #a89e94); margin-bottom: 0.4rem; font-weight: 600; }
+.field textarea {
+width: 100%;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 12px;
+padding: 0.8rem 1rem;
+color: var(--text, #f4efe8);
+font-family: inherit;
+font-size: 0.95rem;
+min-height: 100px;
+resize: vertical;
+line-height: 1.6;
+}
+.field textarea::placeholder { color: var(--text-dim, #7a7068); }
+.field textarea:focus { outline: none; border-color: var(--bordo, #8b2e3e); }
+.quote-original {
+margin: 0 1.5rem 1rem;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border-radius: 12px;
+padding: 0.9rem;
+border-left: 3px solid var(--bordo, #8b2e3e);
+}
+.quote-original-name { font-weight: 700; font-size: 0.82rem; color: var(--text, #f4efe8); margin-bottom: 0.3rem; }
+.quote-original-text { font-size: 0.85rem; color: var(--text-muted, #a89e94); line-height: 1.5; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border, rgba(255,255,255,0.08)); display: flex; gap: 0.5rem; justify-content: flex-end; }
+.btn {
+padding: 0.75rem 1.5rem;
+border-radius: 60px;
+border: none;
+font-weight: 700;
+font-size: 0.9rem;
+cursor: pointer;
+font-family: inherit;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+transition: all 0.2s;
+}
+.btn-primary { background: var(--bordo, #8b2e3e); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--bordo-dark, #6b1f2e); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-cancel { background: transparent; color: var(--text-muted, #a89e94); border: 1px solid var(--border, rgba(255,255,255,0.08)); }
+.btn-cancel:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); }
+
+.loading, .empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted, #a89e94); }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--border, rgba(255,255,255,0.08)); border-top-color: var(--bordo, #8b2e3e); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .login-prompt {
-background: rgba(224,49,49,0.08);
-border: 1px solid rgba(224,49,49,0.2);
+background: var(--bordo-glow, rgba(139,46,62,0.25));
+border: 1px solid var(--border-strong, rgba(255,255,255,0.15));
 border-radius: 16px;
 padding: 1.5rem;
 text-align: center;
 margin-bottom: 1.5rem;
 }
-.login-prompt a { color: #e03131; font-weight: 700; text-decoration: none; }
+.login-prompt a { color: var(--bordo, #8b2e3e); font-weight: 700; text-decoration: none; }
 .toast {
 position: fixed;
-bottom: 2rem;
+bottom: 100px;
 left: 50%;
 transform: translateX(-50%) translateY(100px);
-background: #e03131;
-color: #f4efe8;
+background: var(--bordo, #8b2e3e);
+color: #fff;
 padding: 0.8rem 1.5rem;
 border-radius: 60px;
 font-weight: 600;
@@ -339,94 +474,31 @@ max-width: 90%;
 text-align: center;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
-.modal-backdrop {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.75);
-backdrop-filter: blur(4px);
-z-index: 9998;
-display: none;
-align-items: center;
-justify-content: center;
-padding: 1rem;
+.toast.error { background: #e03131; }
+@media (max-width: 520px) {
+.container { padding: 1rem 0.8rem; }
+.post-card { padding: 1.1rem 1rem; }
+.nav-home { font-size: 1.15rem; }
+.nav-home .home-icon { width: 28px; height: 28px; }
+.nav-home .home-icon svg { width: 15px; height: 15px; }
 }
-.modal-backdrop.open { display: flex; }
-.modal {
-background: #1a1412;
-border: 1px solid rgba(255,255,255,0.1);
-border-radius: 20px;
-max-width: 440px;
-width: 100%;
-max-height: 80vh;
-overflow: hidden;
-display: flex;
-flex-direction: column;
-}
-.modal-header {
-padding: 1.2rem 1.5rem;
-border-bottom: 1px solid rgba(255,255,255,0.06);
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
-.modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
-.modal-close {
-background: transparent;
-border: none;
-color: #a89e94;
-cursor: pointer;
-padding: 0.4rem;
-border-radius: 50%;
-display: flex;
-}
-.modal-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.modal-close:hover { color: #e03131; }
-.modal-body {
-padding: 0.5rem 0;
-overflow-y: auto;
-flex: 1;
-}
-.user-item {
-display: flex;
-align-items: center;
-gap: 0.8rem;
-padding: 0.8rem 1.5rem;
-text-decoration: none;
-color: inherit;
-transition: background 0.15s;
-}
-.user-item:hover { background: rgba(224,49,49,0.06); }
-.user-item-avatar {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-background: linear-gradient(135deg, #e03131, #b71c1c);
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: 900;
-color: #f4efe8;
-flex-shrink: 0;
-font-size: 0.95rem;
-}
-.user-item-info { flex: 1; min-width: 0; }
-.user-item-name { font-weight: 700; font-size: 0.9rem; }
-.user-item-username { color: #a89e94; font-size: 0.8rem; }
 </style>
 </head>
 <body>
 
 <nav class="top-nav">
 <div class="nav-inner">
-<a href="index.html" class="nav-logo"><span class="red">KATRAN</span> AKIŞ</a>
-<div class="nav-right" id="navRight">
-<a href="giris.html" class="nav-btn">Giriş Yap</a>
+<a href="index.html" class="nav-home">
+<span class="home-icon"><svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+<span><span class="red">KATRAN</span></span>
+</a>
+<div id="notifContainer">
+<a href="giris.html" class="notif-btn">Giriş</a>
 </div>
 </div>
 </nav>
 
 <div class="container">
-
 <div class="tabs" id="feedTabs" style="display:none;">
 <button class="tab active" data-tab="all" id="tabAll">
 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -439,40 +511,64 @@ Takip
 </div>
 
 <div id="composeBox" style="display:none;">
-<div class="compose-box" onclick="window.location.href='gonderi.html'">
-<div class="compose-avatar" id="composeAvatar">?</div>
+<div class="compose-box" onclick="window.location.href='paylas.html'">
+<div id="composeAvatar" style="width:40px;height:40px;"></div>
 <div class="compose-placeholder">Ne düşünüyorsun?</div>
 </div>
 </div>
 
 <div id="loginPrompt" class="login-prompt" style="display:none;">
-<a href="giris.html">Giriş yap</a> ve topluluğa katıl 🌸
+<a href="giris.html">Giriş yap</a> ve topluluğa katıl
 </div>
 
 <div id="postsContainer">
-<div class="loading">Yükleniyor...</div>
+<div class="loading"><div class="spinner"></div>Yükleniyor...</div>
+</div>
 </div>
 
+<!-- QUOTE MODAL -->
+<div class="modal-backdrop" id="quoteModal">
+<div class="modal">
+<div class="modal-header">
+<h3>Alıntıla</h3>
+<button class="modal-close" id="quoteClose">
+<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+</div>
+<div class="modal-body" style="padding: 1.5rem 0;">
+<div class="quote-original" id="quoteOriginal"></div>
+<div class="field">
+<label for="quoteComment">Yorumun (opsiyonel)</label>
+<textarea id="quoteComment" maxlength="500" placeholder="Bu gönderi hakkında ne düşünüyorsun?"></textarea>
+</div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-cancel" id="quoteCancel">İptal</button>
+<button class="btn btn-primary" id="quoteSave">Alıntıla</button>
+</div>
+</div>
+</div>
+
+<!-- DM PAYLAŞMA MODAL -->
+<div class="modal-backdrop" id="dmModal">
+<div class="modal">
+<div class="modal-header">
+<h3>Mesaj Olarak Paylaş</h3>
+<button class="modal-close" id="dmClose">
+<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+</div>
+<div class="modal-body" id="dmBody">
+<div style="text-align:center;padding:2rem;color:var(--text-muted);">Yükleniyor...</div>
+</div>
+</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- KULLANICI LİSTESİ MODAL -->
-<div class="modal-backdrop" id="userListModal">
-<div class="modal">
-<div class="modal-header">
-<h3 id="modalTitle">Beğenenler</h3>
-<button class="modal-close" id="modalClose">
-<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-</button>
-</div>
-<div class="modal-body" id="modalBody">
-<div class="loading">Yükleniyor...</div>
-</div>
-</div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+<script src="avatares.js"></script>
 
 <script>
 (function() {
@@ -485,20 +581,26 @@ var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KE
 var currentUser = null;
 var currentProfile = null;
 var profileCache = {};
+var bookCache = {};
 var currentTab = 'all';
 var allPosts = [];
+var followingIds = [];
+var myLikes = {};
+var pendingQuotePost = null;
+var pendingDmPost = null;
 
 var ICONS = {
 heart: '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
 comment: '<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
 bell: '<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
-mail: '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>',
-library: '<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
-search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
-trash: '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
 more: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>',
-plus: '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
-x: '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+trash: '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+repost: '<svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+quote: '<svg viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>',
+send: '<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>',
+x: '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+checkCircle: '<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+pencil: '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
 };
 
 function escapeHtml(str) {
@@ -508,8 +610,7 @@ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;
 
 function timeAgo(dateStr) {
 var d = new Date(dateStr);
-var now = new Date();
-var s = Math.floor((now - d) / 1000);
+var s = Math.floor((new Date() - d) / 1000);
 if (s < 60) return 'şimdi';
 if (s < 3600) return Math.floor(s/60) + ' dk';
 if (s < 86400) return Math.floor(s/3600) + ' sa';
@@ -517,91 +618,68 @@ if (s < 604800) return Math.floor(s/86400) + ' gün';
 return d.toLocaleDateString('tr-TR');
 }
 
-function toast(msg) {
+function formatDate(dateStr) {
+if (!dateStr) return '';
+var d = new Date(dateStr);
+var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function toast(msg, isError) {
 var t = document.getElementById('toast');
 t.textContent = msg;
-t.classList.add('show');
+t.className = 'toast show' + (isError ? ' error' : '');
 setTimeout(function() { t.classList.remove('show'); }, 2500);
 }
 
-// ---------- OTURUM ----------
+// Avatars hazır olana kadar bekle
+function waitForAvatars(cb) {
+  if (window.renderAvatar) { cb(); return; }
+  var count = 0;
+  var iv = setInterval(function() {
+    count++;
+    if (window.renderAvatar || count > 40) { clearInterval(iv); cb(); }
+  }, 50);
+}
+
 async function init() {
 try {
 var sessionRes = await supabaseClient.auth.getSession();
 var session = sessionRes.data.session;
-
 if (session) {
 currentUser = session.user;
-var profRes = await supabaseClient
-.from('profiles')
-.select('full_name, username, status, role')
-.eq('id', currentUser.id)
-.single();
-
+var profRes = await supabaseClient.from('profiles').select('full_name, username, avatar, status, role').eq('id', currentUser.id).single();
 if (profRes.data && profRes.data.status === 'approved') {
 currentProfile = profRes.data;
+var fRes = await supabaseClient.from('follows').select('following_id').eq('follower_id', currentUser.id);
+followingIds = (fRes.data || []).map(function(f) { return f.following_id; });
+var lRes = await supabaseClient.from('likes').select('post_id').eq('user_id', currentUser.id);
+(lRes.data || []).forEach(function(l) { myLikes[l.post_id] = true; });
 showLoggedInUI();
-}
-}
-} catch (e) { console.error(e); }
-
+} else { document.getElementById('loginPrompt').style.display = 'block'; }
+} else { document.getElementById('loginPrompt').style.display = 'block'; }
+} catch (e) { console.error(e); document.getElementById('loginPrompt').style.display = 'block'; }
 loadPosts();
 }
 
 function showLoggedInUI() {
 document.getElementById('composeBox').style.display = 'block';
 document.getElementById('feedTabs').style.display = 'flex';
-var initial = (currentProfile.full_name || 'K').charAt(0).toUpperCase();
-document.getElementById('composeAvatar').textContent = initial;
+document.getElementById('loginPrompt').style.display = 'none';
 
-var navRight = document.getElementById('navRight');
-navRight.innerHTML =
-'<a href="bildirimler.html" class="nav-btn" title="Bildirimler">' + ICONS.bell + '<span id="notifBadge" class="notif-badge" style="display:none;">0</span></a>' +
-'<a href="mesajlar.html" class="nav-btn" title="Mesajlar">' + ICONS.mail + '<span id="msgBadge" class="notif-badge" style="display:none;">0</span></a>' +
-'<a href="kitapligim.html" class="nav-btn" title="Kitaplığım">' + ICONS.library + '</a>' +
-'<a href="kitaplar.html" class="nav-btn" title="Kitap Ara">' + ICONS.search + '</a>' +
-'<a href="profil.html" class="nav-btn">' + escapeHtml(currentProfile.full_name.split(' ')[0]) + '</a>' +
-'<button class="nav-btn primary" id="newPostBtn" title="Yeni Gönderi">' + ICONS.plus + '</button>';
-
-document.getElementById('newPostBtn').addEventListener('click', function() {
-window.location.href = 'gonderi.html';
+waitForAvatars(function() {
+  document.getElementById('composeAvatar').innerHTML = window.renderAvatar(currentProfile, 40);
 });
 
-// Sekmeler
-document.getElementById('tabAll').addEventListener('click', function() {
-switchTab('all');
-});
-document.getElementById('tabFollowing').addEventListener('click', function() {
-switchTab('following');
-});
-
-// Bildirim sayısı
-supabaseClient
-.from('notifications')
-.select('id', { count: 'exact', head: true })
-.eq('user_id', currentUser.id)
-.eq('is_read', false)
-.then(function(res) {
-var count = res.count || 0;
-if (count > 0) {
-var badge = document.getElementById('notifBadge');
-badge.textContent = count > 9 ? '9+' : count;
-badge.style.display = 'inline-block';
-}
-});
-
-// Okunmamış mesaj sayısı
-supabaseClient
-.from('messages')
-.select('id', { count: 'exact', head: true })
-.eq('receiver_id', currentUser.id)
-.eq('is_read', false)
-.then(function(res) {
-var count = res.count || 0;
-if (count > 0) {
-var badge = document.getElementById('msgBadge');
-badge.textContent = count > 9 ? '9+' : count;
-badge.style.display = 'inline-block';
+document.getElementById('notifContainer').innerHTML = '<a href="bildirimler.html" class="notif-btn">' + ICONS.bell + '<span id="notifBadge" class="notif-badge" style="display:none;">0</span></a>';
+document.getElementById('tabAll').addEventListener('click', function() { switchTab('all'); });
+document.getElementById('tabFollowing').addEventListener('click', function() { switchTab('following'); });
+supabaseClient.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id).eq('is_read', false).then(function(res) {
+var c = res.count || 0;
+if (c > 0) {
+var b = document.getElementById('notifBadge');
+b.textContent = c > 9 ? '9+' : c;
+b.style.display = 'inline-block';
 }
 });
 }
@@ -614,121 +692,304 @@ else document.getElementById('tabFollowing').classList.add('active');
 renderPosts();
 }
 
-// ---------- PROFİL CACHE ----------
 async function fetchProfiles(ids) {
 var missing = ids.filter(function(id) { return !profileCache[id]; });
 if (missing.length) {
-var res = await supabaseClient.from('profiles').select('id, full_name, username').in('id', missing);
+var res = await supabaseClient.from('profiles').select('id, full_name, username, avatar').in('id', missing);
 (res.data || []).forEach(function(p) { profileCache[p.id] = p; });
 }
 var map = {};
-ids.forEach(function(id) {
-map[id] = profileCache[id] || { full_name: 'İsimsiz', username: 'kullanici' };
-});
+ids.forEach(function(id) { map[id] = profileCache[id] || { full_name: 'İsimsiz', username: 'kullanici', avatar: 'harf' }; });
 return map;
 }
 
-// ---------- GÖNDERİLERİ YÜKLE ----------
 async function loadPosts() {
-var postsRes = await supabaseClient
-.from('posts')
-.select('*')
-.order('created_at', { ascending: false })
-.limit(50);
+var res = await supabaseClient.from('posts').select('*').order('created_at', { ascending: false }).limit(50);
+if (res.error) { document.getElementById('postsContainer').innerHTML = '<div class="empty">Hata: ' + escapeHtml(res.error.message) + '</div>'; return; }
+allPosts = res.data || [];
+if (!allPosts.length) { document.getElementById('postsContainer').innerHTML = '<div class="empty">Henüz gönderi yok. İlk paylaşan sen ol!</div>'; return; }
 
-if (postsRes.error) {
-document.getElementById('postsContainer').innerHTML =
-'<div class="empty">Hata: ' + escapeHtml(postsRes.error.message) + '</div>';
-return;
-}
-
-allPosts = postsRes.data || [];
-
-if (!allPosts.length) {
-document.getElementById('postsContainer').innerHTML =
-'<div class="empty"><span class="flower">❀</span>Henüz gönderi yok. İlk paylaşan sen ol!</div>';
-return;
-}
-
-// Yazarları çek
 var userIds = allPosts.map(function(p) { return p.user_id; });
 var uniqueIds = userIds.filter(function(v, i, a) { return a.indexOf(v) === i; });
 await fetchProfiles(uniqueIds);
 
-// Kullanıcının beğendiklerini çek
-var myLikes = {};
-if (currentUser) {
-var likesRes = await supabaseClient.from('likes').select('post_id').eq('user_id', currentUser.id);
-(likesRes.data || []).forEach(function(l) { myLikes[l.post_id] = true; });
+var repostIds = allPosts.filter(function(p) { return p.repost_of; }).map(function(p) { return p.repost_of; });
+window.repostCache = {};
+if (repostIds.length) {
+  var origRes = await supabaseClient.from('posts').select('*').in('id', repostIds);
+  (origRes.data || []).forEach(function(p) { window.repostCache[p.id] = p; });
+  var origUserIds = (origRes.data || []).map(function(p) { return p.user_id; });
+  await fetchProfiles(origUserIds);
 }
-window.myLikes = myLikes;
 
-// Takip edilenlerin listesi
-var followingIds = [];
-if (currentUser) {
-var fRes = await supabaseClient.from('follows').select('following_id').eq('follower_id', currentUser.id);
-followingIds = (fRes.data || []).map(function(f) { return f.following_id; });
+var bookIds = allPosts.filter(function(p) { return p.book_id; }).map(function(p) { return p.book_id; });
+if (bookIds.length) {
+var bookRes = await supabaseClient.from('books').select('id, cover_url, title, author').in('id', bookIds);
+(bookRes.data || []).forEach(function(b) { bookCache[b.id] = b; });
 }
-window.followingIds = followingIds;
-
 renderPosts();
+}
+
+function getAvatar(profile, size) {
+  if (window.renderAvatar) return window.renderAvatar(profile, size || 42);
+  // Fallback (avatars.js yüklenmemişse)
+  var initial = (profile.full_name || 'K').charAt(0).toUpperCase();
+  return '<div style="width:' + (size || 42) + 'px;height:' + (size || 42) + 'px;border-radius:50%;background:linear-gradient(135deg, var(--bordo, #8b2e3e), var(--bordo-dark, #6b1f2e));display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;font-weight:900;font-size:' + Math.round((size || 42) * 0.42) + 'px;">' + initial + '</div>';
 }
 
 function renderPosts() {
 var posts = allPosts;
-
 if (currentTab === 'following') {
-if (!window.followingIds.length) {
-document.getElementById('postsContainer').innerHTML =
-'<div class="empty"><span class="flower">❀</span>Henüz kimseyi takip etmiyorsun. Profillere gidip takip et!</div>';
-return;
-}
-posts = posts.filter(function(p) { return window.followingIds.indexOf(p.user_id) !== -1; });
-if (!posts.length) {
-document.getElementById('postsContainer').innerHTML =
-'<div class="empty"><span class="flower">❀</span>Takip ettiğin kişilerin gönderisi yok.</div>';
-return;
-}
+if (!followingIds.length) { document.getElementById('postsContainer').innerHTML = '<div class="empty">Henüz kimseyi takip etmiyorsun.</div>'; return; }
+posts = posts.filter(function(p) { return followingIds.indexOf(p.user_id) !== -1; });
+if (!posts.length) { document.getElementById('postsContainer').innerHTML = '<div class="empty">Takip ettiğin kişilerin gönderisi yok.</div>'; return; }
 }
 
 var html = '';
 posts.forEach(function(post) {
-var author = profileCache[post.user_id] || { full_name: 'İsimsiz', username: 'kullanici' };
-var initial = (author.full_name || 'K').charAt(0).toUpperCase();
-var liked = window.myLikes[post.id] ? 'liked' : '';
+var author = profileCache[post.user_id] || { full_name: 'İsimsiz', username: 'kullanici', avatar: 'harf' };
 var isOwner = currentUser && currentUser.id === post.user_id;
+var liked = myLikes[post.id] ? 'liked' : '';
 
-html += '<div class="post-card" data-post-id="' + post.id + '" data-owner-id="' + post.user_id + '">';
+// REPOST
+if (post.is_repost && post.repost_of) {
+  var orig = window.repostCache ? window.repostCache[post.repost_of] : null;
+  if (!orig) return;
+  var origAuthor = profileCache[orig.user_id] || { full_name: 'İsimsiz', username: 'kullanici', avatar: 'harf' };
+  
+  html += '<div class="post-card" data-post-id="' + post.id + '" data-owner-id="' + post.user_id + '">';
+  html += '<div class="repost-badge">' + ICONS.repost + ' <strong>' + escapeHtml(author.full_name) + '</strong> yeniden paylaştı</div>';
+  html += '<div class="original-post" onclick="window.location.href=\'gonderi-detay.html?id=' + orig.id + '\'">';
+  html += '<div class="original-header">';
+  html += getAvatar(origAuthor, 32);
+  html += '<span class="original-name">' + escapeHtml(origAuthor.full_name) + '</span>';
+  html += '<span class="original-time">' + timeAgo(orig.created_at) + '</span>';
+  html += '</div>';
+  html += '<div class="original-content">' + escapeHtml(orig.content || '') + '</div>';
+  html += '</div>';
+  html += '<div class="post-actions">';
+  html += '<button class="action-btn ' + liked + '" onclick="toggleLike(\'' + post.id + '\', this)">' + ICONS.heart + '<span class="like-count">' + (post.likes_count || 0) + '</span></button>';
+  html += '<button class="action-btn" onclick="toggleComments(\'' + post.id + '\', this)">' + ICONS.comment + '<span class="comment-count">' + (post.comments_count || 0) + '</span></button>';
+  html += '<button class="action-btn" onclick="doRepost(\'' + orig.id + '\', this)">' + ICONS.repost + '</button>';
+  html += '</div>';
+  html += '<div class="comments-section" id="comments-' + post.id + '"></div>';
+  html += '</div>';
+  return;
+}
+
+// QUOTE
+if (post.repost_of && !post.is_repost) {
+  var orig = window.repostCache ? window.repostCache[post.repost_of] : null;
+  
+  html += '<div class="post-card" data-post-id="' + post.id + '" data-owner-id="' + post.user_id + '">';
+  html += '<div class="post-header">';
+  html += '<a href="kullanici.html?id=' + post.user_id + '" class="post-avatar-link">' + getAvatar(author, 42) + '</a>';
+  html += '<a href="kullanici.html?id=' + post.user_id + '" style="text-decoration:none;color:inherit;flex:1;min-width:0;">';
+  html += '<div class="post-meta"><div class="post-name">' + escapeHtml(author.full_name) + '</div><div class="post-username">' + timeAgo(post.created_at) + '</div></div></a>';
+  if (isOwner) {
+    html += '<button class="post-menu" onclick="toggleMenu(\'' + post.id + '\', event)">' + ICONS.more + '</button>';
+    html += '<div class="dropdown" id="menu-' + post.id + '">';
+    html += '<button onclick="deletePost(\'' + post.id + '\')" class="danger">' + ICONS.trash + ' Sil</button>';
+    html += '</div>';
+  }
+  html += '</div>';
+  
+  if (post.content && post.content.trim()) {
+    html += '<div class="post-content">' + escapeHtml(post.content) + '</div>';
+  }
+  
+  if (orig) {
+    var origAuthor = profileCache[orig.user_id] || { full_name: 'İsimsiz', username: 'kullanici', avatar: 'harf' };
+    html += '<div class="original-post" onclick="window.location.href=\'gonderi-detay.html?id=' + orig.id + '\'">';
+    html += '<div class="original-header">';
+    html += getAvatar(origAuthor, 32);
+    html += '<span class="original-name">' + escapeHtml(origAuthor.full_name) + '</span>';
+    html += '<span class="original-time">' + timeAgo(orig.created_at) + '</span>';
+    html += '</div>';
+    html += '<div class="original-content">' + escapeHtml(orig.content || '') + '</div>';
+    html += '</div>';
+  }
+  
+  html += '<div class="post-actions">';
+  html += '<button class="action-btn ' + liked + '" onclick="toggleLike(\'' + post.id + '\', this)">' + ICONS.heart + '<span class="like-count">' + (post.likes_count || 0) + '</span></button>';
+  html += '<button class="action-btn" onclick="toggleComments(\'' + post.id + '\', this)">' + ICONS.comment + '<span class="comment-count">' + (post.comments_count || 0) + '</span></button>';
+  html += '<button class="action-btn" onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + '</button>';
+  html += '</div>';
+  html += '<div class="comments-section" id="comments-' + post.id + '"></div>';
+  html += '</div>';
+  return;
+}
+
+// ANALİZ
+if (post.type === 'analysis') {
+  var book = post.book_id && bookCache ? bookCache[post.book_id] : null;
+  var coverUrl = book ? book.cover_url : null;
+  var targetBookId = post.book_id || '';
+  
+  html += '<div class="post-card read-card" data-post-id="' + post.id + '" data-owner-id="' + post.user_id + '">';
+  html += '<div class="post-header">';
+  html += '<a href="kullanici.html?id=' + post.user_id + '" class="post-avatar-link">' + getAvatar(author, 42) + '</a>';
+  html += '<a href="kullanici.html?id=' + post.user_id + '" style="text-decoration:none;color:inherit;flex:1;min-width:0;">';
+  html += '<div class="post-meta"><div class="post-name">' + escapeHtml(author.full_name) + '</div><div class="post-username">' + timeAgo(post.created_at) + '</div></div></a>';
+  if (isOwner) {
+    html += '<button class="post-menu" onclick="toggleMenu(\'' + post.id + '\', event)">' + ICONS.more + '</button>';
+    html += '<div class="dropdown" id="menu-' + post.id + '">';
+    html += '<button onclick="deletePost(\'' + post.id + '\')" class="danger">' + ICONS.trash + ' Sil</button>';
+    html += '<button onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + ' Yeniden Paylaş</button>';
+    html += '<button onclick="openDmModal(\'' + post.id + '\')">' + ICONS.send + ' Mesaj Olarak Paylaş</button>';
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '<div class="read-action">' + ICONS.pencil;
+  html += '<span><strong>' + escapeHtml(author.full_name) + '</strong>, <em>' + escapeHtml(post.quote_book || 'bir kitap') + '</em> hakkında analiz yazdı</span>';
+  html += '</div>';
+  if (targetBookId) html += '<a class="book-preview" href="kitap.html?id=' + targetBookId + '">';
+  else html += '<div class="book-preview">';
+  if (coverUrl) html += '<img class="book-preview-cover" src="' + escapeHtml(coverUrl) + '" alt="" onerror="this.outerHTML=\'<div class=&quot;book-preview-cover book-preview-placeholder&quot;>' + escapeHtml((post.quote_book || '?').charAt(0).toUpperCase()) + '</div>\'">';
+  else html += '<div class="book-preview-cover book-preview-placeholder">' + escapeHtml((post.quote_book || '?').charAt(0).toUpperCase()) + '</div>';
+  html += '<div class="book-preview-info">';
+  html += '<div class="book-preview-title">' + escapeHtml(post.quote_book || 'İsimsiz') + '</div>';
+  html += '<div class="book-preview-author">' + escapeHtml(post.quote_author || 'Bilinmeyen') + '</div>';
+  html += '</div>';
+  if (targetBookId) html += '</a>'; else html += '</div>';
+  if (post.analysis_title) html += '<h2 class="analysis-title">' + escapeHtml(post.analysis_title) + '</h2>';
+  if (post.content) {
+    var content = post.content;
+    if (content.length > 400) content = content.substring(0, 400) + '...';
+    html += '<div class="analysis-preview">' + escapeHtml(content) + '</div>';
+    if (post.content.length > 400) {
+      html += '<a href="gonderi-detay.html?id=' + post.id + '" class="read-more-link">Devamını oku →</a>';
+    }
+  }
+  html += '<div class="post-actions">';
+  html += '<button class="action-btn ' + liked + '" onclick="toggleLike(\'' + post.id + '\', this)">' + ICONS.heart + '<span class="like-count">' + (post.likes_count || 0) + '</span></button>';
+  html += '<button class="action-btn" onclick="toggleComments(\'' + post.id + '\', this)">' + ICONS.comment + '<span class="comment-count">' + (post.comments_count || 0) + '</span></button>';
+  html += '<button class="action-btn" onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + '</button>';
+  html += '</div>';
+  html += '<div class="comments-section" id="comments-' + post.id + '"></div>';
+  html += '</div>';
+  return;
+}
+
+// ALINTI (kitap)
+if (post.type === 'quote') {
+  var book = post.book_id && bookCache ? bookCache[post.book_id] : null;
+  var coverUrl = book ? book.cover_url : null;
+  var targetBookId = post.book_id || '';
+  
+  html += '<div class="post-card read-card" data-post-id="' + post.id + '" data-owner-id="' + post.user_id + '">';
+  html += '<div class="post-header">';
+  html += '<a href="kullanici.html?id=' + post.user_id + '" class="post-avatar-link">' + getAvatar(author, 42) + '</a>';
+  html += '<a href="kullanici.html?id=' + post.user_id + '" style="text-decoration:none;color:inherit;flex:1;min-width:0;">';
+  html += '<div class="post-meta"><div class="post-name">' + escapeHtml(author.full_name) + '</div><div class="post-username">' + timeAgo(post.created_at) + '</div></div></a>';
+  if (isOwner) {
+    html += '<button class="post-menu" onclick="toggleMenu(\'' + post.id + '\', event)">' + ICONS.more + '</button>';
+    html += '<div class="dropdown" id="menu-' + post.id + '">';
+    html += '<button onclick="deletePost(\'' + post.id + '\')" class="danger">' + ICONS.trash + ' Sil</button>';
+    html += '<button onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + ' Yeniden Paylaş</button>';
+    html += '<button onclick="openDmModal(\'' + post.id + '\')">' + ICONS.send + ' Mesaj Olarak Paylaş</button>';
+    html += '</div>';
+  }
+  html += '</div>';
+  if (post.analysis_content && post.analysis_content.trim()) {
+    html += '<div class="post-content">' + escapeHtml(post.analysis_content) + '</div>';
+  }
+  if (targetBookId) html += '<a class="book-preview" href="kitap.html?id=' + targetBookId + '">';
+  else html += '<div class="book-preview">';
+  if (coverUrl) html += '<img class="book-preview-cover" src="' + escapeHtml(coverUrl) + '" alt="" onerror="this.outerHTML=\'<div class=&quot;book-preview-cover book-preview-placeholder&quot;>' + escapeHtml((post.quote_book || '?').charAt(0).toUpperCase()) + '</div>\'">';
+  else html += '<div class="book-preview-cover book-preview-placeholder">' + escapeHtml((post.quote_book || '?').charAt(0).toUpperCase()) + '</div>';
+  html += '<div class="book-preview-info">';
+  html += '<div class="book-preview-title">' + escapeHtml(post.quote_book || 'İsimsiz') + '</div>';
+  html += '<div class="book-preview-author">' + escapeHtml(post.quote_author || 'Bilinmeyen') + '</div>';
+  html += '</div>';
+  if (targetBookId) html += '</a>'; else html += '</div>';
+  if (post.content && post.content.trim()) {
+    html += '<div class="read-quote">';
+    html += '<div class="read-quote-mark">&#8220;</div>';
+    html += '<div class="read-quote-text">' + escapeHtml(post.content) + '</div>';
+    if (post.quote_page) html += '<div class="read-quote-page">s. ' + post.quote_page + '</div>';
+    html += '</div>';
+  }
+  html += '<div class="post-actions">';
+  html += '<button class="action-btn ' + liked + '" onclick="toggleLike(\'' + post.id + '\', this)">' + ICONS.heart + '<span class="like-count">' + (post.likes_count || 0) + '</span></button>';
+  html += '<button class="action-btn" onclick="toggleComments(\'' + post.id + '\', this)">' + ICONS.comment + '<span class="comment-count">' + (post.comments_count || 0) + '</span></button>';
+  html += '<button class="action-btn" onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + '</button>';
+  html += '</div>';
+  html += '<div class="comments-section" id="comments-' + post.id + '"></div>';
+  html += '</div>';
+  return;
+}
+
+// OKUDU
+if (post.type === 'read') {
+var book = post.book_id && bookCache ? bookCache[post.book_id] : null;
+var coverUrl = book ? book.cover_url : null;
+var finishedStr = post.finished_at ? formatDate(post.finished_at) : '';
+var targetBookId = post.book_id || '';
+
+html += '<div class="post-card read-card" data-post-id="' + post.id + '" data-owner-id="' + post.user_id + '">';
 html += '<div class="post-header">';
-html += '<a href="kullanici.html?id=' + post.user_id + '" class="post-avatar-link">';
-html += '<div class="post-avatar">' + initial + '</div>';
-html += '</a>';
+html += '<a href="kullanici.html?id=' + post.user_id + '" class="post-avatar-link">' + getAvatar(author, 42) + '</a>';
 html += '<a href="kullanici.html?id=' + post.user_id + '" style="text-decoration:none;color:inherit;flex:1;min-width:0;">';
-html += '<div class="post-meta">';
-html += '<div class="post-name">' + escapeHtml(author.full_name) + '</div>';
-html += '<div class="post-username">@' + escapeHtml(author.username) + '</div>';
-html += '</div>';
-html += '</a>';
-html += '<div class="post-time">' + timeAgo(post.created_at) + '</div>';
-
+html += '<div class="post-meta"><div class="post-name">' + escapeHtml(author.full_name) + '</div><div class="post-username">' + timeAgo(post.created_at) + '</div></div></a>';
 if (isOwner) {
 html += '<button class="post-menu" onclick="toggleMenu(\'' + post.id + '\', event)">' + ICONS.more + '</button>';
 html += '<div class="dropdown" id="menu-' + post.id + '">';
-html += '<button onclick="deletePost(\'' + post.id + '\')">' + ICONS.trash + ' Gönderiyi Sil</button>';
+html += '<button onclick="deletePost(\'' + post.id + '\')" class="danger">' + ICONS.trash + ' Sil</button>';
+html += '<button onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + ' Yeniden Paylaş</button>';
+html += '<button onclick="openDmModal(\'' + post.id + '\')">' + ICONS.send + ' Mesaj Olarak Paylaş</button>';
 html += '</div>';
 }
-
 html += '</div>';
-html += '<div class="post-content">' + escapeHtml(post.content) + '</div>';
+html += '<div class="read-action">' + ICONS.checkCircle;
+html += '<span><strong>' + escapeHtml(author.full_name) + '</strong>, <em>' + escapeHtml(post.quote_book || 'bir kitabı') + '</em>\' okudu</span>';
+html += '</div>';
+if (targetBookId) html += '<a class="book-preview" href="kitap.html?id=' + targetBookId + '">';
+else html += '<div class="book-preview">';
+if (coverUrl) html += '<img class="book-preview-cover" src="' + escapeHtml(coverUrl) + '" alt="" onerror="this.outerHTML=\'<div class=&quot;book-preview-cover book-preview-placeholder&quot;>' + escapeHtml((post.quote_book || '?').charAt(0).toUpperCase()) + '</div>\'">';
+else html += '<div class="book-preview-cover book-preview-placeholder">' + escapeHtml((post.quote_book || '?').charAt(0).toUpperCase()) + '</div>';
+html += '<div class="book-preview-info">';
+html += '<div class="book-preview-title">' + escapeHtml(post.quote_book || 'İsimsiz') + '</div>';
+html += '<div class="book-preview-author">' + escapeHtml(post.quote_author || 'Bilinmeyen') + '</div>';
+if (finishedStr) html += '<div class="book-preview-date">' + finishedStr + '\'de bitirdi</div>';
+html += '</div>';
+if (targetBookId) html += '</a>'; else html += '</div>';
+if (post.content && post.content.trim()) {
+html += '<div class="read-quote"><div class="read-quote-mark">&#8220;</div><div class="read-quote-text">' + escapeHtml(post.content) + '</div>';
+if (post.quote_page) html += '<div class="read-quote-page">s. ' + post.quote_page + '</div>';
+html += '</div>';
+}
 html += '<div class="post-actions">';
-html += '<button class="action-btn ' + liked + '" onclick="toggleLike(\'' + post.id + '\', this)">';
-html += ICONS.heart;
-html += '<span class="like-count">' + (post.likes_count || 0) + '</span>';
-html += '</button>';
-html += '<button class="action-btn" onclick="toggleComments(\'' + post.id + '\', this)">';
-html += ICONS.comment;
-html += '<span class="comment-count">' + (post.comments_count || 0) + '</span>';
-html += '</button>';
+html += '<button class="action-btn ' + liked + '" onclick="toggleLike(\'' + post.id + '\', this)">' + ICONS.heart + '<span class="like-count">' + (post.likes_count || 0) + '</span></button>';
+html += '<button class="action-btn" onclick="toggleComments(\'' + post.id + '\', this)">' + ICONS.comment + '<span class="comment-count">' + (post.comments_count || 0) + '</span></button>';
+html += '<button class="action-btn" onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + '</button>';
+html += '</div>';
+html += '<div class="comments-section" id="comments-' + post.id + '"></div>';
+html += '</div>';
+return;
+}
+
+// NORMAL
+html += '<div class="post-card" data-post-id="' + post.id + '" data-owner-id="' + post.user_id + '">';
+html += '<div class="post-header">';
+html += '<a href="kullanici.html?id=' + post.user_id + '" class="post-avatar-link">' + getAvatar(author, 42) + '</a>';
+html += '<a href="kullanici.html?id=' + post.user_id + '" style="text-decoration:none;color:inherit;flex:1;min-width:0;">';
+html += '<div class="post-meta"><div class="post-name">' + escapeHtml(author.full_name) + '</div><div class="post-username">@' + escapeHtml(author.username) + '</div></div></a>';
+html += '<div class="post-time">' + timeAgo(post.created_at) + '</div>';
+html += '<button class="post-menu" onclick="toggleMenu(\'' + post.id + '\', event)">' + ICONS.more + '</button>';
+html += '<div class="dropdown" id="menu-' + post.id + '">';
+if (isOwner) html += '<button onclick="deletePost(\'' + post.id + '\')" class="danger">' + ICONS.trash + ' Sil</button>';
+html += '<button onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + ' Yeniden Paylaş</button>';
+html += '<button onclick="openQuoteModal(\'' + post.id + '\')">' + ICONS.quote + ' Alıntıla</button>';
+html += '<button onclick="openDmModal(\'' + post.id + '\')">' + ICONS.send + ' Mesaj Olarak Paylaş</button>';
+html += '<a href="gonderi-detay.html?id=' + post.id + '" style="text-decoration:none;color:inherit;"><button>Detayı Gör</button></a>';
+html += '</div>';
+html += '</div>';
+html += '<div class="post-content" style="cursor:pointer;" onclick="window.location.href=\'gonderi-detay.html?id=' + post.id + '\'">' + escapeHtml(post.content) + '</div>';
+html += '<div class="post-actions">';
+html += '<button class="action-btn ' + liked + '" onclick="toggleLike(\'' + post.id + '\', this)">' + ICONS.heart + '<span class="like-count">' + (post.likes_count || 0) + '</span></button>';
+html += '<button class="action-btn" onclick="toggleComments(\'' + post.id + '\', this)">' + ICONS.comment + '<span class="comment-count">' + (post.comments_count || 0) + '</span></button>';
+html += '<button class="action-btn" onclick="doRepost(\'' + post.id + '\', this)">' + ICONS.repost + '</button>';
 html += '</div>';
 html += '<div class="comments-section" id="comments-' + post.id + '"></div>';
 html += '</div>';
@@ -736,19 +997,14 @@ html += '</div>';
 
 document.getElementById('postsContainer').innerHTML = html;
 
-// URL'de ?post=ID varsa highlight
 var urlParams = new URLSearchParams(window.location.search);
 var highlightId = urlParams.get('post');
 if (highlightId) {
 var target = document.querySelector('[data-post-id="' + highlightId + '"]');
-if (target) {
-target.classList.add('highlight');
-setTimeout(function() { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
-}
+if (target) { target.classList.add('highlight'); setTimeout(function() { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); }
 }
 }
 
-// ---------- MENÜ ----------
 window.toggleMenu = function(postId, e) {
 e.stopPropagation();
 var menu = document.getElementById('menu-' + postId);
@@ -756,95 +1012,67 @@ var isOpen = menu.classList.contains('open');
 document.querySelectorAll('.dropdown').forEach(function(m) { m.classList.remove('open'); });
 if (!isOpen) menu.classList.add('open');
 };
+document.addEventListener('click', function() { document.querySelectorAll('.dropdown').forEach(function(m) { m.classList.remove('open'); }); });
 
-document.addEventListener('click', function() {
-document.querySelectorAll('.dropdown').forEach(function(m) { m.classList.remove('open'); });
-});
-
-// ---------- GÖNDERİ SİL ----------
 window.deletePost = async function(postId) {
-if (!confirm('Bu gönderiyi silmek istediğine emin misin?')) return;
+if (!confirm('Silmek istediğine emin misin?')) return;
 var res = await supabaseClient.from('posts').delete().eq('id', postId);
-if (res.error) { toast('Silinemedi: ' + res.error.message); return; }
+if (res.error) { toast('Silinemedi'); return; }
 var card = document.querySelector('[data-post-id="' + postId + '"]');
 if (card) card.remove();
-toast('Gönderi silindi');
+toast('Silindi');
 };
 
-// ---------- BEĞENİ ----------
 window.toggleLike = async function(postId, btn) {
 if (!currentUser) { toast('Beğenmek için giriş yap'); return; }
-
 var liked = btn.classList.contains('liked');
 var countEl = btn.querySelector('.like-count');
-var currentCount = parseInt(countEl.textContent) || 0;
-
+var c = parseInt(countEl.textContent) || 0;
 if (liked) {
 btn.classList.remove('liked');
-countEl.textContent = Math.max(0, currentCount - 1);
+countEl.textContent = Math.max(0, c - 1);
+delete myLikes[postId];
 } else {
 btn.classList.add('liked');
-countEl.textContent = currentCount + 1;
+countEl.textContent = c + 1;
+myLikes[postId] = true;
 }
-
-if (liked) {
-await supabaseClient.from('likes').delete().eq('post_id', postId).eq('user_id', currentUser.id);
-} else {
-await supabaseClient.from('likes').insert([{ post_id: postId, user_id: currentUser.id }]);
-}
+if (liked) await supabaseClient.from('likes').delete().eq('post_id', postId).eq('user_id', currentUser.id);
+else await supabaseClient.from('likes').insert([{ post_id: postId, user_id: currentUser.id }]);
 };
 
-// ---------- YORUMLAR ----------
 window.toggleComments = async function(postId, btn) {
 var section = document.getElementById('comments-' + postId);
-if (section.classList.contains('open')) {
-section.classList.remove('open');
-return;
-}
+if (section.classList.contains('open')) { section.classList.remove('open'); return; }
 section.classList.add('open');
-section.innerHTML = '<div style="color:#a89e94;font-size:0.85rem;padding:0.5rem;">Yükleniyor...</div>';
-
-var res = await supabaseClient
-.from('comments')
-.select('*')
-.eq('post_id', postId)
-.order('created_at', { ascending: true });
-
+section.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:0.5rem;">Yükleniyor...</div>';
+var res = await supabaseClient.from('comments').select('*').eq('post_id', postId).order('created_at', { ascending: true });
 var comments = res.data || [];
 var ids = comments.map(function(c) { return c.user_id; });
 var uniqueIds = ids.filter(function(v, i, a) { return a.indexOf(v) === i; });
 var profileMap = await fetchProfiles(uniqueIds);
-
 var card = document.querySelector('[data-post-id="' + postId + '"]');
 var postOwnerId = card ? card.getAttribute('data-owner-id') : null;
-
 var html = '';
 comments.forEach(function(c) {
-var author = profileMap[c.user_id] || { full_name: 'İsimsiz' };
-var initial = (author.full_name || 'K').charAt(0).toUpperCase();
+var author = profileMap[c.user_id] || { full_name: 'İsimsiz', avatar: 'harf' };
 var canDelete = currentUser && (currentUser.id === c.user_id || currentUser.id === postOwnerId);
-
 html += '<div class="comment" data-comment-id="' + c.id + '">';
-html += '<div class="comment-avatar">' + initial + '</div>';
+html += getAvatar(author, 32);
 html += '<div class="comment-body">';
 html += '<a href="kullanici.html?id=' + c.user_id + '" class="comment-name">' + escapeHtml(author.full_name) + '</a>';
 html += '<div class="comment-text">' + escapeHtml(c.content) + '</div>';
-if (canDelete) {
-html += '<button class="comment-delete" onclick="deleteComment(\'' + c.id + '\', \'' + postId + '\')" title="Yorumu sil">' + ICONS.x + '</button>';
-}
-html += '</div>';
-html += '</div>';
+if (canDelete) html += '<button class="comment-delete" onclick="deleteComment(\'' + c.id + '\', \'' + postId + '\')">' + ICONS.x + '</button>';
+html += '</div></div>';
 });
-
 if (currentUser) {
 html += '<div class="comment-form">';
 html += '<input type="text" class="comment-input" placeholder="Yorum yaz..." id="cinput-' + postId + '" maxlength="500">';
 html += '<button class="comment-send" onclick="sendComment(\'' + postId + '\', this)">Gönder</button>';
 html += '</div>';
 } else {
-html += '<div style="color:#a89e94;font-size:0.85rem;text-align:center;padding:0.5rem;">Yorum yapmak için <a href="giris.html" style="color:#e03131;">giriş yap</a></div>';
+html += '<div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:0.5rem;">Yorum için <a href="giris.html" style="color:var(--bordo);">giriş yap</a></div>';
 }
-
 section.innerHTML = html;
 };
 
@@ -852,84 +1080,121 @@ window.sendComment = async function(postId, btn) {
 var input = document.getElementById('cinput-' + postId);
 var content = input.value.trim();
 if (!content) return;
-
 btn.disabled = true;
 btn.textContent = '...';
-
-var res = await supabaseClient.from('comments').insert([{
-post_id: postId,
-user_id: currentUser.id,
-content: content
-}]);
-
+var res = await supabaseClient.from('comments').insert([{ post_id: postId, user_id: currentUser.id, content: content }]);
 btn.disabled = false;
 btn.textContent = 'Gönder';
-
-if (res.error) { toast('Hata: ' + res.error.message); return; }
-
+if (res.error) { toast('Hata'); return; }
 input.value = '';
 var card = document.querySelector('[data-post-id="' + postId + '"]');
 var countEl = card.querySelector('.comment-count');
 countEl.textContent = (parseInt(countEl.textContent) || 0) + 1;
-
 var section = document.getElementById('comments-' + postId);
 section.classList.remove('open');
 await toggleComments(postId, btn);
 };
 
 window.deleteComment = async function(commentId, postId) {
-if (!confirm('Bu yorumu silmek istediğine emin misin?')) return;
+if (!confirm('Yorumu silmek istediğine emin misin?')) return;
 var res = await supabaseClient.from('comments').delete().eq('id', commentId);
-if (res.error) { toast('Silinemedi: ' + res.error.message); return; }
-
+if (res.error) { toast('Silinemedi'); return; }
 var card = document.querySelector('[data-post-id="' + postId + '"]');
 var countEl = card.querySelector('.comment-count');
 countEl.textContent = Math.max(0, (parseInt(countEl.textContent) || 1) - 1);
-
 var section = document.getElementById('comments-' + postId);
 section.classList.remove('open');
 await toggleComments(postId, document.createElement('button'));
-toast('Yorum silindi');
 };
 
-// ---------- BEĞENENLER MODAL ----------
-window.showLikes = async function(postId) {
-document.getElementById('modalTitle').textContent = 'Beğenenler';
-document.getElementById('modalBody').innerHTML = '<div class="loading">Yükleniyor...</div>';
-document.getElementById('userListModal').classList.add('open');
-
-var res = await supabaseClient.from('likes').select('user_id').eq('post_id', postId);
-var userIds = (res.data || []).map(function(r) { return r.user_id; });
-
-if (!userIds.length) {
-document.getElementById('modalBody').innerHTML =
-'<div class="empty" style="padding:2rem;text-align:center;color:#a89e94;font-size:0.9rem;">Henüz beğenen yok.</div>';
+window.doRepost = async function(originalPostId, btn) {
+if (!currentUser) { toast('Yeniden paylaşmak için giriş yap'); return; }
+if (btn) btn.disabled = true;
+var existing = await supabaseClient.from('posts').select('id').eq('user_id', currentUser.id).eq('repost_of', originalPostId).eq('is_repost', true).maybeSingle();
+if (existing.data) {
+var delRes = await supabaseClient.from('posts').delete().eq('id', existing.data.id);
+if (delRes.error) { toast('Kaldırılamadı', true); if (btn) btn.disabled = false; return; }
+toast('Yeniden paylaşım kaldırıldı');
+if (btn) btn.classList.remove('reposted');
+loadPosts();
 return;
 }
-
-var profRes = await supabaseClient.from('profiles').select('id, full_name, username').in('id', userIds);
-var profiles = profRes.data || [];
-
-var html = '';
-profiles.forEach(function(p) {
-var initial = (p.full_name || 'K').charAt(0).toUpperCase();
-html += '<a class="user-item" href="kullanici.html?id=' + p.id + '">';
-html += '<div class="user-item-avatar">' + initial + '</div>';
-html += '<div class="user-item-info">';
-html += '<div class="user-item-name">' + escapeHtml(p.full_name) + '</div>';
-html += '<div class="user-item-username">@' + escapeHtml(p.username) + '</div>';
-html += '</div>';
-html += '</a>';
-});
-document.getElementById('modalBody').innerHTML = html;
+var origRes = await supabaseClient.from('posts').select('id, user_id').eq('id', originalPostId).single();
+if (origRes.error || !origRes.data) { toast('Gönderi bulunamadı', true); if (btn) btn.disabled = false; return; }
+if (origRes.data.user_id === currentUser.id) {
+toast('Kendi gönderini yeniden paylaşamazsın', true);
+if (btn) btn.disabled = false;
+return;
+}
+var insRes = await supabaseClient.from('posts').insert([{ user_id: currentUser.id, content: null, is_repost: true, repost_of: originalPostId }]);
+if (insRes.error) { toast('Hata: ' + insRes.error.message, true); if (btn) btn.disabled = false; return; }
+toast('✅ Yeniden paylaşıldı');
+loadPosts();
 };
 
-document.getElementById('modalClose').addEventListener('click', function() {
-document.getElementById('userListModal').classList.remove('open');
+window.openQuoteModal = async function(postId) {
+if (!currentUser) { toast('Giriş yapmalısın', true); return; }
+var origRes = await supabaseClient.from('posts').select('*').eq('id', postId).single();
+if (origRes.error || !origRes.data) { toast('Gönderi bulunamadı', true); return; }
+var orig = origRes.data;
+var origAuthor = profileCache[orig.user_id] || { full_name: 'İsimsiz' };
+pendingQuotePost = orig;
+document.getElementById('quoteOriginal').innerHTML = '<div class="quote-original-name">' + escapeHtml(origAuthor.full_name) + '</div><div class="quote-original-text">' + escapeHtml(orig.content || '') + '</div>';
+document.getElementById('quoteComment').value = '';
+document.getElementById('quoteModal').classList.add('open');
+setTimeout(function() { document.getElementById('quoteComment').focus(); }, 100);
+};
+
+document.getElementById('quoteClose').addEventListener('click', function() { document.getElementById('quoteModal').classList.remove('open'); pendingQuotePost = null; });
+document.getElementById('quoteCancel').addEventListener('click', function() { document.getElementById('quoteModal').classList.remove('open'); pendingQuotePost = null; });
+document.getElementById('quoteModal').addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('open'); pendingQuotePost = null; } });
+
+document.getElementById('quoteSave').addEventListener('click', async function() {
+if (!pendingQuotePost) return;
+var comment = document.getElementById('quoteComment').value.trim();
+var btn = this;
+btn.disabled = true;
+btn.textContent = 'Paylaşılıyor...';
+var res = await supabaseClient.from('posts').insert([{ user_id: currentUser.id, content: comment || null, is_repost: false, repost_of: pendingQuotePost.id }]);
+if (res.error) { toast('Hata: ' + res.error.message, true); btn.disabled = false; btn.textContent = 'Alıntıla'; return; }
+document.getElementById('quoteModal').classList.remove('open');
+pendingQuotePost = null;
+btn.disabled = false;
+btn.textContent = 'Alıntıla';
+toast('✅ Alıntılandı');
+loadPosts();
 });
-document.getElementById('userListModal').addEventListener('click', function(e) {
-if (e.target === this) this.classList.remove('open');
+
+window.openDmModal = async function(postId) {
+if (!currentUser) { toast('Giriş yapmalısın', true); return; }
+var origRes = await supabaseClient.from('posts').select('*').eq('id', postId).single();
+if (origRes.error || !origRes.data) { toast('Gönderi bulunamadı', true); return; }
+pendingDmPost = origRes.data;
+document.getElementById('dmBody').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Yükleniyor...</div>';
+document.getElementById('dmModal').classList.add('open');
+var usersRes = await supabaseClient.from('profiles').select('id, full_name, username, avatar').eq('status', 'approved').neq('id', currentUser.id).order('full_name', { ascending: true }).limit(100);
+var users = usersRes.data || [];
+if (!users.length) { document.getElementById('dmBody').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Kullanıcı bulunamadı.</div>'; return; }
+var html = '';
+users.forEach(function(u) {
+html += '<button class="user-item" onclick="sendDm(\'' + u.id + '\')">' + getAvatar(u, 40) + '<div class="user-item-info"><div class="user-item-name">' + escapeHtml(u.full_name) + '</div><div class="user-item-username">@' + escapeHtml(u.username) + '</div></div></button>';
 });
+document.getElementById('dmBody').innerHTML = html;
+};
+
+window.sendDm = async function(receiverId) {
+if (!pendingDmPost) return;
+var postUrl = window.location.origin + '/gonderi-detay.html?id=' + pendingDmPost.id;
+var content = '📎 Bir gönderi paylaştı:\n\n"' + (pendingDmPost.content || '').substring(0, 100) + (pendingDmPost.content && pendingDmPost.content.length > 100 ? '...' : '') + '"\n\n' + postUrl;
+var res = await supabaseClient.from('messages').insert([{ sender_id: currentUser.id, receiver_id: receiverId, content: content, post_id: pendingDmPost.id }]);
+if (res.error) { toast('Hata: ' + res.error.message, true); return; }
+document.getElementById('dmModal').classList.remove('open');
+pendingDmPost = null;
+toast('✅ Gönderi paylaşıldı');
+};
+
+document.getElementById('dmClose').addEventListener('click', function() { document.getElementById('dmModal').classList.remove('open'); pendingDmPost = null; });
+document.getElementById('dmModal').addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('open'); pendingDmPost = null; } });
 
 init();
 })();

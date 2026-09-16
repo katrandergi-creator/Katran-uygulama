@@ -2,97 +2,79 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Profil • Katran Dergi</title>
+<link rel="stylesheet" href="tema.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
 font-family: 'Inter', -apple-system, sans-serif;
-background: #0a0808;
-color: #f4efe8;
+background: var(--bg);
+color: var(--text);
 min-height: 100vh;
-padding: 2rem 1rem;
+padding: 1.5rem 1rem 100px;
+transition: background 0.3s ease, color 0.3s ease;
 }
 .container { max-width: 700px; margin: 0 auto; }
-.top-bar {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 2rem;
-flex-wrap: wrap;
-gap: 0.5rem;
-}
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem; }
 .back-link {
-color: #a89e94;
+color: var(--text-muted);
 text-decoration: none;
 font-size: 0.85rem;
-padding: 0.45rem 0.9rem;
-border: 1px solid rgba(255,255,255,0.1);
+padding: 0.4rem 0.85rem;
+border: 1px solid var(--border);
 border-radius: 60px;
 display: inline-flex;
 align-items: center;
-gap: 0.4rem;
+gap: 0.35rem;
 transition: all 0.2s;
+background: var(--bg-elev);
 }
-.back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.back-link:hover { color: #e03131; border-color: #e03131; }
+.back-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.back-link:hover { color: var(--bordo); border-color: var(--bordo); background: var(--bordo-glow); }
+
 .profile-card {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(255,255,255,0.06);
+background: var(--bg-elev);
+border: 1px solid var(--border);
 border-radius: 20px;
-padding: 3rem 2.5rem;
+padding: 1.8rem 1.5rem;
 text-align: center;
-margin-bottom: 1.5rem;
+margin-bottom: 1rem;
 }
-.avatar {
-width: 100px;
-height: 100px;
-border-radius: 50%;
-background: linear-gradient(135deg, #e03131, #b71c1c);
-display: flex;
-align-items: center;
-justify-content: center;
-margin: 0 auto 1.5rem;
-font-family: 'Playfair Display', serif;
-font-size: 2.5rem;
-font-weight: 900;
-color: #f4efe8;
-border: 3px solid rgba(255,255,255,0.1);
-}
+.avatar-container { display: flex; justify-content: center; margin-bottom: 1rem; }
+.full-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; margin-bottom: 0.15rem; color: var(--text); }
+.username { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.8rem; }
+.member-since { color: var(--text-dim); font-size: 0.78rem; font-style: italic; margin-top: 0.5rem; }
+
 .rank-badge {
 display: inline-flex;
 align-items: center;
-gap: 0.4rem;
-padding: 0.4rem 1rem;
+gap: 0.35rem;
+padding: 0.35rem 0.85rem;
 border-radius: 60px;
-font-size: 0.75rem;
+font-size: 0.7rem;
 font-weight: 700;
 text-transform: uppercase;
-letter-spacing: 0.1em;
-margin-bottom: 1rem;
+letter-spacing: 0.08em;
 }
-.rank-filiz { background: rgba(168,158,148,0.15); color: #a89e94; border: 1px solid rgba(168,158,148,0.3); }
-.rank-karanfil { background: rgba(236,72,153,0.15); color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
+.rank-filiz { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+.rank-karanfil { background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); }
 .rank-gergedan { background: rgba(224,49,49,0.15); color: #e03131; border: 1px solid rgba(224,49,49,0.3); }
-.rank-katran { background: rgba(212,168,67,0.15); color: #d4a843; border: 1px solid rgba(212,168,67,0.3); }
-.rank-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; }
+.rank-katran { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
+.rank-icon { width: 14px; height: 14px; display: inline-flex; align-items: center; }
 .rank-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.full-name {
-font-family: 'Playfair Display', serif;
-font-size: 2rem;
-font-weight: 900;
-margin-bottom: 0.3rem;
-}
-.username { color: #a89e94; font-size: 1rem; margin-bottom: 1rem; }
-.member-since { color: #a89e94; font-size: 0.85rem; font-style: italic; margin-bottom: 1.5rem; }
-.btn-row {
-display: flex;
-gap: 0.5rem;
-justify-content: center;
-flex-wrap: wrap;
-}
+
+.btn-row { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1.2rem; }
 .action-btn {
-padding: 0.7rem 1.5rem;
+padding: 0.65rem 1.4rem;
 border-radius: 60px;
 border: none;
 font-weight: 700;
@@ -101,164 +83,100 @@ cursor: pointer;
 font-family: inherit;
 display: inline-flex;
 align-items: center;
-gap: 0.5rem;
-transition: all 0.2s;
+gap: 0.45rem;
+transition: all 0.25s;
 }
 .action-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.action-btn.not-following { background: #e03131; color: #f4efe8; }
-.action-btn.not-following:hover { background: #b71c1c; }
-.action-btn.following { background: transparent; color: #a89e94; border: 1px solid rgba(255,255,255,0.15); }
-.action-btn.following:hover { background: rgba(224,49,49,0.15); color: #e03131; border-color: #e03131; }
-.action-btn.message-btn { background: transparent; color: #a89e94; border: 1px solid rgba(255,255,255,0.15); }
-.action-btn.message-btn:hover { color: #e03131; border-color: #e03131; }
-.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.follow-stats {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 0.8rem;
-margin-bottom: 1.5rem;
-}
+.action-btn.follow { background: var(--bordo); color: #fff; }
+.action-btn.follow:hover { background: var(--bordo-dark); transform: translateY(-2px); }
+.action-btn.following { background: transparent; color: var(--text-muted); border: 1px solid var(--border-strong); }
+.action-btn.following:hover { color: var(--bordo); border-color: var(--bordo); }
+.action-btn.message { background: transparent; color: var(--text-muted); border: 1px solid var(--border-strong); }
+.action-btn.message:hover { color: var(--bordo); border-color: var(--bordo); }
+
+.follow-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem; }
 .follow-stat {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(255,255,255,0.06);
-border-radius: 16px;
-padding: 1.2rem 0.5rem;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 1rem 0.5rem;
 text-align: center;
-transition: all 0.2s;
 cursor: pointer;
+transition: all 0.25s;
 }
-.follow-stat:hover { border-color: rgba(224,49,49,0.3); background: rgba(224,49,49,0.03); }
-.follow-stat .number {
-font-family: 'Playfair Display', serif;
-font-size: 1.8rem;
-font-weight: 900;
-color: #e03131;
-display: block;
-}
-.follow-stat .label {
-font-size: 0.7rem;
-color: #a89e94;
-text-transform: uppercase;
-letter-spacing: 0.1em;
-margin-top: 0.3rem;
-}
-.section {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(255,255,255,0.06);
-border-radius: 20px;
-padding: 2rem;
-margin-bottom: 1.5rem;
-}
-.section h2 {
-font-family: 'Playfair Display', serif;
-font-size: 1.3rem;
-margin-bottom: 1rem;
-}
-.section h2::before { content: '❀ '; color: #e03131; }
-.section p { color: #a89e94; font-size: 0.95rem; line-height: 1.7; white-space: pre-wrap; word-wrap: break-word; }
-.stats-grid {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 0.8rem;
-margin-bottom: 1.5rem;
-}
-.stat-box {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(255,255,255,0.06);
-border-radius: 16px;
-padding: 1.2rem 0.5rem;
-text-align: center;
-}
-.stat-box .number {
-font-family: 'Playfair Display', serif;
-font-size: 1.8rem;
-font-weight: 900;
-color: #e03131;
-display: block;
-}
-.stat-box .label {
-font-size: 0.7rem;
-color: #a89e94;
-text-transform: uppercase;
-letter-spacing: 0.1em;
-margin-top: 0.3rem;
-}
-.my-post {
-background: rgba(255,255,255,0.02);
-border: 1px solid rgba(255,255,255,0.06);
-border-radius: 12px;
-padding: 1rem;
-margin-bottom: 0.7rem;
-transition: all 0.2s;
-}
-.my-post:hover { border-color: rgba(224,49,49,0.3); }
-.my-post-time { font-size: 0.75rem; color: #7a7068; margin-bottom: 0.5rem; }
-.my-post-content {
-font-size: 0.95rem;
-color: #e8e0d6;
-line-height: 1.6;
-white-space: pre-wrap;
-word-wrap: break-word;
-cursor: pointer;
-}
-.my-post-stats {
+.follow-stat:hover { border-color: var(--bordo); transform: translateY(-2px); }
+.follow-stat .number { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--bordo); display: block; line-height: 1; }
+.follow-stat .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-bottom: 1.2rem; }
+.stat-box { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 1rem 0.4rem; text-align: center; }
+.stat-box .number { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--bordo); display: block; line-height: 1; }
+.stat-box .label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem; }
+
+.section { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 16px; padding: 1.3rem; margin-bottom: 1rem; }
+.section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.9rem; }
+.section h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.section p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
+
+.shelf-wrap { position: relative; padding-bottom: 6px; }
+.shelf-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.8rem; padding: 0.3rem 0 0.7rem; }
+.shelf-line { height: 5px; background: var(--bordo); border-radius: 2px; opacity: 0.4; margin-bottom: 0.3rem; }
+.shelf-empty { color: var(--text-dim); font-size: 0.85rem; font-style: italic; text-align: center; padding: 0.8rem 0; }
+.book-spine { text-decoration: none; color: inherit; transition: transform 0.25s; display: block; }
+.book-spine:hover { transform: translateY(-4px); }
+.book-spine .cover {
+width: 100%;
+aspect-ratio: 2/3;
+border-radius: 3px 5px 5px 3px;
+background: linear-gradient(135deg, var(--bordo), var(--bordo-dark));
 display: flex;
-gap: 1rem;
-margin-top: 0.6rem;
-font-size: 0.8rem;
-color: #a89e94;
 align-items: center;
+justify-content: center;
+color: #fff;
+font-family: 'Playfair Display', serif;
+font-size: 1.4rem;
+font-weight: 900;
+box-shadow: 0 3px 10px -3px rgba(0,0,0,0.4);
+overflow: hidden;
 }
-.my-post-stats button {
-background: transparent;
-border: none;
-color: #a89e94;
-font-family: inherit;
-font-size: 0.8rem;
-cursor: pointer;
-display: inline-flex;
-align-items: center;
-gap: 0.3rem;
-padding: 0.2rem 0.4rem;
-border-radius: 6px;
-transition: all 0.2s;
+.book-spine .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.book-spine .title {
+font-size: 0.7rem;
+color: var(--text-muted);
+margin-top: 0.35rem;
+line-height: 1.3;
+overflow: hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
 }
-.my-post-stats button:hover { background: rgba(224,49,49,0.1); color: #e03131; }
-.my-post-stats svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.loading { text-align: center; padding: 4rem; color: #a89e94; }
-.loading .flower {
-font-size: 3rem;
-color: #e03131;
-animation: spin 2s linear infinite;
-display: inline-block;
-}
-@keyframes spin {
-from { transform: rotate(0deg); }
-to { transform: rotate(360deg); }
-}
-.message-error {
-background: rgba(224,49,49,0.15);
-border: 1px solid rgba(224,49,49,0.4);
-color: #ff8a8a;
-padding: 1rem;
-border-radius: 10px;
-margin-bottom: 1rem;
-text-align: center;
-}
-.own-note {
-text-align: center;
-color: #a89e94;
-font-size: 0.85rem;
-margin-top: 1rem;
-}
-.own-note a { color: #e03131; text-decoration: none; font-weight: 700; }
+
+.my-post { background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 0.6rem; cursor: pointer; transition: all 0.2s; }
+.my-post:last-child { margin-bottom: 0; }
+.my-post:hover { border-color: var(--bordo); transform: translateX(4px); }
+.my-post-time { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.35rem; }
+.my-post-content { font-size: 0.88rem; color: var(--text); line-height: 1.55; white-space: pre-wrap; word-wrap: break-word; }
+.my-post-content.quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.95rem; }
+.my-post-attr { font-size: 0.75rem; color: var(--text-muted); text-align: right; margin-top: 0.4rem; font-style: italic; }
+.my-post-attr strong { color: var(--bordo); font-style: normal; }
+.my-post-stats { display: flex; gap: 0.9rem; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted); align-items: center; }
+.my-post-stats svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.my-post-stats span { display: inline-flex; align-items: center; gap: 0.3rem; }
+
+.loading { text-align: center; padding: 4rem 1rem; color: var(--text-muted); }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--bordo); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.message-error { background: rgba(224,49,49,0.15); border: 1px solid rgba(224,49,49,0.4); color: #ff8a8a; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; text-align: center; font-size: 0.9rem; }
+.own-note { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem; font-style: italic; }
+.own-note a { color: var(--bordo); text-decoration: none; font-weight: 700; }
 .toast {
 position: fixed;
-bottom: 2rem;
+bottom: 100px;
 left: 50%;
 transform: translateX(-50%) translateY(100px);
-background: #e03131;
-color: #f4efe8;
+background: var(--bordo);
+color: #fff;
 padding: 0.8rem 1.5rem;
 border-radius: 60px;
 font-weight: 600;
@@ -269,104 +187,37 @@ max-width: 90%;
 text-align: center;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
-/* MODAL */
-.modal-backdrop {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.75);
-backdrop-filter: blur(4px);
-z-index: 9998;
-display: none;
-align-items: center;
-justify-content: center;
-padding: 1rem;
-}
+
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 1rem; }
 .modal-backdrop.open { display: flex; }
-.modal {
-background: #1a1412;
-border: 1px solid rgba(255,255,255,0.1);
-border-radius: 20px;
-max-width: 440px;
-width: 100%;
-max-height: 80vh;
-overflow: hidden;
-display: flex;
-flex-direction: column;
-}
-.modal-header {
-padding: 1.2rem 1.5rem;
-border-bottom: 1px solid rgba(255,255,255,0.06);
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
-.modal-header h3 {
-font-family: 'Playfair Display', serif;
-font-size: 1.2rem;
-font-weight: 700;
-}
-.modal-close {
-background: transparent;
-border: none;
-color: #a89e94;
-cursor: pointer;
-padding: 0.4rem;
-border-radius: 50%;
-display: flex;
-align-items: center;
-}
+.modal { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; max-width: 440px; width: 100%; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); }
+.modal-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text); }
+.modal-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 0.4rem; border-radius: 50%; display: flex; transition: all 0.2s; }
 .modal-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.modal-close:hover { color: #e03131; background: rgba(224,49,49,0.1); }
-.modal-body {
-padding: 0.5rem 0;
-overflow-y: auto;
-flex: 1;
-}
-.user-item {
-display: flex;
-align-items: center;
-gap: 0.8rem;
-padding: 0.8rem 1.5rem;
-text-decoration: none;
-color: inherit;
-transition: background 0.15s;
-cursor: pointer;
-}
-.user-item:hover { background: rgba(224,49,49,0.06); }
-.user-item-avatar {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-background: linear-gradient(135deg, #e03131, #b71c1c);
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: 900;
-color: #f4efe8;
-flex-shrink: 0;
-font-size: 0.95rem;
-}
+.modal-close:hover { color: var(--bordo); background: var(--bordo-glow); }
+.modal-body { padding: 0.5rem 0; overflow-y: auto; flex: 1; }
+.user-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1.5rem; text-decoration: none; color: inherit; transition: background 0.15s; }
+.user-item:hover { background: var(--bordo-glow); }
 .user-item-info { flex: 1; min-width: 0; }
-.user-item-name { font-weight: 700; font-size: 0.9rem; }
-.user-item-username { color: #a89e94; font-size: 0.8rem; }
+.user-item-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+.user-item-username { color: var(--text-muted); font-size: 0.8rem; }
+
 @media (max-width: 520px) {
-.profile-card { padding: 2rem 1.5rem; }
-.full-name { font-size: 1.5rem; }
-.avatar { width: 80px; height: 80px; font-size: 2rem; }
+.container { padding: 1rem 0.8rem; }
+.profile-card { padding: 1.5rem 1rem; }
+.full-name { font-size: 1.3rem; }
+.section { padding: 1.1rem 1rem; }
 }
 </style>
 </head>
 <body>
 
 <div class="container">
-<div id="loadingState" class="loading">
-<div class="flower">❀</div>
-<p style="margin-top:1rem;">Yükleniyor...</p>
-</div>
-
+<div id="loadingState" class="loading"><div class="spinner"></div>Yükleniyor...</div>
 <div id="errorState" style="display:none;">
 <div class="message-error" id="errorMsg"></div>
-<a href="akis.html" class="back-link">← Akışa dön</a>
+<a href="akis.html" class="back-link" style="display:inline-flex;margin-top:0.5rem;">← Akışa dön</a>
 </div>
 
 <div id="profileContent" style="display:none;">
@@ -378,7 +229,7 @@ Akışa dön
 </div>
 
 <div class="profile-card">
-<div class="avatar" id="avatar">K</div>
+<div class="avatar-container" id="avatarContainer"></div>
 <h1 class="full-name" id="fullName">—</h1>
 <p class="username" id="username">@—</p>
 <div id="rankContainer"></div>
@@ -398,28 +249,27 @@ Akışa dön
 </div>
 
 <div class="stats-grid">
-<div class="stat-box">
-<span class="number" id="statRead">0</span>
-<span class="label">Okudum</span>
-</div>
-<div class="stat-box">
-<span class="number" id="statReading">0</span>
-<span class="label">Okuyorum</span>
-</div>
-<div class="stat-box">
-<span class="number" id="statWant">0</span>
-<span class="label">Okuyacağım</span>
-</div>
+<div class="stat-box"><span class="number" id="statRead">0</span><span class="label">Okudum</span></div>
+<div class="stat-box"><span class="number" id="statReading">0</span><span class="label">Okuyorum</span></div>
+<div class="stat-box"><span class="number" id="statWant">0</span><span class="label">Okuyacağım</span></div>
 </div>
 
-<div class="section" id="bioSection">
+<div class="section" id="bioSection" style="display:none;">
 <h2>Hakkımda</h2>
 <p id="bio">—</p>
 </div>
 
 <div class="section">
-<h2>Gönderileri</h2>
-<div id="userPosts"><div style="color:#a89e94;font-size:0.9rem;">Yükleniyor...</div></div>
+<div class="section-header"><h2>Okudukları</h2></div>
+<div class="shelf-wrap">
+<div class="shelf-row" id="readShelf"><div class="shelf-empty">Henüz kitap okumamış.</div></div>
+<div class="shelf-line"></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header"><h2>Gönderileri</h2></div>
+<div id="userPosts"><div style="color:var(--text-muted);font-size:0.9rem;">Yükleniyor...</div></div>
 </div>
 
 <div class="own-note" id="ownNote" style="display:none;">
@@ -430,7 +280,6 @@ Bu senin profilini. <a href="profil.html">Kendi profil sayfana git →</a>
 
 <div class="toast" id="toast"></div>
 
-<!-- KULLANICI LİSTESİ MODAL -->
 <div class="modal-backdrop" id="userListModal">
 <div class="modal">
 <div class="modal-header">
@@ -439,13 +288,13 @@ Bu senin profilini. <a href="profil.html">Kendi profil sayfana git →</a>
 <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 </button>
 </div>
-<div class="modal-body" id="modalBody">
-<div class="loading">Yükleniyor...</div>
-</div>
+<div class="modal-body" id="modalBody"></div>
 </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+<script src="avatares.js"></script>
 
 <script>
 (function() {
@@ -472,12 +321,7 @@ var ICON_PLUS = '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/>
 var ICON_CHECK = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
 var ICON_MAIL = '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>';
 
-var RANK_LABELS = {
-filiz: 'Filiz',
-karanfil: 'Karanfil',
-gergedan: 'Gergedan Böceği',
-katran: 'Katran Kurucusu'
-};
+var RANK_LABELS = { filiz: 'Filiz', karanfil: 'Karanfil', gergedan: 'Gergedan Böceği', katran: 'Katran Kurucusu' };
 
 function escapeHtml(str) {
 if (!str) return '';
@@ -486,8 +330,7 @@ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;
 
 function timeAgo(dateStr) {
 var d = new Date(dateStr);
-var now = new Date();
-var s = Math.floor((now - d) / 1000);
+var s = Math.floor((new Date() - d) / 1000);
 if (s < 60) return 'şimdi';
 if (s < 3600) return Math.floor(s/60) + ' dk önce';
 if (s < 86400) return Math.floor(s/3600) + ' sa önce';
@@ -508,169 +351,105 @@ document.getElementById('errorState').style.display = 'block';
 document.getElementById('errorMsg').textContent = msg;
 }
 
-// ---------- BAŞLAT ----------
+function getAvatar(profile, size) {
+  if (window.renderAvatar) return window.renderAvatar(profile, size || 42);
+  var initial = (profile.full_name || 'K').charAt(0).toUpperCase();
+  return '<div style="width:' + (size || 42) + 'px;height:' + (size || 42) + 'px;border-radius:50%;background:linear-gradient(135deg, var(--bordo), var(--bordo-dark));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:' + Math.round((size || 42) * 0.42) + 'px;">' + initial + '</div>';
+}
+
 (async function init() {
 var urlParams = new URLSearchParams(window.location.search);
 targetUserId = urlParams.get('id');
+if (!targetUserId) { showError('Kullanıcı belirtilmedi.'); return; }
 
-if (!targetUserId) {
-showError('Kullanıcı belirtilmedi.');
-return;
-}
-
-try {
 var sessionRes = await supabaseClient.auth.getSession();
-if (sessionRes.data.session) {
-currentUser = sessionRes.data.session.user;
-}
-} catch (e) { console.error(e); }
+if (sessionRes.data.session) currentUser = sessionRes.data.session.user;
+var isOwn = currentUser && currentUser.id === targetUserId;
 
-var isOwnProfile = currentUser && currentUser.id === targetUserId;
-
-var profileRes = await supabaseClient
-.from('profiles')
-.select('*')
-.eq('id', targetUserId)
-.single();
-
-if (profileRes.error || !profileRes.data) {
-showError('Kullanıcı bulunamadı.');
-return;
-}
-
+var profileRes = await supabaseClient.from('profiles').select('*').eq('id', targetUserId).single();
+if (profileRes.error || !profileRes.data) { showError('Kullanıcı bulunamadı.'); return; }
 var profile = profileRes.data;
+if (profile.status !== 'approved' && !isOwn) { showError('Bu kullanıcının profili mevcut değil.'); return; }
 
-if (profile.status !== 'approved' && !isOwnProfile) {
-showError('Bu kullanıcının profili mevcut değil.');
-return;
-}
+// Avatar
+var waitAvatar = setInterval(function() {
+  if (window.renderAvatar) {
+    clearInterval(waitAvatar);
+    document.getElementById('avatarContainer').innerHTML = window.renderAvatar(profile, 80);
+  }
+}, 50);
 
-var initial = (profile.full_name || 'K').charAt(0).toUpperCase();
-document.getElementById('avatar').textContent = initial;
 document.getElementById('fullName').textContent = profile.full_name || 'İsimsiz';
 document.getElementById('username').textContent = '@' + (profile.username || 'kullanici');
 
 var rank = profile.rank || 'filiz';
-document.getElementById('rankContainer').innerHTML =
-'<div class="rank-badge rank-' + rank + '">' +
-'<span class="rank-icon">' + (RANK_ICONS[rank] || RANK_ICONS.filiz) + '</span>' +
-(RANK_LABELS[rank] || 'Filiz') +
-'</div>';
+document.getElementById('rankContainer').innerHTML = '<div class="rank-badge rank-' + rank + '"><span class="rank-icon">' + (RANK_ICONS[rank] || RANK_ICONS.filiz) + '</span>' + (RANK_LABELS[rank] || 'Filiz') + '</div>';
 
 if (profile.bio && profile.bio.trim()) {
 document.getElementById('bio').textContent = profile.bio;
-} else {
-document.getElementById('bioSection').style.display = 'none';
+document.getElementById('bioSection').style.display = 'block';
 }
 
 if (profile.created_at) {
 var date = new Date(profile.created_at);
 var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-document.getElementById('memberSince').textContent =
-months[date.getMonth()] + ' ' + date.getFullYear() + "'den beri üye";
+document.getElementById('memberSince').textContent = months[date.getMonth()] + ' ' + date.getFullYear() + "'den beri üye";
 }
 
 document.title = profile.full_name + ' • Katran Dergi';
 
 await loadFollowCounts();
-
-if (!isOwnProfile) {
-await checkFollowStatus();
-renderButtons();
-} else {
-document.getElementById('ownNote').style.display = 'block';
-}
-
-var stats = { read: 0, reading: 0, want: 0 };
-var ubRes = await supabaseClient.from('user_books').select('status').eq('user_id', targetUserId);
-(ubRes.data || []).forEach(function(r) {
-if (r.status === 'read') stats.read++;
-else if (r.status === 'reading') stats.reading++;
-else stats.want++;
-});
-document.getElementById('statRead').textContent = stats.read;
-document.getElementById('statReading').textContent = stats.reading;
-document.getElementById('statWant').textContent = stats.want;
-
+await loadUserBooks();
 loadUserPosts(targetUserId);
 
-// Follow stat tıklamaları
-document.getElementById('followersStat').addEventListener('click', function() {
-showUserList('Takipçiler', 'followers');
-});
-document.getElementById('followingStat').addEventListener('click', function() {
-showUserList('Takip Edilenler', 'following');
-});
+if (!isOwn) { await checkFollowStatus(); renderButtons(); }
+else { document.getElementById('ownNote').style.display = 'block'; }
+
+document.getElementById('followersStat').addEventListener('click', function() { showUserList('Takipçiler', 'followers'); });
+document.getElementById('followingStat').addEventListener('click', function() { showUserList('Takip Edilenler', 'following'); });
+document.getElementById('modalClose').addEventListener('click', function() { document.getElementById('userListModal').classList.remove('open'); });
+document.getElementById('userListModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
 
 document.getElementById('loadingState').style.display = 'none';
 document.getElementById('profileContent').style.display = 'block';
 })();
 
-// ---------- TAKİP SAYILARI ----------
 async function loadFollowCounts() {
-var followersRes = await supabaseClient
-.from('follows')
-.select('id', { count: 'exact', head: true })
-.eq('following_id', targetUserId);
-
-var followingRes = await supabaseClient
-.from('follows')
-.select('id', { count: 'exact', head: true })
-.eq('follower_id', targetUserId);
-
+var followersRes = await supabaseClient.from('follows').select('id', { count: 'exact', head: true }).eq('following_id', targetUserId);
+var followingRes = await supabaseClient.from('follows').select('id', { count: 'exact', head: true }).eq('follower_id', targetUserId);
 document.getElementById('statFollowers').textContent = followersRes.count || 0;
 document.getElementById('statFollowing').textContent = followingRes.count || 0;
 }
 
-// ---------- TAKİP DURUMU ----------
 async function checkFollowStatus() {
 if (!currentUser) return;
-var res = await supabaseClient
-.from('follows')
-.select('id')
-.eq('follower_id', currentUser.id)
-.eq('following_id', targetUserId)
-.single();
+var res = await supabaseClient.from('follows').select('id').eq('follower_id', currentUser.id).eq('following_id', targetUserId).maybeSingle();
 isFollowing = !!res.data;
 }
 
 function renderButtons() {
 var row = document.getElementById('btnRow');
 if (!currentUser) {
-row.innerHTML =
-'<button class="action-btn not-following" onclick="window.location.href=\'giris.html\'">' + ICON_PLUS + ' Takip Et</button>';
+row.innerHTML = '<button class="action-btn follow" onclick="window.location.href=\'giris.html\'">' + ICON_PLUS + ' Takip Et</button>';
 return;
 }
-row.innerHTML =
-'<button class="action-btn ' + (isFollowing ? 'following' : 'not-following') + '" id="followBtn">' +
-(isFollowing ? ICON_CHECK + ' Takiptesin' : ICON_PLUS + ' Takip Et') +
-'</button>' +
-'<button class="action-btn message-btn" id="messageBtn">' + ICON_MAIL + ' Mesaj</button>';
-
+row.innerHTML = '<button class="action-btn ' + (isFollowing ? 'following' : 'follow') + '" id="followBtn">' + (isFollowing ? ICON_CHECK + ' Takiptesin' : ICON_PLUS + ' Takip Et') + '</button>' +
+'<button class="action-btn message" id="messageBtn">' + ICON_MAIL + ' Mesaj</button>';
 document.getElementById('followBtn').addEventListener('click', toggleFollow);
-document.getElementById('messageBtn').addEventListener('click', function() {
-window.location.href = 'sohbet.html?id=' + targetUserId;
-});
+document.getElementById('messageBtn').addEventListener('click', function() { window.location.href = 'sohbet.html?id=' + targetUserId; });
 }
 
 async function toggleFollow() {
-if (!currentUser) {
-toast('Takip etmek için giriş yapmalısın');
-return;
-}
+if (!currentUser) { toast('Takip etmek için giriş yap'); return; }
 var btn = document.getElementById('followBtn');
 btn.disabled = true;
-
 if (isFollowing) {
 await supabaseClient.from('follows').delete().eq('follower_id', currentUser.id).eq('following_id', targetUserId);
 isFollowing = false;
 toast('Takipten çıkıldı');
 } else {
-var res = await supabaseClient.from('follows').insert([{
-follower_id: currentUser.id,
-following_id: targetUserId
-}]);
-if (res.error) { toast('Hata: ' + res.error.message); btn.disabled = false; return; }
+var res = await supabaseClient.from('follows').insert([{ follower_id: currentUser.id, following_id: targetUserId }]);
+if (res.error) { toast('Hata'); btn.disabled = false; return; }
 isFollowing = true;
 toast('Takip ediliyor');
 }
@@ -679,14 +458,76 @@ renderButtons();
 await loadFollowCounts();
 }
 
-// ---------- KULLANICI LİSTESİ MODAL ----------
+async function loadUserBooks() {
+var res = await supabaseClient.from('user_books').select('status, books(id, title, author, cover_url)').eq('user_id', targetUserId);
+if (res.error) return;
+var stats = { read: 0, reading: 0, want: 0 };
+var readBooks = [];
+(res.data || []).forEach(function(r) {
+if (!r.books) return;
+if (r.status === 'read') { stats.read++; readBooks.push(r.books); }
+else if (r.status === 'reading') { stats.reading++; }
+else { stats.want++; }
+});
+document.getElementById('statRead').textContent = stats.read;
+document.getElementById('statReading').textContent = stats.reading;
+document.getElementById('statWant').textContent = stats.want;
+renderShelf(readBooks);
+}
+
+function renderShelf(books) {
+var el = document.getElementById('readShelf');
+if (!books.length) { el.innerHTML = '<div class="shelf-empty">Henüz kitap okumamış.</div>'; return; }
+var html = '';
+books.forEach(function(b) {
+var cover = b.cover_url
+? '<img src="' + escapeHtml(b.cover_url) + '" alt="" onerror="this.style.display=\'none\';this.parentElement.textContent=\'' + escapeHtml((b.title || '?').charAt(0).toUpperCase()) + '\';">'
+: escapeHtml((b.title || '?').charAt(0).toUpperCase());
+html += '<a class="book-spine" href="kitap.html?id=' + b.id + '" title="' + escapeHtml(b.title) + '">';
+html += '<div class="cover">' + cover + '</div>';
+html += '<div class="title">' + escapeHtml(b.title || 'İsimsiz') + '</div>';
+html += '</a>';
+});
+el.innerHTML = html;
+}
+
+async function loadUserPosts(userId) {
+var res = await supabaseClient.from('posts').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(20);
+var container = document.getElementById('userPosts');
+if (res.error) { container.innerHTML = '<div style="color:#ff8a8a;font-size:0.85rem;">Yüklenemedi.</div>'; return; }
+var posts = res.data || [];
+if (!posts.length) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.9rem;">Henüz gönderi paylaşmamış.</div>'; return; }
+var html = '';
+posts.forEach(function(p) {
+if (p.type === 'quote' || p.type === 'read' || p.type === 'analysis') {
+html += '<div class="my-post" onclick="window.location.href=\'gonderi-detay.html?id=' + p.id + '\'">';
+html += '<div class="my-post-time">' + timeAgo(p.created_at) + '</div>';
+if (p.content) html += '<div class="my-post-content quote">&#8220;' + escapeHtml(p.content) + '&#8221;</div>';
+html += '<div class="my-post-attr">— <strong>' + escapeHtml(p.quote_author || 'Bilinmeyen') + '</strong>';
+if (p.quote_book) html += ', <em>' + escapeHtml(p.quote_book) + '</em>';
+html += '</div>';
+html += '<div class="my-post-stats">';
+html += '<span>' + ICON_HEART + ' ' + (p.likes_count || 0) + '</span>';
+html += '<span>' + ICON_COMMENT + ' ' + (p.comments_count || 0) + '</span>';
+html += '</div></div>';
+} else {
+html += '<div class="my-post" onclick="window.location.href=\'gonderi-detay.html?id=' + p.id + '\'">';
+html += '<div class="my-post-time">' + timeAgo(p.created_at) + '</div>';
+html += '<div class="my-post-content">' + escapeHtml(p.content) + '</div>';
+html += '<div class="my-post-stats">';
+html += '<span>' + ICON_HEART + ' ' + (p.likes_count || 0) + '</span>';
+html += '<span>' + ICON_COMMENT + ' ' + (p.comments_count || 0) + '</span>';
+html += '</div></div>';
+}
+});
+container.innerHTML = html;
+}
+
 async function showUserList(title, type) {
 document.getElementById('modalTitle').textContent = title;
-document.getElementById('modalBody').innerHTML = '<div class="loading">Yükleniyor...</div>';
+document.getElementById('modalBody').innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted);">Yükleniyor...</div>';
 document.getElementById('userListModal').classList.add('open');
-
 var userIds = [];
-
 if (type === 'followers') {
 var res = await supabaseClient.from('follows').select('follower_id').eq('following_id', targetUserId);
 userIds = (res.data || []).map(function(r) { return r.follower_id; });
@@ -694,111 +535,15 @@ userIds = (res.data || []).map(function(r) { return r.follower_id; });
 var res = await supabaseClient.from('follows').select('following_id').eq('follower_id', targetUserId);
 userIds = (res.data || []).map(function(r) { return r.following_id; });
 }
-
-if (!userIds.length) {
-document.getElementById('modalBody').innerHTML =
-'<div class="empty" style="padding:2rem;text-align:center;color:#a89e94;font-size:0.9rem;">Henüz kimse yok.</div>';
-return;
-}
-
-var profRes = await supabaseClient.from('profiles').select('id, full_name, username').in('id', userIds);
+if (!userIds.length) { document.getElementById('modalBody').innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted);font-size:0.9rem;">Henüz kimse yok.</div>'; return; }
+var profRes = await supabaseClient.from('profiles').select('id, full_name, username, avatar').in('id', userIds);
 var profiles = profRes.data || [];
-
-if (!profiles.length) {
-document.getElementById('modalBody').innerHTML =
-'<div class="empty" style="padding:2rem;text-align:center;color:#a89e94;font-size:0.9rem;">Kimse bulunamadı.</div>';
-return;
-}
-
 var html = '';
 profiles.forEach(function(p) {
-var initial = (p.full_name || 'K').charAt(0).toUpperCase();
-html += '<a class="user-item" href="kullanici.html?id=' + p.id + '">';
-html += '<div class="user-item-avatar">' + initial + '</div>';
-html += '<div class="user-item-info">';
-html += '<div class="user-item-name">' + escapeHtml(p.full_name) + '</div>';
-html += '<div class="user-item-username">@' + escapeHtml(p.username) + '</div>';
-html += '</div>';
-html += '</a>';
+html += '<a class="user-item" href="kullanici.html?id=' + p.id + '">' + getAvatar(p, 40) + '<div class="user-item-info"><div class="user-item-name">' + escapeHtml(p.full_name) + '</div><div class="user-item-username">@' + escapeHtml(p.username) + '</div></div></a>';
 });
 document.getElementById('modalBody').innerHTML = html;
 }
-
-document.getElementById('modalClose').addEventListener('click', function() {
-document.getElementById('userListModal').classList.remove('open');
-});
-document.getElementById('userListModal').addEventListener('click', function(e) {
-if (e.target === this) this.classList.remove('open');
-});
-
-// ---------- GÖNDERİLER ----------
-async function loadUserPosts(userId) {
-var res = await supabaseClient
-.from('posts')
-.select('*')
-.eq('user_id', userId)
-.order('created_at', { ascending: false })
-.limit(20);
-
-var container = document.getElementById('userPosts');
-
-if (res.error) {
-container.innerHTML = '<div style="color:#ff8a8a;font-size:0.85rem;">Yüklenemedi.</div>';
-return;
-}
-
-var posts = res.data || [];
-if (!posts.length) {
-container.innerHTML = '<div style="color:#a89e94;font-size:0.9rem;">Henüz gönderi paylaşmamış.</div>';
-return;
-}
-
-var html = '';
-posts.forEach(function(p) {
-html += '<div class="my-post">';
-html += '<div class="my-post-time">' + timeAgo(p.created_at) + '</div>';
-html += '<div class="my-post-content" onclick="window.location.href=\'akis.html?post=' + p.id + '\'">' + escapeHtml(p.content) + '</div>';
-html += '<div class="my-post-stats">';
-html += '<button onclick="showLikes(\'' + p.id + '\')">' + ICON_HEART + ' ' + (p.likes_count || 0) + '</button>';
-html += '<span style="display:inline-flex;align-items:center;gap:0.3rem;">' + ICON_COMMENT + ' ' + (p.comments_count || 0) + '</span>';
-html += '</div>';
-html += '</div>';
-});
-container.innerHTML = html;
-}
-
-// ---------- KİMLER BEĞENDİ ----------
-window.showLikes = async function(postId) {
-document.getElementById('modalTitle').textContent = 'Beğenenler';
-document.getElementById('modalBody').innerHTML = '<div class="loading">Yükleniyor...</div>';
-document.getElementById('userListModal').classList.add('open');
-
-var res = await supabaseClient.from('likes').select('user_id').eq('post_id', postId);
-var userIds = (res.data || []).map(function(r) { return r.user_id; });
-
-if (!userIds.length) {
-document.getElementById('modalBody').innerHTML =
-'<div class="empty" style="padding:2rem;text-align:center;color:#a89e94;font-size:0.9rem;">Henüz beğenen yok.</div>';
-return;
-}
-
-var profRes = await supabaseClient.from('profiles').select('id, full_name, username').in('id', userIds);
-var profiles = profRes.data || [];
-
-var html = '';
-profiles.forEach(function(p) {
-var initial = (p.full_name || 'K').charAt(0).toUpperCase();
-html += '<a class="user-item" href="kullanici.html?id=' + p.id + '">';
-html += '<div class="user-item-avatar">' + initial + '</div>';
-html += '<div class="user-item-info">';
-html += '<div class="user-item-name">' + escapeHtml(p.full_name) + '</div>';
-html += '<div class="user-item-username">@' + escapeHtml(p.username) + '</div>';
-html += '</div>';
-html += '</a>';
-});
-document.getElementById('modalBody').innerHTML = html;
-};
-
 })();
 </script>
 </body>

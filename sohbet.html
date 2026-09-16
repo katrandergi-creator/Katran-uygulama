@@ -2,39 +2,51 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Sohbet • Katran Dergi</title>
+<link rel="stylesheet" href="tema.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
 font-family: 'Inter', -apple-system, sans-serif;
-background: #0a0808;
-color: #f4efe8;
-min-height: 100vh;
+background: var(--bg, #0a0808);
+color: var(--text, #f4efe8);
+height: 100vh;
 display: flex;
 flex-direction: column;
-height: 100vh;
+overflow: hidden;
 }
 .top-nav {
-background: rgba(10,8,8,0.95);
+background: var(--nav-bg, rgba(10,8,8,0.95));
 backdrop-filter: blur(20px);
-border-bottom: 1px solid rgba(255,255,255,0.06);
-padding: 0.8rem 1rem;
+border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
+padding: 0.7rem 1rem;
 display: flex;
 align-items: center;
 gap: 0.8rem;
 flex-shrink: 0;
+z-index: 10;
 }
 .back-link {
-color: #a89e94;
+color: var(--text-muted, #a89e94);
 text-decoration: none;
 display: inline-flex;
 align-items: center;
 padding: 0.4rem;
 border-radius: 50%;
+transition: all 0.2s;
+flex-shrink: 0;
 }
 .back-link svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.back-link:hover { color: #e03131; }
+.back-link:hover { color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.25)); }
 .chat-user {
 display: flex;
 align-items: center;
@@ -42,21 +54,27 @@ gap: 0.7rem;
 flex: 1;
 text-decoration: none;
 color: inherit;
+min-width: 0;
 }
-.chat-avatar {
+.chat-info { min-width: 0; }
+.chat-name { font-weight: 700; font-size: 0.95rem; color: var(--text, #f4efe8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-username { color: var(--text-muted, #a89e94); font-size: 0.78rem; }
+.color-btn {
+background: var(--bg-elev, rgba(255,255,255,0.03));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+color: var(--text-muted, #a89e94);
 width: 38px;
 height: 38px;
 border-radius: 50%;
-background: linear-gradient(135deg, #e03131, #b71c1c);
+cursor: pointer;
 display: flex;
 align-items: center;
 justify-content: center;
-font-weight: 900;
-color: #f4efe8;
-font-size: 0.9rem;
+transition: all 0.2s;
+flex-shrink: 0;
 }
-.chat-name { font-weight: 700; font-size: 0.95rem; }
-.chat-username { color: #a89e94; font-size: 0.78rem; }
+.color-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.color-btn:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.25)); }
 .messages {
 flex: 1;
 overflow-y: auto;
@@ -68,6 +86,13 @@ max-width: 700px;
 margin: 0 auto;
 width: 100%;
 }
+.date-label {
+text-align: center;
+font-size: 0.72rem;
+color: var(--text-dim, #7a7068);
+margin: 0.8rem 0;
+font-style: italic;
+}
 .msg {
 max-width: 75%;
 padding: 0.7rem 1rem;
@@ -76,29 +101,27 @@ font-size: 0.92rem;
 line-height: 1.5;
 word-wrap: break-word;
 white-space: pre-wrap;
+transition: background 0.3s ease, color 0.3s ease;
 }
 .msg.sent {
 align-self: flex-end;
-background: #e03131;
-color: #f4efe8;
+background: var(--chat-color, #8b2e3e);
+color: #fff;
 border-bottom-right-radius: 4px;
 }
 .msg.received {
 align-self: flex-start;
-background: rgba(255,255,255,0.06);
-color: #e8e0d6;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+color: var(--text, #f4efe8);
 border-bottom-left-radius: 4px;
 }
-.msg-time {
-font-size: 0.65rem;
-opacity: 0.6;
-margin-top: 0.2rem;
-}
+.msg-time { font-size: 0.65rem; opacity: 0.65; margin-top: 0.2rem; }
 .msg.sent .msg-time { text-align: right; }
 .composer {
-padding: 0.8rem 1rem;
-border-top: 1px solid rgba(255,255,255,0.06);
-background: rgba(10,8,8,0.95);
+padding: 0.7rem 1rem;
+border-top: 1px solid var(--border, rgba(255,255,255,0.06));
+background: var(--nav-bg, rgba(10,8,8,0.95));
+backdrop-filter: blur(20px);
 display: flex;
 gap: 0.5rem;
 max-width: 700px;
@@ -108,18 +131,19 @@ flex-shrink: 0;
 }
 .composer input {
 flex: 1;
-background: rgba(255,255,255,0.05);
-border: 1px solid rgba(255,255,255,0.1);
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
 border-radius: 60px;
-padding: 0.8rem 1.2rem;
-color: #f4efe8;
+padding: 0.75rem 1.2rem;
+color: var(--text, #f4efe8);
 font-family: inherit;
 font-size: 0.92rem;
 }
-.composer input:focus { outline: none; border-color: #e03131; }
+.composer input::placeholder { color: var(--text-dim, #7a7068); }
+.composer input:focus { outline: none; border-color: var(--chat-color, #8b2e3e); }
 .composer button {
-background: #e03131;
-color: #f4efe8;
+background: var(--chat-color, #8b2e3e);
+color: #fff;
 border: none;
 border-radius: 60px;
 padding: 0 1.3rem;
@@ -128,13 +152,73 @@ cursor: pointer;
 font-family: inherit;
 display: flex;
 align-items: center;
+transition: all 0.2s;
 }
 .composer button svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.composer button:hover { opacity: 0.9; }
 .composer button:disabled { opacity: 0.5; }
-.loading { text-align: center; padding: 3rem; color: #a89e94; }
-@media (max-width: 640px) {
-.msg { max-width: 85%; }
+.loading { text-align: center; padding: 3rem; color: var(--text-muted, #a89e94); }
+
+/* RENK PALETİ MODAL */
+.palette-backdrop {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.7);
+backdrop-filter: blur(6px);
+z-index: 9998;
+display: none;
+align-items: center;
+justify-content: center;
+padding: 1rem;
 }
+.palette-backdrop.open { display: flex; }
+.palette {
+background: var(--bg, #0a0808);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 20px;
+max-width: 340px;
+width: 100%;
+padding: 1.5rem;
+box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.5));
+}
+.palette h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text, #f4efe8); margin-bottom: 0.3rem; }
+.palette p { font-size: 0.8rem; color: var(--text-muted, #a89e94); margin-bottom: 1.2rem; font-style: italic; }
+.palette-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+.color-swatch {
+aspect-ratio: 1;
+border-radius: 14px;
+cursor: pointer;
+border: 3px solid transparent;
+transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.color-swatch:hover { transform: scale(1.08); }
+.color-swatch.active { border-color: var(--text, #f4efe8); transform: scale(1.05); }
+.color-swatch.active::after { content: '✓'; color: #fff; font-weight: 900; font-size: 1.4rem; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+.color-bordo { background: linear-gradient(135deg, #8b2e3e, #6b1f2e); }
+.color-blue { background: linear-gradient(135deg, #3b82f6, #1e40af); }
+.color-yellow { background: linear-gradient(135deg, #f59e0b, #b45309); }
+.color-green { background: linear-gradient(135deg, #10b981, #047857); }
+.color-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+.color-pink { background: linear-gradient(135deg, #ec4899, #be185d); }
+.palette-close {
+background: transparent;
+color: var(--text-muted, #a89e94);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 60px;
+padding: 0.6rem 1.2rem;
+font-family: inherit;
+font-size: 0.85rem;
+cursor: pointer;
+width: 100%;
+margin-top: 1rem;
+font-weight: 600;
+transition: all 0.2s;
+}
+.palette-close:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); }
+@media (max-width: 640px) { .msg { max-width: 85%; } }
 </style>
 </head>
 <body>
@@ -152,7 +236,18 @@ align-items: center;
 </button>
 </div>
 
+<div class="palette-backdrop" id="paletteBackdrop">
+<div class="palette">
+<h3>Sohbet Rengi</h3>
+<p>Bu kişiyle olan sohbetin rengini seç.</p>
+<div class="palette-grid" id="paletteGrid"></div>
+<button class="palette-close" id="paletteClose">Kapat</button>
+</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+<script src="avatares.js"></script>
 
 <script>
 (function() {
@@ -165,6 +260,15 @@ var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KE
 var currentUser = null;
 var otherId = null;
 var otherProfile = null;
+
+var COLORS = [
+{ id: 'bordo', class: 'color-bordo', hex: '#8b2e3e', label: 'Bordo' },
+{ id: 'blue', class: 'color-blue', hex: '#3b82f6', label: 'Mavi' },
+{ id: 'yellow', class: 'color-yellow', hex: '#f59e0b', label: 'Sarı' },
+{ id: 'green', class: 'color-green', hex: '#10b981', label: 'Yeşil' },
+{ id: 'purple', class: 'color-purple', hex: '#8b5cf6', label: 'Mor' },
+{ id: 'pink', class: 'color-pink', hex: '#ec4899', label: 'Pembe' }
+];
 
 function escapeHtml(str) {
 if (!str) return '';
@@ -181,52 +285,61 @@ var d = new Date(dateStr);
 var today = new Date();
 var yesterday = new Date();
 yesterday.setDate(yesterday.getDate() - 1);
-
 if (d.toDateString() === today.toDateString()) return 'Bugün';
 if (d.toDateString() === yesterday.toDateString()) return 'Dün';
 var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
+function getColorKey() { return 'chat-color-' + otherId; }
+function getSavedColor() {
+try { return localStorage.getItem(getColorKey()) || 'bordo'; } catch(e) { return 'bordo'; }
+}
+function applyColor(colorId) {
+var color = COLORS.find(function(c) { return c.id === colorId; }) || COLORS[0];
+document.documentElement.style.setProperty('--chat-color', color.hex);
+try { localStorage.setItem(getColorKey(), colorId); } catch(e) {}
+}
+
+function renderPalette() {
+var current = getSavedColor();
+var grid = document.getElementById('paletteGrid');
+var html = '';
+COLORS.forEach(function(c) {
+html += '<div class="color-swatch ' + c.class + (c.id === current ? ' active' : '') + '" data-color="' + c.id + '" title="' + c.label + '"></div>';
+});
+grid.innerHTML = html;
+grid.querySelectorAll('.color-swatch').forEach(function(sw) {
+sw.addEventListener('click', function() {
+var colorId = this.getAttribute('data-color');
+applyColor(colorId);
+renderPalette();
+});
+});
+}
+
 (async function init() {
 var urlParams = new URLSearchParams(window.location.search);
 otherId = urlParams.get('id');
-
-if (!otherId) {
-window.location.href = 'mesajlar.html';
-return;
-}
+if (!otherId) { window.location.href = 'mesajlar.html'; return; }
 
 var sessionRes = await supabaseClient.auth.getSession();
-if (!sessionRes.data.session) {
-window.location.href = 'giris.html';
-return;
-}
+if (!sessionRes.data.session) { window.location.href = 'giris.html'; return; }
 currentUser = sessionRes.data.session.user;
+if (otherId === currentUser.id) { window.location.href = 'mesajlar.html'; return; }
 
-if (otherId === currentUser.id) {
-window.location.href = 'mesajlar.html';
-return;
-}
-
-var profRes = await supabaseClient
-.from('profiles')
-.select('id, full_name, username, status')
-.eq('id', otherId)
-.single();
-
+var profRes = await supabaseClient.from('profiles').select('id, full_name, username, avatar, status').eq('id', otherId).single();
 if (profRes.error || !profRes.data || profRes.data.status !== 'approved') {
-document.getElementById('topNav').innerHTML =
-'<a href="mesajlar.html" class="back-link">←</a><div class="loading" style="padding:0;">Kullanıcı bulunamadı.</div>';
+document.getElementById('topNav').innerHTML = '<a href="mesajlar.html" class="back-link">←</a><div class="loading" style="padding:0;">Kullanıcı bulunamadı.</div>';
 return;
 }
-
 otherProfile = profRes.data;
-renderHeader();
 
-// Okunmamış mesajları okundu yap
-await supabaseClient.from('messages').update({ is_read: true })
-.eq('sender_id', otherId).eq('receiver_id', currentUser.id).eq('is_read', false);
+applyColor(getSavedColor());
+renderHeader();
+renderPalette();
+
+await supabaseClient.from('messages').update({ is_read: true }).eq('sender_id', otherId).eq('receiver_id', currentUser.id).eq('is_read', false);
 
 await loadMessages();
 document.getElementById('composer').style.display = 'flex';
@@ -236,16 +349,22 @@ document.getElementById('msgInput').addEventListener('keydown', function(e) {
 if (e.key === 'Enter') sendMessage();
 });
 
-// Realtime - yeni mesajları otomatik al
+document.getElementById('topNav').addEventListener('click', function(e) {
+if (e.target.closest('.color-btn')) {
+document.getElementById('paletteBackdrop').classList.add('open');
+}
+});
+document.getElementById('paletteClose').addEventListener('click', function() {
+document.getElementById('paletteBackdrop').classList.remove('open');
+});
+document.getElementById('paletteBackdrop').addEventListener('click', function(e) {
+if (e.target === this) this.classList.remove('open');
+});
+
 supabaseClient.channel('messages-channel')
-.on('postgres_changes', {
-event: 'INSERT',
-schema: 'public',
-table: 'messages'
-}, function(payload) {
+.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, function(payload) {
 var m = payload.new;
-if ((m.sender_id === otherId && m.receiver_id === currentUser.id) ||
-(m.sender_id === currentUser.id && m.receiver_id === otherId)) {
+if ((m.sender_id === otherId && m.receiver_id === currentUser.id) || (m.sender_id === currentUser.id && m.receiver_id === otherId)) {
 loadMessages();
 if (m.sender_id === otherId) {
 supabaseClient.from('messages').update({ is_read: true }).eq('id', m.id);
@@ -253,22 +372,27 @@ supabaseClient.from('messages').update({ is_read: true }).eq('id', m.id);
 }
 })
 .subscribe();
-
 })();
 
 function renderHeader() {
-var initial = (otherProfile.full_name || 'K').charAt(0).toUpperCase();
+var tryRender = function() {
+if (window.renderAvatar) {
 document.getElementById('topNav').innerHTML =
-'<a href="mesajlar.html" class="back-link">' +
-'<svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>' +
-'</a>' +
+'<a href="mesajlar.html" class="back-link"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a>' +
 '<a href="kullanici.html?id=' + otherId + '" class="chat-user">' +
-'<div class="chat-avatar">' + initial + '</div>' +
-'<div>' +
+window.renderAvatar(otherProfile, 38) +
+'<div class="chat-info">' +
 '<div class="chat-name">' + escapeHtml(otherProfile.full_name) + '</div>' +
 '<div class="chat-username">@' + escapeHtml(otherProfile.username) + '</div>' +
-'</div>' +
-'</a>';
+'</div></a>' +
+'<button class="color-btn" title="Sohbet Rengi">' +
+'<svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>' +
+'</button>';
+} else {
+setTimeout(tryRender, 50);
+}
+};
+tryRender();
 }
 
 async function loadMessages() {
@@ -292,7 +416,7 @@ var lastDate = '';
 msgs.forEach(function(m) {
 var dateLabel = formatDateLabel(m.created_at);
 if (dateLabel !== lastDate) {
-html += '<div style="text-align:center;font-size:0.75rem;color:#7a7068;margin:0.8rem 0;">' + dateLabel + '</div>';
+html += '<div class="date-label">' + dateLabel + '</div>';
 lastDate = dateLabel;
 }
 
@@ -314,11 +438,7 @@ if (!content) return;
 var btn = document.getElementById('sendBtn');
 btn.disabled = true;
 
-var res = await supabaseClient.from('messages').insert([{
-sender_id: currentUser.id,
-receiver_id: otherId,
-content: content
-}]);
+var res = await supabaseClient.from('messages').insert([{ sender_id: currentUser.id, receiver_id: otherId, content: content }]);
 
 btn.disabled = false;
 if (res.error) { alert('Hata: ' + res.error.message); return; }

@@ -2,148 +2,104 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Kitaplar • Katran Dergi</title>
+<link rel="stylesheet" href="tema.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
 font-family: 'Inter', -apple-system, sans-serif;
-background: #0a0808;
-color: #f4efe8;
+background: var(--bg, #0a0808);
+color: var(--text, #f4efe8);
 min-height: 100vh;
-padding-bottom: 4rem;
+padding: 1.5rem 1rem 100px;
+transition: background 0.3s ease, color 0.3s ease;
 }
-.top-nav {
-position: sticky;
-top: 0;
-background: rgba(10,8,8,0.9);
-backdrop-filter: blur(20px);
-border-bottom: 1px solid rgba(255,255,255,0.06);
-padding: 1rem 0;
-z-index: 100;
-}
-.nav-inner {
-max-width: 700px;
-margin: 0 auto;
-padding: 0 1rem;
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
-.nav-logo {
-font-family: 'Playfair Display', serif;
-font-size: 1.4rem;
-font-weight: 900;
-text-decoration: none;
-color: #f4efe8;
-}
-.nav-logo .red { color: #e03131; }
-.nav-btn {
-background: transparent;
-color: #a89e94;
-border: 1px solid rgba(255,255,255,0.1);
-padding: 0.5rem 0.75rem;
-border-radius: 60px;
-text-decoration: none;
-font-size: 0.8rem;
-cursor: pointer;
-display: flex;
-align-items: center;
-gap: 0.4rem;
-transition: all 0.2s;
-font-family: inherit;
-}
-.nav-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.nav-btn:hover { color: #e03131; border-color: #e03131; }
-.container { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem; }
-h1 {
-font-family: 'Playfair Display', serif;
-font-size: 1.8rem;
-font-weight: 900;
-margin-bottom: 0.5rem;
-}
-h1 .red { color: #e03131; }
-.subtitle { color: #a89e94; font-size: 0.9rem; margin-bottom: 1.5rem; }
-.search-box {
-display: flex;
-gap: 0.5rem;
-margin-bottom: 1.5rem;
-}
+.container { max-width: 700px; margin: 0 auto; }
+h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; margin-bottom: 0.3rem; color: var(--text, #f4efe8); }
+h1 .red { color: var(--bordo, #8b2e3e); }
+.subtitle { color: var(--text-muted, #a89e94); font-size: 0.85rem; margin-bottom: 1.2rem; font-style: italic; }
+.search-box { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+.search-input-wrap { flex: 1; position: relative; display: flex; align-items: center; }
+.search-input-wrap svg { position: absolute; left: 1rem; width: 18px; height: 18px; stroke: var(--text-dim, #7a7068); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
 .search-input {
-flex: 1;
-background: rgba(255,255,255,0.05);
-border: 1px solid rgba(255,255,255,0.1);
+width: 100%;
+background: var(--bg-elev, rgba(255,255,255,0.03));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
 border-radius: 60px;
-padding: 0.9rem 1.3rem;
-color: #f4efe8;
+padding: 0.85rem 1.2rem 0.85rem 2.6rem;
+color: var(--text, #f4efe8);
 font-family: inherit;
 font-size: 0.95rem;
+transition: all 0.2s;
 }
-.search-input:focus { outline: none; border-color: #e03131; }
+.search-input::placeholder { color: var(--text-dim, #7a7068); }
+.search-input:focus { outline: none; border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.15)); }
 .search-btn {
-background: #e03131;
-color: #f4efe8;
+background: var(--bordo, #8b2e3e);
+color: #fff;
 border: none;
 border-radius: 60px;
-padding: 0 1.5rem;
+padding: 0 1.3rem;
 font-weight: 700;
-font-size: 0.9rem;
 cursor: pointer;
 font-family: inherit;
-display: flex;
+font-size: 0.9rem;
+display: inline-flex;
 align-items: center;
 gap: 0.4rem;
+flex-shrink: 0;
 }
-.search-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.search-btn:disabled { opacity: 0.5; }
+.search-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.search-btn:hover { background: var(--bordo-dark, #6b1f2e); }
+.search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .book-card {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(255,255,255,0.06);
+background: var(--bg-elev, rgba(255,255,255,0.03));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
 border-radius: 16px;
 padding: 1rem;
-margin-bottom: 0.8rem;
+margin-bottom: 0.7rem;
 display: flex;
 gap: 1rem;
 transition: all 0.2s;
 }
-.book-card:hover { border-color: rgba(224,49,49,0.3); }
-.book-cover {
-width: 60px;
-height: 90px;
-border-radius: 6px;
-background: rgba(255,255,255,0.05);
-flex-shrink: 0;
-object-fit: cover;
-}
+.book-card:hover { border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.08)); }
+.book-cover { width: 68px; height: 102px; border-radius: 4px 6px 6px 4px; background: var(--bg-elev-2, rgba(255,255,255,0.06)); flex-shrink: 0; object-fit: cover; box-shadow: 0 4px 12px -3px rgba(0,0,0,0.4); }
 .book-cover-placeholder {
-width: 60px;
-height: 90px;
-border-radius: 6px;
-background: linear-gradient(135deg, #2a1a1a, #1a0a0a);
+width: 68px;
+height: 102px;
+border-radius: 4px 6px 6px 4px;
+background: linear-gradient(135deg, var(--bordo, #8b2e3e), var(--bordo-dark, #6b1f2e));
 flex-shrink: 0;
 display: flex;
 align-items: center;
 justify-content: center;
-color: #e03131;
+color: #fff;
+font-family: 'Playfair Display', serif;
+font-size: 1.8rem;
+font-weight: 900;
+box-shadow: 0 4px 12px -3px rgba(0,0,0,0.4);
 }
-.book-cover-placeholder svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .book-info { flex: 1; min-width: 0; }
-.book-title {
-font-weight: 700;
-font-size: 0.95rem;
-margin-bottom: 0.2rem;
-line-height: 1.3;
-}
-.book-author { color: #a89e94; font-size: 0.85rem; margin-bottom: 0.4rem; }
-.book-meta { color: #7a7068; font-size: 0.75rem; margin-bottom: 0.6rem; }
+.book-title { font-weight: 700; font-size: 0.98rem; margin-bottom: 0.2rem; line-height: 1.3; color: var(--text, #f4efe8); }
+.book-author { color: var(--text-muted, #a89e94); font-size: 0.85rem; margin-bottom: 0.3rem; }
+.book-meta { color: var(--text-dim, #7a7068); font-size: 0.75rem; margin-bottom: 0.7rem; }
 .book-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .book-action-btn {
 background: transparent;
-color: #a89e94;
-border: 1px solid rgba(255,255,255,0.1);
+color: var(--text-muted, #a89e94);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
 border-radius: 60px;
 padding: 0.4rem 0.85rem;
-font-size: 0.72rem;
+font-size: 0.75rem;
 cursor: pointer;
 font-family: inherit;
 font-weight: 600;
@@ -152,28 +108,22 @@ align-items: center;
 gap: 0.35rem;
 transition: all 0.2s;
 }
-.book-action-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.book-action-btn:hover { color: #e03131; border-color: #e03131; }
-.book-action-btn.active { background: rgba(224,49,49,0.15); color: #e03131; border-color: #e03131; }
-.loading, .empty {
-text-align: center;
-padding: 3rem 1rem;
-color: #a89e94;
-}
-.empty .flower { font-size: 2.5rem; color: #e03131; display: block; margin-bottom: 1rem; }
+.book-action-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.book-action-btn:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.book-action-btn.active { background: var(--bordo, #8b2e3e); color: #fff; border-color: var(--bordo, #8b2e3e); }
 .request-box {
-background: rgba(224,49,49,0.06);
-border: 1px solid rgba(224,49,49,0.2);
+background: var(--bordo-glow, rgba(139,46,62,0.15));
+border: 1px solid var(--bordo, #8b2e3e);
 border-radius: 16px;
-padding: 1.5rem;
+padding: 1.3rem;
 margin-top: 1.5rem;
 text-align: center;
 }
-.request-box h3 { font-size: 1rem; margin-bottom: 0.5rem; }
-.request-box p { color: #a89e94; font-size: 0.85rem; margin-bottom: 1rem; }
+.request-box h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--text, #f4efe8); margin-bottom: 0.4rem; }
+.request-box p { color: var(--text-muted, #a89e94); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5; }
 .request-btn {
-background: #e03131;
-color: #f4efe8;
+background: var(--bordo, #8b2e3e);
+color: #fff;
 border: none;
 border-radius: 60px;
 padding: 0.7rem 1.5rem;
@@ -184,15 +134,156 @@ font-family: inherit;
 display: inline-flex;
 align-items: center;
 gap: 0.5rem;
+transition: all 0.2s;
 }
-.request-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.request-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.request-btn:hover { background: var(--bordo-dark, #6b1f2e); }
+.loading, .empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted, #a89e94); font-size: 0.9rem; }
+.spinner {
+width: 32px;
+height: 32px;
+border: 3px solid var(--border, rgba(255,255,255,0.08));
+border-top-color: var(--bordo, #8b2e3e);
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.source-badge {
+display: inline-block;
+font-size: 0.65rem;
+padding: 0.15rem 0.5rem;
+border-radius: 60px;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+color: var(--text-dim, #7a7068);
+margin-left: 0.4rem;
+font-weight: 600;
+letter-spacing: 0.05em;
+text-transform: uppercase;
+}
+.source-badge.google { background: rgba(66,133,244,0.15); color: #4285f4; }
+.source-badge.openlibrary { background: rgba(139,46,62,0.15); color: var(--bordo, #8b2e3e); }
+
+/* MODAL */
+.modal-backdrop {
+position: fixed; inset: 0;
+background: rgba(0,0,0,0.75);
+backdrop-filter: blur(6px);
+z-index: 9998;
+display: none;
+align-items: center;
+justify-content: center;
+padding: 1rem;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+background: var(--bg, #0a0808);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 20px;
+max-width: 500px;
+width: 100%;
+max-height: 90vh;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.5));
+}
+.modal-header {
+padding: 1.2rem 1.5rem;
+border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text, #f4efe8); }
+.modal-close {
+background: transparent;
+border: none;
+color: var(--text-muted, #a89e94);
+cursor: pointer;
+padding: 0.4rem;
+border-radius: 50%;
+display: flex;
+transition: all 0.2s;
+}
+.modal-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.modal-close:hover { color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.25)); }
+.modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; }
+.modal-book-info { background: var(--bg-elev-2, rgba(255,255,255,0.06)); border-radius: 12px; padding: 0.9rem; margin-bottom: 1.2rem; }
+.modal-book-title { font-weight: 700; font-size: 0.95rem; color: var(--text, #f4efe8); margin-bottom: 0.2rem; }
+.modal-book-author { color: var(--text-muted, #a89e94); font-size: 0.85rem; }
+.modal-info {
+background: var(--bordo-glow, rgba(139,46,62,0.15));
+border-left: 3px solid var(--bordo, #8b2e3e);
+border-radius: 8px;
+padding: 0.8rem 1rem;
+margin-bottom: 1.2rem;
+font-size: 0.85rem;
+color: var(--text-muted, #a89e94);
+line-height: 1.5;
+}
+.modal-info strong { color: var(--bordo, #8b2e3e); }
+.field { margin-bottom: 1rem; }
+.field label { display: block; font-size: 0.8rem; color: var(--text-muted, #a89e94); margin-bottom: 0.4rem; font-weight: 600; }
+.field label .required { color: var(--bordo, #8b2e3e); }
+.field input,
+.field textarea {
+width: 100%;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 12px;
+padding: 0.8rem 1rem;
+color: var(--text, #f4efe8);
+font-family: inherit;
+font-size: 0.95rem;
+transition: all 0.2s;
+}
+.field input::placeholder,
+.field textarea::placeholder { color: var(--text-dim, #7a7068); }
+.field input:focus,
+.field textarea:focus { outline: none; border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.field textarea { min-height: 100px; resize: vertical; line-height: 1.7; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1rem; }
+.char-count { text-align: right; color: var(--text-dim, #7a7068); font-size: 0.72rem; margin-top: 0.3rem; }
+.checkbox-row { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.9rem 0; cursor: pointer; }
+.checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--bordo, #8b2e3e); cursor: pointer; margin-top: 0.1rem; }
+.checkbox-row label { font-size: 0.88rem; color: var(--text, #f4efe8); cursor: pointer; margin: 0; font-weight: 500; line-height: 1.4; }
+.checkbox-row .hint { font-size: 0.75rem; color: var(--text-muted, #a89e94); display: block; margin-top: 0.2rem; }
+.modal-footer {
+padding: 1rem 1.5rem;
+border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+display: flex;
+gap: 0.5rem;
+justify-content: flex-end;
+}
+.btn {
+padding: 0.75rem 1.5rem;
+border-radius: 60px;
+border: none;
+font-weight: 700;
+font-size: 0.9rem;
+cursor: pointer;
+font-family: inherit;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+transition: all 0.2s;
+}
+.btn-primary { background: var(--bordo, #8b2e3e); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--bordo-dark, #6b1f2e); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-cancel {
+background: transparent;
+color: var(--text-muted, #a89e94);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+}
+.btn-cancel:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); }
 .toast {
 position: fixed;
-bottom: 2rem;
+bottom: 100px;
 left: 50%;
 transform: translateX(-50%) translateY(100px);
-background: #e03131;
-color: #f4efe8;
+background: var(--bordo, #8b2e3e);
+color: #fff;
 padding: 0.8rem 1.5rem;
 border-radius: 60px;
 font-weight: 600;
@@ -203,27 +294,28 @@ max-width: 90%;
 text-align: center;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
-.toast.success { background: #2e7d32; }
+.toast.error { background: #e03131; }
+@media (max-width: 520px) {
+.container { padding: 1rem 0.8rem; }
+h1 { font-size: 1.4rem; }
+.book-cover, .book-cover-placeholder { width: 60px; height: 90px; }
+.book-cover-placeholder { font-size: 1.5rem; }
+.modal-body { padding: 1.2rem 1rem; }
+.modal-footer { padding: 0.8rem 1rem; }
+}
 </style>
 </head>
 <body>
-
-<nav class="top-nav">
-<div class="nav-inner">
-<a href="akis.html" class="nav-logo"><span class="red">KATRAN</span></a>
-<a href="kitapligim.html" class="nav-btn" id="navLibrary">
-<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-Kitaplığım
-</a>
-</div>
-</nav>
 
 <div class="container">
 <h1><span class="red">Kitap</span> Ara</h1>
 <p class="subtitle">Milyonlarca kitap arasından ara, rafına ekle.</p>
 
 <div class="search-box">
-<input type="text" class="search-input" id="searchInput" placeholder="Kitap adı veya yazar..." autofocus>
+<div class="search-input-wrap">
+<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+<input type="text" class="search-input" id="searchInput" placeholder="Kitap adı veya yazar..." autofocus autocomplete="off">
+</div>
 <button class="search-btn" id="searchBtn">
 <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
 Ara
@@ -231,7 +323,7 @@ Ara
 </div>
 
 <div id="resultsContainer">
-<div class="empty"><span class="flower">❀</span>Aramak için yukarıya yaz.</div>
+<div class="empty">Aramak için yukarıya yaz.</div>
 </div>
 
 <div class="request-box" id="requestBox" style="display:none;">
@@ -244,13 +336,53 @@ Kitap Talep Et
 </div>
 </div>
 
+<!-- ALINTI MODAL -->
+<div class="modal-backdrop" id="quoteModal">
+<div class="modal">
+<div class="modal-header">
+<h3 id="modalTitle">Alıntı Ekle</h3>
+<button class="modal-close" id="modalClose">
+<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+</div>
+<div class="modal-body">
+<div class="modal-book-info" id="modalBookInfo"></div>
+<div class="modal-info" id="modalInfo"></div>
+<div class="field">
+<label for="quoteText">Alıntı metni <span class="required" id="quoteRequired">*</span></label>
+<textarea id="quoteText" maxlength="500" placeholder="Okuduğun bölümden bir alıntı yaz..."></textarea>
+<div class="char-count" id="quoteCharCount">0 / 500</div>
+</div>
+<div class="field">
+<label for="quotePage">Sayfa numarası</label>
+<input type="number" id="quotePage" min="1" max="9999" placeholder="Örn: 42">
+</div>
+<div class="checkbox-row">
+<input type="checkbox" id="shareToFeed" checked>
+<label for="shareToFeed">
+Akışta paylaş
+<span class="hint">Bu alıntı ve kitap akışta görünsün</span>
+</label>
+</div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-cancel" id="cancelBtn">İptal</button>
+<button class="btn btn-primary" id="saveQuoteBtn">Okudum Olarak Kaydet</button>
+</div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
 
 <script>
 (function() {
 'use strict';
+
+// ⚠️ KENDİ ANAHTARINI BURAYA YAPIŞTIR
+var GOOGLE_BOOKS_KEY = 'AIzaSyC3CdeZC84uB_VkENv_M3OoFiFSBrCqsps';
 
 var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
@@ -258,8 +390,10 @@ var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 var currentUser = null;
 var userBooks = {};
+var userBookIds = {};
+var userReadCount = 0;
+var pendingBook = null;
 
-// ---------- İKONLAR ----------
 var ICONS = {
 bookOpen: '<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
 bookmark: '<svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>',
@@ -272,159 +406,426 @@ if (!str) return '';
 return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-function toast(msg, isSuccess) {
+function toast(msg, isError) {
 var t = document.getElementById('toast');
 t.textContent = msg;
-t.className = 'toast show' + (isSuccess ? ' success' : '');
+t.className = 'toast show' + (isError ? ' error' : '');
 setTimeout(function() { t.classList.remove('show'); }, 2500);
 }
 
-(async function init() {
-var sessionRes = await supabaseClient.auth.getSession();
-if (sessionRes.data.session) {
-currentUser = sessionRes.data.session.user;
-var ubRes = await supabaseClient.from('user_books').select('book_id, status').eq('user_id', currentUser.id);
-(ubRes.data || []).forEach(function(ub) { userBooks[ub.book_id] = ub.status; });
+// ============================================================
+// GOOGLE BOOKS API KONTROL
+// ============================================================
+function isGoogleBooksAvailable() {
+  var blockUntil = localStorage.getItem('gb_blocked_until');
+  if (!blockUntil) return true;
+  if (Date.now() > parseInt(blockUntil)) {
+    localStorage.removeItem('gb_blocked_until');
+    return true;
+  }
+  return false;
 }
 
-document.getElementById('searchInput').addEventListener('keydown', function(e) {
-if (e.key === 'Enter') doSearch();
-});
-document.getElementById('searchBtn').addEventListener('click', doSearch);
+function blockGoogleBooks() {
+  // Bugünün sonuna kadar (24 saat) blokla
+  var tomorrow = new Date();
+  tomorrow.setHours(24, 0, 0, 0);
+  localStorage.setItem('gb_blocked_until', tomorrow.getTime().toString());
+}
+
+// ============================================================
+// GOOGLE BOOKS ARAMA
+// ============================================================
+async function searchGoogleBooks(query) {
+  if (!isGoogleBooksAvailable()) return { source: 'google', blocked: true, books: [] };
+  
+  try {
+    var url = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(query) + '&maxResults=20&key=' + GOOGLE_BOOKS_KEY;
+    var res = await fetch(url);
+    
+    if (res.status === 429 || res.status === 403) {
+      // Kota doldu
+      blockGoogleBooks();
+      return { source: 'google', blocked: true, books: [] };
+    }
+    if (!res.ok) throw new Error('Google Books hata: ' + res.status);
+    
+    var data = await res.json();
+    var items = data.items || [];
+    if (!items.length) return { source: 'google', blocked: false, books: [] };
+    
+    var books = items.map(function(item) {
+      var info = item.volumeInfo || {};
+      var cover = info.imageLinks ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail) : null;
+      if (cover) cover = cover.replace('http://', 'https://');
+      
+      return {
+        external_id: item.id,
+        source: 'google',
+        title: info.title || 'İsimsiz',
+        author: info.authors ? info.authors[0] : null,
+        cover_url: cover,
+        page_count: info.pageCount || null,
+        published_year: info.publishedDate ? parseInt(info.publishedDate.substring(0, 4)) : null,
+        description: info.description || null,
+        subjects: info.categories ? info.categories.join(', ') : null
+      };
+    });
+    
+    return { source: 'google', blocked: false, books: books };
+  } catch (e) {
+    console.warn('Google Books hatası:', e);
+    return { source: 'google', blocked: false, books: [] };
+  }
+}
+
+// ============================================================
+// OPEN LIBRARY ARAMA
+// ============================================================
+async function searchOpenLibrary(query) {
+  try {
+    var url = 'https://openlibrary.org/search.json?q=' + encodeURIComponent(query) + '&limit=20';
+    var res = await fetch(url);
+    if (!res.ok) throw new Error('Open Library hata');
+    
+    var data = await res.json();
+    var docs = data.docs || [];
+    if (!docs.length) return [];
+    
+    var books = docs.filter(function(d) { return d.title; }).map(function(doc) {
+      var externalId = doc.key ? doc.key.replace('/works/', '') : null;
+      var coverId = doc.cover_i;
+      var coverUrl = coverId ? 'https://covers.openlibrary.org/b/id/' + coverId + '-M.jpg' : null;
+      
+      return {
+        external_id: externalId,
+        source: 'openlibrary',
+        title: doc.title,
+        author: (doc.author_name && doc.author_name[0]) || null,
+        cover_url: coverUrl,
+        page_count: doc.number_of_pages_median || null,
+        published_year: doc.first_publish_year || null,
+        description: null,
+        subjects: doc.subject ? doc.subject.slice(0, 5).join(', ') : null
+      };
+    });
+    
+    return books;
+  } catch (e) {
+    console.warn('Open Library hatası:', e);
+    return [];
+  }
+}
+
+// ============================================================
+// HİBRİT ARAMA — ÖNCE GOOGLE, SONRA OPEN LIBRARY
+// ============================================================
+async function hybridSearch(query) {
+  var books = [];
+  var source = 'google';
+  
+  // 1. GOOGLE BOOKS
+  if (isGoogleBooksAvailable()) {
+    var gbResult = await searchGoogleBooks(query);
+    if (gbResult.books.length > 0) {
+      return { books: gbResult.books, source: 'google' };
+    }
+    // Google'da sonuç yok, Open Library'ye düş
+  }
+  
+  // 2. OPEN LIBRARY
+  source = 'openlibrary';
+  books = await searchOpenLibrary(query);
+  
+  return { books: books, source: source };
+}
+
+// BAŞLAT
+(async function init() {
+  var sessionRes = await supabaseClient.auth.getSession();
+  if (sessionRes.data.session) {
+    currentUser = sessionRes.data.session.user;
+    await loadUserBooks();
+  }
+  
+  document.getElementById('searchInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doSearch();
+  });
+  document.getElementById('searchBtn').addEventListener('click', doSearch);
+  
+  document.getElementById('modalClose').addEventListener('click', closeQuoteModal);
+  document.getElementById('cancelBtn').addEventListener('click', closeQuoteModal);
+  document.getElementById('quoteModal').addEventListener('click', function(e) {
+    if (e.target === this) closeQuoteModal();
+  });
+  document.getElementById('quoteText').addEventListener('input', function() {
+    document.getElementById('quoteCharCount').textContent = this.value.length + ' / 500';
+  });
+  document.getElementById('saveQuoteBtn').addEventListener('click', saveQuote);
 })();
 
+async function loadUserBooks() {
+  var res = await supabaseClient
+    .from('user_books')
+    .select('id, book_id, status')
+    .eq('user_id', currentUser.id);
+  
+  userBooks = {};
+  userBookIds = {};
+  userReadCount = 0;
+  (res.data || []).forEach(function(ub) {
+    userBooks[ub.book_id] = ub.status;
+    userBookIds[ub.book_id] = ub.id;
+    if (ub.status === 'read') userReadCount++;
+  });
+}
+
+// ARAMA
 async function doSearch() {
-var query = document.getElementById('searchInput').value.trim();
-if (!query) return;
-
-var container = document.getElementById('resultsContainer');
-var btn = document.getElementById('searchBtn');
-container.innerHTML = '<div class="loading">Aranıyor...</div>';
-btn.disabled = true;
-
-try {
-var res = await fetch('https://openlibrary.org/search.json?q=' + encodeURIComponent(query) + '&limit=20');
-var data = await res.json();
-var docs = data.docs || [];
-
-if (!docs.length) {
-container.innerHTML = '<div class="empty"><span class="flower">❀</span>Sonuç bulunamadı.</div>';
-document.getElementById('requestBox').style.display = 'block';
-return;
+  var query = document.getElementById('searchInput').value.trim();
+  if (!query) return;
+  
+  var container = document.getElementById('resultsContainer');
+  var btn = document.getElementById('searchBtn');
+  container.innerHTML = '<div class="loading"><div class="spinner"></div>Aranıyor...</div>';
+  btn.disabled = true;
+  
+  try {
+    var result = await hybridSearch(query);
+    var booksToSave = result.books;
+    var sourceUsed = result.source;
+    
+    if (!booksToSave.length) {
+      container.innerHTML = '<div class="empty">Sonuç bulunamadı.</div>';
+      document.getElementById('requestBox').style.display = 'block';
+      btn.disabled = false;
+      return;
+    }
+    
+    // DB'ye kaydet (external_id + source ile)
+    var existingExternalIds = booksToSave.map(function(b) { return b.external_id; }).filter(Boolean);
+    var existingRes = await supabaseClient
+      .from('books')
+      .select('id, external_id, source')
+      .in('external_id', existingExternalIds);
+    
+    var existingMap = {};
+    (existingRes.data || []).forEach(function(b) {
+      existingMap[b.external_id + '_' + b.source] = b.id;
+    });
+    
+    // Eski kayıtları da kontrol et (source olmadan)
+    var oldExistingRes = await supabaseClient
+      .from('books')
+      .select('id, external_id')
+      .in('external_id', existingExternalIds);
+    (oldExistingRes.data || []).forEach(function(b) {
+      if (!existingMap[b.external_id + '_' + sourceUsed]) {
+        existingMap[b.external_id + '_' + sourceUsed] = b.id;
+      }
+    });
+    
+    var newBooks = booksToSave.filter(function(b) {
+      return b.external_id && !existingMap[b.external_id + '_' + b.source];
+    });
+    
+    if (newBooks.length) {
+      var insertRes = await supabaseClient.from('books').insert(newBooks).select('id, external_id, source');
+      (insertRes.data || []).forEach(function(b) {
+        existingMap[b.external_id + '_' + b.source] = b.id;
+      });
+    }
+    
+    // Render
+    var html = '';
+    html += '<div style="text-align:right;font-size:0.7rem;color:var(--text-dim);margin-bottom:0.5rem;">';
+    if (sourceUsed === 'google') {
+      html += '<span class="source-badge google">Google Books</span>';
+    } else {
+      html += '<span class="source-badge openlibrary">Open Library</span>';
+    }
+    html += '</div>';
+    
+    booksToSave.forEach(function(b) {
+      var bookId = existingMap[b.external_id + '_' + b.source];
+      if (!bookId) return;
+      
+      var status = userBooks[bookId] || null;
+      var coverHtml = b.cover_url
+        ? '<img class="book-cover" src="' + b.cover_url + '" alt="" onerror="this.outerHTML=\'<div class=&quot;book-cover-placeholder&quot;>' + escapeHtml((b.title || '?').charAt(0).toUpperCase()) + '</div>\'">'
+        : '<div class="book-cover-placeholder">' + escapeHtml((b.title || '?').charAt(0).toUpperCase()) + '</div>';
+      
+      var metaParts = [];
+      if (b.author) metaParts.push(b.author);
+      if (b.published_year) metaParts.push(b.published_year);
+      if (b.page_count) metaParts.push(b.page_count + ' sayfa');
+      
+      html += '<div class="book-card" style="cursor:pointer;" data-book-id="' + bookId + '" data-title="' + escapeHtml(b.title) + '" data-author="' + escapeHtml(b.author || '') + '" data-cover="' + escapeHtml(b.cover_url || '') + '" onclick="if(!event.target.closest(\'.book-action-btn\')) window.location.href=\'kitap.html?id=' + bookId + '\'">';
+      html += coverHtml;
+      html += '<div class="book-info">';
+      html += '<div class="book-title">' + escapeHtml(b.title) + '</div>';
+      if (metaParts.length) html += '<div class="book-meta">' + escapeHtml(metaParts.join(' · ')) + '</div>';
+      html += '<div class="book-actions">';
+      html += '<button class="book-action-btn ' + (status === 'want' ? 'active' : '') + '" onclick="setBookStatus(\'' + bookId + '\', \'want\', this)">' + ICONS.bookmark + ' Okuyacağım</button>';
+      html += '<button class="book-action-btn ' + (status === 'reading' ? 'active' : '') + '" onclick="setBookStatus(\'' + bookId + '\', \'reading\', this)">' + ICONS.bookOpen + ' Okuyorum</button>';
+      html += '<button class="book-action-btn ' + (status === 'read' ? 'active' : '') + '" onclick="setBookStatus(\'' + bookId + '\', \'read\', this)">' + ICONS.checkCircle + ' Okudum</button>';
+      html += '</div></div></div>';
+    });
+    
+    container.innerHTML = html || '<div class="empty">Sonuç bulunamadı.</div>';
+    document.getElementById('requestBox').style.display = 'block';
+    
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = '<div class="empty">Arama hatası: ' + escapeHtml(err.message) + '</div>';
+  } finally {
+    btn.disabled = false;
+  }
 }
 
-var booksToSave = [];
-docs.forEach(function(doc) {
-if (!doc.title) return;
-var externalId = doc.key ? doc.key.replace('/works/', '') : null;
-var coverId = doc.cover_i;
-var coverUrl = coverId ? 'https://covers.openlibrary.org/b/id/' + coverId + '-M.jpg' : null;
-booksToSave.push({
-external_id: externalId,
-source: 'openlibrary',
-title: doc.title,
-author: (doc.author_name && doc.author_name[0]) || null,
-cover_url: coverUrl,
-page_count: doc.number_of_pages_median || null,
-published_year: doc.first_publish_year || null
-});
-});
-
-var existingExternalIds = booksToSave.map(function(b) { return b.external_id; }).filter(Boolean);
-var existingRes = await supabaseClient.from('books').select('id, external_id').in('external_id', existingExternalIds);
-
-var existingMap = {};
-(existingRes.data || []).forEach(function(b) { existingMap[b.external_id] = b.id; });
-
-var newBooks = booksToSave.filter(function(b) { return b.external_id && !existingMap[b.external_id]; });
-if (newBooks.length) {
-var insertRes = await supabaseClient.from('books').insert(newBooks).select('id, external_id');
-(insertRes.data || []).forEach(function(b) { existingMap[b.external_id] = b.id; });
-}
-
-var html = '';
-booksToSave.forEach(function(b) {
-var bookId = existingMap[b.external_id];
-if (!bookId) return;
-
-var status = userBooks[bookId] || null;
-var coverHtml = b.cover_url
-? '<img class="book-cover" src="' + b.cover_url + '" alt="" onerror="this.outerHTML=\'<div class=&quot;book-cover-placeholder&quot;>' + ICONS.bookOpen.replace(/"/g, '&quot;') + '</div>\'">'
-: '<div class="book-cover-placeholder">' + ICONS.bookOpen + '</div>';
-
-var metaParts = [];
-if (b.author) metaParts.push(b.author);
-if (b.published_year) metaParts.push(b.published_year);
-if (b.page_count) metaParts.push(b.page_count + ' sayfa');
-
-html += '<div class="book-card">';
-html += coverHtml;
-html += '<div class="book-info">';
-html += '<div class="book-title">' + escapeHtml(b.title) + '</div>';
-if (metaParts.length) html += '<div class="book-meta">' + escapeHtml(metaParts.join(' · ')) + '</div>';
-html += '<div class="book-actions">';
-html += '<button class="book-action-btn ' + (status === 'want' ? 'active' : '') + '" onclick="setBookStatus(\'' + bookId + '\', \'want\', this)">' + ICONS.bookmark + ' Okuyacağım</button>';
-html += '<button class="book-action-btn ' + (status === 'reading' ? 'active' : '') + '" onclick="setBookStatus(\'' + bookId + '\', \'reading\', this)">' + ICONS.bookOpen + ' Okuyorum</button>';
-html += '<button class="book-action-btn ' + (status === 'read' ? 'active' : '') + '" onclick="setBookStatus(\'' + bookId + '\', \'read\', this)">' + ICONS.checkCircle + ' Okudum</button>';
-html += '</div>';
-html += '</div>';
-html += '</div>';
-});
-
-container.innerHTML = html || '<div class="empty">Sonuç bulunamadı.</div>';
-document.getElementById('requestBox').style.display = 'block';
-
-} catch (err) {
-console.error(err);
-container.innerHTML = '<div class="empty">Arama hatası: ' + escapeHtml(err.message) + '</div>';
-} finally {
-btn.disabled = false;
-}
-}
-
+// DURUM AYARLA
 window.setBookStatus = async function(bookId, status, btn) {
-if (!currentUser) { toast('Giriş yapmalısın'); return; }
-
-var container = btn.parentElement;
-var buttons = container.querySelectorAll('.book-action-btn');
-buttons.forEach(function(b) { b.classList.remove('active'); });
-
-var existing = userBooks[bookId];
-
-if (existing === status) {
-await supabaseClient.from('user_books').delete().eq('user_id', currentUser.id).eq('book_id', bookId);
-delete userBooks[bookId];
-toast('Rafından kaldırıldı');
-} else if (existing) {
-await supabaseClient.from('user_books').update({ status: status, updated_at: new Date().toISOString() }).eq('user_id', currentUser.id).eq('book_id', bookId);
-userBooks[bookId] = status;
-btn.classList.add('active');
-toast(status === 'read' ? 'Okundu olarak işaretlendi' : status === 'reading' ? 'Okunuyor' : 'Okunacaklara eklendi', true);
-} else {
-await supabaseClient.from('user_books').insert([{ user_id: currentUser.id, book_id: bookId, status: status }]);
-userBooks[bookId] = status;
-btn.classList.add('active');
-toast(status === 'read' ? 'Okundu olarak işaretlendi' : status === 'reading' ? 'Okunuyor' : 'Okunacaklara eklendi', true);
-}
+  if (!currentUser) { toast('Giriş yapmalısın', true); return; }
+  var existing = userBooks[bookId];
+  
+  if (existing === status) {
+    await supabaseClient.from('user_books').delete().eq('user_id', currentUser.id).eq('book_id', bookId);
+    delete userBooks[bookId];
+    delete userBookIds[bookId];
+    if (status === 'read') userReadCount--;
+    toast('Rafından kaldırıldı');
+    location.reload();
+    return;
+  }
+  
+  if (status === 'read') {
+    openQuoteModal(bookId, btn);
+    return;
+  }
+  
+  if (existing) {
+    await supabaseClient.from('user_books').update({ status: status, updated_at: new Date().toISOString() }).eq('user_id', currentUser.id).eq('book_id', bookId);
+  } else {
+    await supabaseClient.from('user_books').insert([{ user_id: currentUser.id, book_id: bookId, status: status }]);
+  }
+  userBooks[bookId] = status;
+  toast(status === 'reading' ? '📖 Okunuyor' : '🔖 Okunacaklara eklendi');
+  location.reload();
 };
 
+// ALINTI MODAL
+function openQuoteModal(bookId, btn) {
+  var card = btn.closest('.book-card');
+  pendingBook = {
+    bookId: bookId,
+    title: card.getAttribute('data-title'),
+    author: card.getAttribute('data-author'),
+    cover: card.getAttribute('data-cover')
+  };
+  
+  document.getElementById('modalBookInfo').innerHTML =
+    '<div class="modal-book-title">' + escapeHtml(pendingBook.title) + '</div>' +
+    '<div class="modal-book-author">' + escapeHtml(pendingBook.author || 'Bilinmeyen') + '</div>';
+  
+  var isFree = userReadCount < 2;
+  if (isFree) {
+    document.getElementById('modalInfo').innerHTML =
+      '💡 Bu <strong>' + (userReadCount + 1) + '. kitap</strong>. İlk 2 kitap için <strong>alıntı zorunlu değil</strong>.';
+    document.getElementById('quoteRequired').style.display = 'none';
+    document.getElementById('saveQuoteBtn').textContent = 'Okudum Olarak Kaydet';
+  } else {
+    document.getElementById('modalInfo').innerHTML =
+      '📝 Artık <strong>alıntı zorunlu</strong>. Bu kitaptan bir bölüm paylaşmadan "Okudum" olarak kaydedemezsin.';
+    document.getElementById('quoteRequired').style.display = 'inline';
+    document.getElementById('saveQuoteBtn').textContent = 'Alıntıyla Kaydet';
+  }
+  
+  document.getElementById('quoteText').value = '';
+  document.getElementById('quotePage').value = '';
+  document.getElementById('shareToFeed').checked = true;
+  document.getElementById('quoteCharCount').textContent = '0 / 500';
+  document.getElementById('quoteModal').classList.add('open');
+  setTimeout(function() { document.getElementById('quoteText').focus(); }, 100);
+}
+
+function closeQuoteModal() {
+  document.getElementById('quoteModal').classList.remove('open');
+  pendingBook = null;
+}
+
+async function saveQuote() {
+  if (!pendingBook) return;
+  var quoteText = document.getElementById('quoteText').value.trim();
+  var page = document.getElementById('quotePage').value.trim();
+  var shareToFeed = document.getElementById('shareToFeed').checked;
+  var isFree = userReadCount < 2;
+  
+  if (!isFree && !quoteText) { toast('❌ Alıntı zorunlu!', true); return; }
+  if (quoteText && quoteText.length < 10) { toast('❌ Alıntı en az 10 karakter olmalı', true); return; }
+  
+  var btn = document.getElementById('saveQuoteBtn');
+  btn.disabled = true;
+  btn.textContent = 'Kaydediliyor...';
+  
+  var bookId = pendingBook.bookId;
+  
+  try {
+    var existing = userBooks[bookId];
+    var updates = {
+      status: 'read',
+      quote: quoteText || null,
+      quote_page: page ? parseInt(page) : null,
+      finished_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    if (existing && userBookIds[bookId]) {
+      await supabaseClient.from('user_books').update(updates).eq('id', userBookIds[bookId]);
+    } else {
+      updates.user_id = currentUser.id;
+      updates.book_id = bookId;
+      var insertRes = await supabaseClient.from('user_books').insert([updates]).select('id').single();
+      if (insertRes.data) userBookIds[bookId] = insertRes.data.id;
+    }
+    userBooks[bookId] = 'read';
+    if (!existing || existing !== 'read') userReadCount++;
+    
+    if (shareToFeed) {
+      await supabaseClient.from('posts').insert([{
+        user_id: currentUser.id,
+        type: 'read',
+        content: quoteText || null,
+        quote_author: pendingBook.author || 'Bilinmeyen',
+        quote_book: pendingBook.title || '',
+        quote_page: page ? parseInt(page) : null,
+        book_id: bookId,
+        finished_at: new Date().toISOString()
+      }]);
+    }
+    
+    closeQuoteModal();
+    toast('✅ Kaydedildi!' + (shareToFeed ? ' Akışta paylaşıldı.' : ''));
+    setTimeout(function() { location.reload(); }, 800);
+  } catch (err) {
+    console.error(err);
+    toast('Hata: ' + err.message, true);
+    btn.disabled = false;
+    btn.textContent = 'Kaydet';
+  }
+}
+
+// TALEP
 document.getElementById('openRequestBtn').addEventListener('click', async function() {
-if (!currentUser) { toast('Talep için giriş yapmalısın'); return; }
-
-var title = prompt('Kitabın adı:');
-if (!title) return;
-var author = prompt('Yazar (opsiyonel):') || '';
-var note = prompt('Eklemek istediğin not (opsiyonel):') || '';
-
-var res = await supabaseClient.from('book_requests').insert([{
-user_id: currentUser.id,
-title: title,
-author: author,
-note: note
-}]);
-
-if (res.error) { toast('Hata: ' + res.error.message); return; }
-toast('Talebin alındı! En kısa sürede ekleyeceğiz.', true);
+  if (!currentUser) { toast('Talep için giriş yapmalısın', true); return; }
+  var title = prompt('Kitabın adı:');
+  if (!title) return;
+  var author = prompt('Yazar (opsiyonel):') || '';
+  var note = prompt('Eklemek istediğin not (opsiyonel):') || '';
+  var res = await supabaseClient.from('book_requests').insert([{
+    user_id: currentUser.id, title: title, author: author, note: note
+  }]);
+  if (res.error) { toast('Hata: ' + res.error.message, true); return; }
+  toast('✅ Talebin alındı!');
 });
 })();
 </script>

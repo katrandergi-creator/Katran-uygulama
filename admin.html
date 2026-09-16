@@ -13,10 +13,7 @@ color: #f4efe8;
 min-height: 100vh;
 padding: 2rem 1rem;
 }
-.container {
-max-width: 900px;
-margin: 0 auto;
-}
+.container { max-width: 900px; margin: 0 auto; }
 .top-bar {
 display: flex;
 justify-content: space-between;
@@ -31,19 +28,19 @@ font-size: 2rem;
 font-weight: 900;
 }
 h1 .red { color: #e03131; }
-.top-actions {
-display: flex;
-gap: 0.5rem;
-align-items: center;
-}
+.top-actions { display: flex; gap: 0.5rem; }
 .back-link {
 color: #a89e94;
 text-decoration: none;
-font-size: 0.9rem;
+font-size: 0.85rem;
 padding: 0.5rem 1rem;
 border: 1px solid rgba(255,255,255,0.1);
 border-radius: 60px;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
 }
+.back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .back-link:hover { color: #e03131; border-color: #e03131; }
 .logout-btn {
 background: transparent;
@@ -53,38 +50,44 @@ padding: 0.5rem 1.2rem;
 border-radius: 60px;
 cursor: pointer;
 font-size: 0.85rem;
+font-family: inherit;
 }
-.logout-btn:hover {
-background: #e03131;
-color: #f4efe8;
-border-color: #e03131;
+.logout-btn:hover { background: #e03131; color: #f4efe8; border-color: #e03131; }
+.tabs {
+display: flex;
+gap: 0.4rem;
+margin-bottom: 1.5rem;
+border-bottom: 1px solid rgba(255,255,255,0.06);
+padding-bottom: 0.5rem;
+overflow-x: auto;
 }
-.stats {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 1rem;
-margin-bottom: 2rem;
-}
-.stat-box {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(255,255,255,0.06);
-border-radius: 16px;
-padding: 1.5rem;
-text-align: center;
-}
-.stat-box .number {
-font-family: 'Playfair Display', serif;
-font-size: 2rem;
-font-weight: 900;
-color: #e03131;
-display: block;
-}
-.stat-box .label {
-font-size: 0.75rem;
+.tab {
+background: transparent;
 color: #a89e94;
-text-transform: uppercase;
-letter-spacing: 0.1em;
-margin-top: 0.3rem;
+border: none;
+padding: 0.6rem 1.2rem;
+font-size: 0.85rem;
+font-weight: 600;
+cursor: pointer;
+border-radius: 60px;
+font-family: inherit;
+white-space: nowrap;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+transition: all 0.2s;
+}
+.tab svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tab.active { background: rgba(224,49,49,0.15); color: #e03131; }
+.tab .count {
+background: #e03131;
+color: #fff;
+font-size: 0.65rem;
+padding: 1px 6px;
+border-radius: 20px;
+font-weight: 700;
+min-width: 18px;
+text-align: center;
 }
 .section {
 background: rgba(255,255,255,0.03);
@@ -98,75 +101,70 @@ font-family: 'Playfair Display', serif;
 font-size: 1.4rem;
 margin-bottom: 1.5rem;
 }
-.section h2::before {
-content: '❀ ';
-color: #e03131;
-}
-.app-item {
+.section h2::before { content: '❀ '; color: #e03131; }
+.item {
 background: rgba(255,255,255,0.02);
 border: 1px solid rgba(255,255,255,0.06);
 border-radius: 12px;
-padding: 1.5rem;
-margin-bottom: 1rem;
+padding: 1.2rem;
+margin-bottom: 0.8rem;
 }
-.app-item:last-child { margin-bottom: 0; }
-.app-header {
+.item:last-child { margin-bottom: 0; }
+.item-header {
 display: flex;
 justify-content: space-between;
 align-items: flex-start;
 gap: 1rem;
 flex-wrap: wrap;
-margin-bottom: 0.8rem;
+margin-bottom: 0.6rem;
 }
-.app-name {
-font-weight: 700;
-font-size: 1.1rem;
-}
-.app-username {
-color: #a89e94;
-font-size: 0.85rem;
-}
-.app-email {
-color: #a89e94;
-font-size: 0.85rem;
-margin-bottom: 0.8rem;
-word-break: break-all;
-}
-.app-reason {
+.item-name { font-weight: 700; font-size: 1rem; }
+.item-username { color: #a89e94; font-size: 0.85rem; }
+.item-meta { color: #7a7068; font-size: 0.75rem; margin-top: 0.2rem; }
+.item-reason {
 background: rgba(0,0,0,0.2);
 border-left: 3px solid #e03131;
-padding: 0.8rem 1rem;
+padding: 0.7rem 1rem;
 border-radius: 6px;
-font-size: 0.9rem;
+font-size: 0.88rem;
 line-height: 1.6;
 color: #d4c9bd;
-margin-bottom: 1rem;
+margin: 0.7rem 0;
 }
-.app-actions {
+.item-note {
+color: #a89e94;
+font-size: 0.85rem;
+background: rgba(0,0,0,0.15);
+padding: 0.6rem 0.9rem;
+border-radius: 8px;
+margin: 0.6rem 0;
+}
+.item-actions {
 display: flex;
 gap: 0.5rem;
 flex-wrap: wrap;
+margin-top: 0.8rem;
 }
 .btn {
-padding: 0.6rem 1.3rem;
+padding: 0.55rem 1.2rem;
 border: none;
 border-radius: 60px;
 font-weight: 700;
-font-size: 0.85rem;
+font-size: 0.82rem;
 cursor: pointer;
+font-family: inherit;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
 transition: all 0.2s;
 }
-.btn-approve {
-background: #2e7d32;
-color: #fff;
-}
+.btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.btn-approve { background: #2e7d32; color: #fff; }
 .btn-approve:hover { background: #1b5e20; }
-.btn-reject {
-background: transparent;
-color: #ff8a8a;
-border: 1px solid rgba(224,49,49,0.4);
-}
+.btn-reject { background: transparent; color: #ff8a8a; border: 1px solid rgba(224,49,49,0.4); }
 .btn-reject:hover { background: rgba(224,49,49,0.15); }
+.btn-neutral { background: transparent; color: #a89e94; border: 1px solid rgba(255,255,255,0.15); }
+.btn-neutral:hover { color: #e03131; border-color: #e03131; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .badge {
 display: inline-block;
@@ -177,9 +175,24 @@ font-weight: 600;
 text-transform: uppercase;
 letter-spacing: 0.05em;
 }
-.badge.pending { background: rgba(255,193,7,0.15); color: #ffc107; }
-.badge.approved { background: rgba(76,175,80,0.15); color: #81c784; }
-.badge.rejected { background: rgba(224,49,49,0.15); color: #ff8a8a; }
+.badge-pending { background: rgba(255,193,7,0.15); color: #ffc107; }
+.badge-approved { background: rgba(76,175,80,0.15); color: #81c784; }
+.badge-rejected { background: rgba(224,49,49,0.15); color: #ff8a8a; }
+.badge-admin { background: rgba(212,168,67,0.15); color: #d4a843; }
+.badge-member { background: rgba(168,158,148,0.15); color: #a89e94; }
+.rank-pill {
+display: inline-flex;
+align-items: center;
+gap: 0.3rem;
+padding: 0.25rem 0.7rem;
+border-radius: 40px;
+font-size: 0.7rem;
+font-weight: 600;
+}
+.rank-filiz { background: rgba(168,158,148,0.15); color: #a89e94; }
+.rank-karanfil { background: rgba(236,72,153,0.15); color: #ec4899; }
+.rank-gergedan { background: rgba(224,49,49,0.15); color: #e03131; }
+.rank-katran { background: rgba(212,168,67,0.15); color: #d4a843; }
 .loading, .empty {
 text-align: center;
 padding: 3rem;
@@ -195,10 +208,24 @@ border-radius: 10px;
 text-align: center;
 margin-bottom: 1rem;
 }
-@media (max-width: 600px) {
-.stats { grid-template-columns: 1fr; }
-.app-header { flex-direction: column; }
+.toast {
+position: fixed;
+bottom: 2rem;
+left: 50%;
+transform: translateX(-50%) translateY(100px);
+background: #2e7d32;
+color: #fff;
+padding: 0.8rem 1.5rem;
+border-radius: 60px;
+font-weight: 600;
+font-size: 0.9rem;
+transition: transform 0.3s;
+z-index: 9999;
+max-width: 90%;
+text-align: center;
 }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { background: #e03131; }
 </style>
 </head>
 <body>
@@ -208,44 +235,43 @@ margin-bottom: 1rem;
 
 <div id="errorState" style="display:none;">
 <div class="error-msg" id="errorMsg"></div>
-<a href="index.html" class="back-link">← Ana Sayfa</a>
+<a href="akis.html" class="back-link" style="margin-top:1rem;display:inline-flex;">← Akışa dön</a>
 </div>
 
-<div id="adminContent" style="display:none;">
+<div id="content" style="display:none;">
 <div class="top-bar">
 <h1><span class="red">Admin</span> Panel</h1>
 <div class="top-actions">
-<a href="index.html" class="back-link">← Site</a>
+<a href="akis.html" class="back-link">
+<svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+Akış
+</a>
 <button class="logout-btn" id="logoutBtn">Çıkış</button>
 </div>
 </div>
 
-<div class="stats">
-<div class="stat-box">
-<span class="number" id="statPending">0</span>
-<span class="label">Bekleyen</span>
+<div class="tabs">
+<button class="tab active" data-tab="applications">
+<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+Başvurular
+<span class="count" id="countApplications" style="display:none;">0</span>
+</button>
+<button class="tab" data-tab="members">
+<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+Üyeler
+</button>
+<button class="tab" data-tab="bookRequests">
+<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+Kitap Talepleri
+<span class="count" id="countBookRequests" style="display:none;">0</span>
+</button>
 </div>
-<div class="stat-box">
-<span class="number" id="statApproved">0</span>
-<span class="label">Onaylı</span>
-</div>
-<div class="stat-box">
-<span class="number" id="statRejected">0</span>
-<span class="label">Reddedilen</span>
+
+<div id="tabContent"></div>
 </div>
 </div>
 
-<div class="section">
-<h2>Bekleyen Başvurular</h2>
-<div id="pendingList"><div class="loading">Yükleniyor...</div></div>
-</div>
-
-<div class="section">
-<h2>Onaylanmış Üyeler</h2>
-<div id="approvedList"><div class="loading">Yükleniyor...</div></div>
-</div>
-</div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -256,228 +282,412 @@ margin-bottom: 1rem;
 var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
 
-var loadingState = document.getElementById('loadingState');
-var adminContent = document.getElementById('adminContent');
-var errorState = document.getElementById('errorState');
-var errorMsg = document.getElementById('errorMsg');
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var currentUser = null;
+var activeTab = 'applications';
 
-function showError(msg) {
-loadingState.style.display = 'none';
-errorState.style.display = 'block';
-errorMsg.textContent = msg;
+var ICONS = {
+check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+x: '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+book: '<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+crown: '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+shield: '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+};
+
+function escapeHtml(str) {
+if (!str) return '';
+return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-var supabaseClient;
-try {
-supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} catch (e) {
-showError('Supabase bağlantı hatası: ' + e.message);
-return;
+function timeAgo(dateStr) {
+var d = new Date(dateStr);
+var s = Math.floor((new Date() - d) / 1000);
+if (s < 60) return 'şimdi';
+if (s < 3600) return Math.floor(s/60) + ' dk önce';
+if (s < 86400) return Math.floor(s/3600) + ' sa önce';
+if (s < 604800) return Math.floor(s/86400) + ' gün önce';
+return d.toLocaleDateString('tr-TR');
 }
 
-// ---------- ADMIN KONTROLÜ ----------
-async function checkAdmin() {
+function toast(msg, isError) {
+var t = document.getElementById('toast');
+t.textContent = msg;
+t.className = 'toast show' + (isError ? ' error' : '');
+setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+// ---------- BAŞLAT ----------
+(async function init() {
 var sessionRes = await supabaseClient.auth.getSession();
 var session = sessionRes.data.session;
 
 if (!session) {
 window.location.href = 'giris.html';
-return false;
+return;
 }
+currentUser = session.user;
 
-var profileRes = await supabaseClient
+var profRes = await supabaseClient
 .from('profiles')
 .select('role, status, full_name')
-.eq('id', session.user.id)
+.eq('id', currentUser.id)
 .single();
 
-if (profileRes.error || !profileRes.data) {
+if (profRes.error || !profRes.data) {
 showError('Profil bilgisi alınamadı.');
-return false;
+return;
 }
 
-if (profileRes.data.role !== 'admin') {
+if (profRes.data.role !== 'admin') {
 showError('Bu sayfaya erişim yetkiniz yok. Sadece admin kullanabilir.');
-return false;
-}
-
-return true;
-}
-
-// ---------- LİSTELERİ YÜKLE ----------
-async function loadApplications() {
-var res = await supabaseClient
-.from('applications')
-.select('*')
-.order('created_at', { ascending: false });
-
-if (res.error) {
-console.error(res.error);
 return;
 }
 
-var apps = res.data || [];
-var pending = apps.filter(function(a) { return a.status === 'pending' || !a.status; });
-var approved = apps.filter(function(a) { return a.status === 'approved'; });
-var rejected = apps.filter(function(a) { return a.status === 'rejected'; });
+document.getElementById('loadingState').style.display = 'none';
+document.getElementById('content').style.display = 'block';
 
-document.getElementById('statPending').textContent = pending.length;
-document.getElementById('statApproved').textContent = approved.length;
-document.getElementById('statRejected').textContent = rejected.length;
-
-renderList('pendingList', pending, true);
-renderList('approvedList', approved, false);
-}
-
-function renderList(elementId, items, showActions) {
-var el = document.getElementById(elementId);
-
-if (!items.length) {
-el.innerHTML = '<div class="empty"><span class="flower">❀</span>Kayıt yok.</div>';
-return;
-}
-
-var html = '';
-items.forEach(function(app) {
-var statusBadge = '';
-if (app.status === 'pending' || !app.status) {
-statusBadge = '<span class="badge pending">Bekliyor</span>';
-} else if (app.status === 'approved') {
-statusBadge = '<span class="badge approved">Onaylı</span>';
-} else if (app.status === 'rejected') {
-statusBadge = '<span class="badge rejected">Reddedildi</span>';
-}
-
-html += '<div class="app-item" data-id="' + app.id + '">';
-html += '<div class="app-header">';
-html += '<div>';
-html += '<div class="app-name">' + escapeHtml(app.full_name || 'İsimsiz') + '</div>';
-html += '<div class="app-username">@' + escapeHtml(app.username || 'kullanici') + '</div>';
-html += '</div>';
-html += statusBadge;
-html += '</div>';
-html += '<div class="app-email">📧 ' + escapeHtml(app.email) + '</div>';
-
-if (app.reason) {
-html += '<div class="app-reason">' + escapeHtml(app.reason) + '</div>';
-}
-
-if (showActions) {
-html += '<div class="app-actions">';
-html += '<button class="btn btn-approve" onclick="approveApp(\'' + app.id + '\')">✓ Onayla</button>';
-html += '<button class="btn btn-reject" onclick="rejectApp(\'' + app.id + '\')">✕ Reddet</button>';
-html += '</div>';
-}
-
-html += '</div>';
-});
-
-el.innerHTML = html;
-}
-
-function escapeHtml(str) {
-if (!str) return '';
-return String(str)
-.replace(/&/g, '&amp;')
-.replace(/</g, '&lt;')
-.replace(/>/g, '&gt;')
-.replace(/"/g, '&quot;')
-.replace(/'/g, '&#39;');
-}
-
-// ---------- ONAYLA ----------
-window.approveApp = async function(appId) {
-var confirmed = confirm('Bu başvuruyu onaylamak istediğine emin misin?');
-if (!confirmed) return;
-
-var res = await supabaseClient
-.from('applications')
-.select('*')
-.eq('id', appId)
-.single();
-
-if (res.error || !res.data) {
-alert('Başvuru bulunamadı.');
-return;
-}
-
-var app = res.data;
-
-// applications status = approved
-var updateRes = await supabaseClient
-.from('applications')
-.update({ status: 'approved' })
-.eq('id', appId);
-
-if (updateRes.error) {
-alert('Güncellenemedi: ' + updateRes.error.message);
-return;
-}
-
-// profiles tablosunda var mı kontrol et
-var existing = await supabaseClient
-.from('profiles')
-.select('id')
-.eq('email', app.email)
-.single();
-
-if (existing.data) {
-// Güncelle
-await supabaseClient
-.from('profiles')
-.update({ status: 'approved' })
-.eq('email', app.email);
-} else {
-// Yeni kayıt — auth.users'tan id al
-var usersRes = await supabaseClient
-.from('profiles')
-.select('id')
-.eq('email', app.email);
-
-// Auth kullanıcısının id'sini bulmak için başka yol yok (RLS izin vermez)
-// Bu yüzden sadece applications'ı onayladık, kullanıcı signUp zaten yapmıştı
-alert('Başvuru onaylandı! Ancak profiles kaydı yoksa kullanıcı giriş yapamayabilir.\n\nManuel ekleme gerekebilir.');
-}
-
-alert('✅ Başvuru onaylandı!');
-loadApplications();
-};
-
-// ---------- REDDET ----------
-window.rejectApp = async function(appId) {
-var confirmed = confirm('Bu başvuruyu reddetmek istediğine emin misin?');
-if (!confirmed) return;
-
-var res = await supabaseClient
-.from('applications')
-.update({ status: 'rejected' })
-.eq('id', appId);
-
-if (res.error) {
-alert('Reddedilemedi: ' + res.error.message);
-return;
-}
-
-alert('❌ Başvuru reddedildi.');
-loadApplications();
-};
-
-// ---------- ÇIKIŞ ----------
 document.getElementById('logoutBtn').addEventListener('click', async function() {
 await supabaseClient.auth.signOut();
 window.location.href = 'index.html';
 });
 
-// ---------- BAŞLAT ----------
-(async function init() {
-var isAdmin = await checkAdmin();
-if (!isAdmin) return;
+document.querySelectorAll('.tab').forEach(function(t) {
+t.addEventListener('click', function() {
+document.querySelectorAll('.tab').forEach(function(x) { x.classList.remove('active'); });
+this.classList.add('active');
+activeTab = this.getAttribute('data-tab');
+loadTab();
+});
+});
 
-loadingState.style.display = 'none';
-adminContent.style.display = 'block';
-
-await loadApplications();
+// Sayaçları güncelle
+await updateCounts();
+loadTab();
 })();
+
+function showError(msg) {
+document.getElementById('loadingState').style.display = 'none';
+document.getElementById('errorState').style.display = 'block';
+document.getElementById('errorMsg').textContent = msg;
+}
+
+async function updateCounts() {
+// Bekleyen başvuru sayısı
+var appRes = await supabaseClient
+.from('applications')
+.select('id', { count: 'exact', head: true })
+.or('status.is.null,status.eq.pending');
+
+if (appRes.count > 0) {
+var c1 = document.getElementById('countApplications');
+c1.textContent = appRes.count;
+c1.style.display = 'inline-block';
+}
+
+// Bekleyen kitap talebi sayısı
+var brRes = await supabaseClient
+.from('book_requests')
+.select('id', { count: 'exact', head: true })
+.eq('status', 'pending');
+
+if (brRes.count > 0) {
+var c2 = document.getElementById('countBookRequests');
+c2.textContent = brRes.count;
+c2.style.display = 'inline-block';
+}
+}
+
+function loadTab() {
+var c = document.getElementById('tabContent');
+c.innerHTML = '<div class="loading">Yükleniyor...</div>';
+
+if (activeTab === 'applications') loadApplications();
+else if (activeTab === 'members') loadMembers();
+else if (activeTab === 'bookRequests') loadBookRequests();
+}
+
+// ---------- BAŞVURULAR ----------
+async function loadApplications() {
+var res = await supabaseClient
+.from('applications')
+.select('*')
+.order('created_at', { ascending: false })
+.limit(100);
+
+if (res.error) {
+document.getElementById('tabContent').innerHTML =
+'<div class="error-msg">Hata: ' + escapeHtml(res.error.message) + '</div>';
+return;
+}
+
+var apps = res.data || [];
+
+if (!apps.length) {
+document.getElementById('tabContent').innerHTML =
+'<div class="section"><div class="empty"><span class="flower">❀</span>Henüz başvuru yok.</div></div>';
+return;
+}
+
+// Bekleyenler üstte
+apps.sort(function(a, b) {
+var aPending = !a.status || a.status === 'pending';
+var bPending = !b.status || b.status === 'pending';
+if (aPending && !bPending) return -1;
+if (!aPending && bPending) return 1;
+return 0;
+});
+
+var html = '<div class="section"><h2>Üye Başvuruları</h2>';
+apps.forEach(function(app) {
+var status = app.status || 'pending';
+var badgeClass = status === 'approved' ? 'badge-approved' :
+status === 'rejected' ? 'badge-rejected' : 'badge-pending';
+var badgeText = status === 'approved' ? 'Onaylı' :
+status === 'rejected' ? 'Reddedildi' : 'Bekliyor';
+
+html += '<div class="item">';
+html += '<div class="item-header">';
+html += '<div>';
+html += '<div class="item-name">' + escapeHtml(app.full_name || 'İsimsiz') + '</div>';
+html += '<div class="item-username">@' + escapeHtml(app.username || 'kullanici') + '</div>';
+html += '<div class="item-meta">' + escapeHtml(app.email) + ' · ' + timeAgo(app.created_at) + '</div>';
+html += '</div>';
+html += '<span class="badge ' + badgeClass + '">' + badgeText + '</span>';
+html += '</div>';
+
+if (app.reason) {
+html += '<div class="item-reason">' + escapeHtml(app.reason) + '</div>';
+}
+
+if (status === 'pending') {
+html += '<div class="item-actions">';
+html += '<button class="btn btn-approve" onclick="approveApplication(\'' + app.id + '\')">' + ICONS.check + ' Onayla</button>';
+html += '<button class="btn btn-reject" onclick="rejectApplication(\'' + app.id + '\')">' + ICONS.x + ' Reddet</button>';
+html += '</div>';
+}
+
+html += '</div>';
+});
+html += '</div>';
+document.getElementById('tabContent').innerHTML = html;
+}
+
+// Başvuruyu onayla
+window.approveApplication = async function(appId) {
+if (!confirm('Bu başvuruyu onaylamak istediğine emin misin?')) return;
+
+// Başvuruyu al
+var res = await supabaseClient.from('applications').select('*').eq('id', appId).single();
+if (res.error || !res.data) { toast('Başvuru bulunamadı', true); return; }
+var app = res.data;
+
+// applications.status = approved
+await supabaseClient.from('applications').update({ status: 'approved' }).eq('id', appId);
+
+// profiles'da bu email var mı?
+var profRes = await supabaseClient.from('profiles').select('id, status').eq('email', app.email).single();
+
+if (profRes.data) {
+// Var → status approved yap
+await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', profRes.data.id);
+toast('Onaylandı!');
+} else {
+// Yok → trigger ile zaten eklenmiş olması lazım, ama güvenlik için ekle
+toast('Onaylandı ancak profil kaydı bulunamadı', true);
+}
+
+await updateCounts();
+loadApplications();
+};
+
+// Başvuruyu reddet
+window.rejectApplication = async function(appId) {
+if (!confirm('Bu başvuruyu reddetmek istediğine emin misin?')) return;
+
+var res = await supabaseClient.from('applications').update({ status: 'rejected' }).eq('id', appId);
+if (res.error) { toast('Hata: ' + res.error.message, true); return; }
+
+// profiles'daki kaydı da rejected yap
+var appRes = await supabaseClient.from('applications').select('email').eq('id', appId).single();
+if (appRes.data) {
+await supabaseClient.from('profiles').update({ status: 'rejected' }).eq('email', appRes.data.email);
+}
+
+toast('Reddedildi');
+await updateCounts();
+loadApplications();
+};
+
+// ---------- ÜYELER ----------
+async function loadMembers() {
+var res = await supabaseClient
+.from('profiles')
+.select('*')
+.order('created_at', { ascending: false })
+.limit(200);
+
+if (res.error) {
+document.getElementById('tabContent').innerHTML =
+'<div class="error-msg">Hata: ' + escapeHtml(res.error.message) + '</div>';
+return;
+}
+
+var members = res.data || [];
+
+if (!members.length) {
+document.getElementById('tabContent').innerHTML =
+'<div class="section"><div class="empty"><span class="flower">❀</span>Üye yok.</div></div>';
+return;
+}
+
+// İstatistik: kaç onaylı, kaç pending
+var approved = members.filter(function(m) { return m.status === 'approved'; }).length;
+var pending = members.filter(function(m) { return m.status === 'pending'; }).length;
+var rejected = members.filter(function(m) { return m.status === 'rejected'; }).length;
+
+var html = '<div class="section"><h2>Üyeler</h2>';
+html += '<p style="color:#a89e94;font-size:0.85rem;margin-bottom:1.2rem;">Toplam: ' + members.length + ' · Onaylı: ' + approved + ' · Bekleyen: ' + pending + ' · Reddedilen: ' + rejected + '</p>';
+
+members.forEach(function(m) {
+var status = m.status || 'pending';
+var badgeClass = status === 'approved' ? 'badge-approved' :
+status === 'rejected' ? 'badge-rejected' : 'badge-pending';
+var badgeText = status === 'approved' ? 'Onaylı' :
+status === 'rejected' ? 'Reddedilen' : 'Bekliyor';
+
+var rank = m.rank || 'filiz';
+var rankLabel = rank === 'katran' ? 'Katran Kurucusu' :
+rank === 'gergedan' ? 'Gergedan Böceği' :
+rank === 'karanfil' ? 'Karanfil' : 'Filiz';
+
+html += '<div class="item">';
+html += '<div class="item-header">';
+html += '<div>';
+html += '<div class="item-name">' + escapeHtml(m.full_name || 'İsimsiz') + '</div>';
+html += '<div class="item-username">@' + escapeHtml(m.username || 'kullanici') + '</div>';
+html += '<div class="item-meta">' + escapeHtml(m.email) + ' · ' + timeAgo(m.created_at) + '</div>';
+html += '</div>';
+html += '<div style="display:flex;flex-direction:column;gap:0.4rem;align-items:flex-end;">';
+html += '<span class="badge ' + badgeClass + '">' + badgeText + '</span>';
+html += '<span class="rank-pill rank-' + rank + '">' + rankLabel + '</span>';
+if (m.role === 'admin') html += '<span class="badge badge-admin">Admin</span>';
+html += '</div>';
+html += '</div>';
+
+if (status === 'pending') {
+html += '<div class="item-actions">';
+html += '<button class="btn btn-approve" onclick="approveMember(\'' + m.id + '\')">' + ICONS.check + ' Onayla</button>';
+html += '<button class="btn btn-reject" onclick="rejectMember(\'' + m.id + '\')">' + ICONS.x + ' Reddet</button>';
+html += '</div>';
+} else if (status === 'approved') {
+html += '<div class="item-actions">';
+html += '<button class="btn btn-neutral" onclick="toggleAdmin(\'' + m.id + '\', \'' + (m.role || 'member') + '\')">' + ICONS.crown + ' ' + (m.role === 'admin' ? 'Adminliği Kaldır' : 'Admin Yap') + '</button>';
+html += '</div>';
+}
+
+html += '</div>';
+});
+html += '</div>';
+document.getElementById('tabContent').innerHTML = html;
+}
+
+window.approveMember = async function(id) {
+await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', id);
+await supabaseClient.from('applications').update({ status: 'approved' }).eq('email', (await supabaseClient.from('profiles').select('email').eq('id', id).single()).data.email);
+toast('Onaylandı');
+await updateCounts();
+loadMembers();
+};
+
+window.rejectMember = async function(id) {
+await supabaseClient.from('profiles').update({ status: 'rejected' }).eq('id', id);
+var emailRes = await supabaseClient.from('profiles').select('email').eq('id', id).single();
+if (emailRes.data) {
+await supabaseClient.from('applications').update({ status: 'rejected' }).eq('email', emailRes.data.email);
+}
+toast('Reddedildi');
+await updateCounts();
+loadMembers();
+};
+
+window.toggleAdmin = async function(id, currentRole) {
+var newRole = currentRole === 'admin' ? 'member' : 'admin';
+if (!confirm(newRole === 'admin' ? 'Bu kullanıcıyı admin yapmak istediğine emin misin?' : 'Adminliğini kaldırmak istediğine emin misin?')) return;
+await supabaseClient.from('profiles').update({ role: newRole }).eq('id', id);
+toast(newRole === 'admin' ? 'Admin yapıldı' : 'Adminlik kaldırıldı');
+loadMembers();
+};
+
+// ---------- KİTAP TALEPLERİ ----------
+async function loadBookRequests() {
+var res = await supabaseClient
+.from('book_requests')
+.select('*')
+.order('created_at', { ascending: false })
+.limit(100);
+
+if (res.error) {
+document.getElementById('tabContent').innerHTML =
+'<div class="error-msg">Hata: ' + escapeHtml(res.error.message) + '</div>';
+return;
+}
+
+var reqs = res.data || [];
+
+if (!reqs.length) {
+document.getElementById('tabContent').innerHTML =
+'<div class="section"><div class="empty"><span class="flower">❀</span>Henüz kitap talebi yok.</div></div>';
+return;
+}
+
+var html = '<div class="section"><h2>Kitap Talepleri</h2>';
+reqs.forEach(function(r) {
+var status = r.status || 'pending';
+var badgeClass = status === 'approved' ? 'badge-approved' :
+status === 'rejected' ? 'badge-rejected' : 'badge-pending';
+var badgeText = status === 'approved' ? 'Onaylı' :
+status === 'rejected' ? 'Reddedilen' : 'Bekliyor';
+
+html += '<div class="item">';
+html += '<div class="item-header">';
+html += '<div>';
+html += '<div class="item-name">' + escapeHtml(r.title) + '</div>';
+if (r.author) html += '<div class="item-username">' + escapeHtml(r.author) + '</div>';
+html += '<div class="item-meta">' + timeAgo(r.created_at) + '</div>';
+html += '</div>';
+html += '<span class="badge ' + badgeClass + '">' + badgeText + '</span>';
+html += '</div>';
+
+if (r.note) {
+html += '<div class="item-note">' + escapeHtml(r.note) + '</div>';
+}
+
+if (status === 'pending') {
+html += '<div class="item-actions">';
+html += '<button class="btn btn-approve" onclick="approveBookRequest(\'' + r.id + '\')">' + ICONS.check + ' Onayla</button>';
+html += '<button class="btn btn-reject" onclick="rejectBookRequest(\'' + r.id + '\')">' + ICONS.x + ' Reddet</button>';
+html += '</div>';
+}
+
+html += '</div>';
+});
+html += '</div>';
+document.getElementById('tabContent').innerHTML = html;
+}
+
+window.approveBookRequest = async function(id) {
+await supabaseClient.from('book_requests').update({ status: 'approved', reviewed_at: new Date().toISOString(), reviewed_by: currentUser.id }).eq('id', id);
+toast('Talep onaylandı');
+await updateCounts();
+loadBookRequests();
+};
+
+window.rejectBookRequest = async function(id) {
+await supabaseClient.from('book_requests').update({ status: 'rejected', reviewed_at: new Date().toISOString(), reviewed_by: currentUser.id }).eq('id', id);
+toast('Talep reddedildi');
+await updateCounts();
+loadBookRequests();
+};
 
 })();
 </script>

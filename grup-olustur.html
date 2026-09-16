@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Yeni Grup • Katran Dergi</title>
+<link rel="stylesheet" href="tema.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Inter', -apple-system, sans-serif;
+background: var(--bg);
+color: var(--text);
+min-height: 100vh;
+padding: 1.5rem 1rem 100px;
+transition: background 0.3s ease, color 0.3s ease;
+}
+.container { max-width: 600px; margin: 0 auto; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.back-link {
+color: var(--text-muted);
+text-decoration: none;
+font-size: 0.85rem;
+padding: 0.4rem 0.9rem;
+border: 1px solid var(--border);
+border-radius: 60px;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+transition: all 0.2s;
+background: var(--bg-elev);
+}
+.back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.back-link:hover { color: var(--bordo); border-color: var(--bordo); background: var(--bordo-glow); }
+h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--text); }
+h1 .red { color: var(--bordo); }
+.card {
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 20px;
+padding: 1.5rem;
+}
+.field { margin-bottom: 1.2rem; }
+.field label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 600; }
+.field input,
+.field textarea {
+width: 100%;
+background: var(--bg-elev-2);
+border: 1px solid var(--border);
+border-radius: 12px;
+padding: 0.8rem 1rem;
+color: var(--text);
+font-family: inherit;
+font-size: 0.95rem;
+transition: all 0.2s;
+}
+.field input::placeholder,
+.field textarea::placeholder { color: var(--text-dim); }
+.field input:focus,
+.field textarea:focus { outline: none; border-color: var(--bordo); background: var(--bordo-glow); }
+.field textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+
+.search-input-wrap { position: relative; display: flex; align-items: center; margin-bottom: 0.8rem; }
+.search-input-wrap svg { position: absolute; left: 1rem; width: 16px; height: 16px; stroke: var(--text-dim); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.search-input {
+width: 100%;
+background: var(--bg-elev-2);
+border: 1px solid var(--border);
+border-radius: 60px;
+padding: 0.7rem 1.2rem 0.7rem 2.5rem;
+color: var(--text);
+font-family: inherit;
+font-size: 0.9rem;
+}
+.search-input::placeholder { color: var(--text-dim); }
+.search-input:focus { outline: none; border-color: var(--bordo); background: var(--bordo-glow); }
+
+.selected-members { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; min-height: 0; }
+.member-chip {
+background: var(--bordo);
+color: #fff;
+padding: 0.35rem 0.75rem;
+border-radius: 60px;
+font-size: 0.78rem;
+font-weight: 600;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+}
+.member-chip button {
+background: transparent;
+border: none;
+color: #fff;
+cursor: pointer;
+font-size: 1rem;
+line-height: 1;
+padding: 0;
+opacity: 0.8;
+}
+.member-chip button:hover { opacity: 1; }
+
+.user-list {
+max-height: 240px;
+overflow-y: auto;
+border: 1px solid var(--border);
+border-radius: 12px;
+}
+.user-row {
+display: flex;
+align-items: center;
+gap: 0.7rem;
+padding: 0.7rem 1rem;
+cursor: pointer;
+transition: background 0.15s;
+border-bottom: 1px solid var(--border);
+}
+.user-row:last-child { border-bottom: none; }
+.user-row:hover { background: var(--bordo-glow); }
+.user-row.selected { background: var(--bordo-glow); }
+.user-row-info { flex: 1; min-width: 0; }
+.user-row-name { font-weight: 600; font-size: 0.88rem; color: var(--text); }
+.user-row-username { color: var(--text-muted); font-size: 0.75rem; }
+.user-row-check {
+width: 20px;
+height: 20px;
+border-radius: 50%;
+border: 2px solid var(--border-strong);
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+transition: all 0.2s;
+}
+.user-row.selected .user-row-check {
+background: var(--bordo);
+border-color: var(--bordo);
+}
+.user-row-check svg {
+width: 12px;
+height: 12px;
+stroke: #fff;
+fill: none;
+stroke-width: 3;
+stroke-linecap: round;
+stroke-linejoin: round;
+opacity: 0;
+transition: opacity 0.2s;
+}
+.user-row.selected .user-row-check svg { opacity: 1; }
+
+.btn-row { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem; }
+.btn {
+padding: 0.8rem 1.6rem;
+border-radius: 60px;
+border: none;
+font-weight: 700;
+font-size: 0.9rem;
+cursor: pointer;
+font-family: inherit;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-primary { background: var(--bordo); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--bordo-dark); transform: translateX(4px); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-cancel {
+background: transparent;
+color: var(--text-muted);
+border: 1px solid var(--border);
+}
+.btn-cancel:hover { color: var(--bordo); border-color: var(--bordo); }
+.message {
+padding: 1rem;
+border-radius: 10px;
+margin-bottom: 1.2rem;
+display: none;
+font-size: 0.9rem;
+align-items: center;
+gap: 0.5rem;
+}
+.message svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+.message.error {
+background: rgba(224,49,49,0.15);
+border: 1px solid rgba(224,49,49,0.4);
+color: #ff8a8a;
+display: flex;
+}
+.loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+.spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--bordo); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 520px) {
+h1 { font-size: 1.3rem; }
+.card { padding: 1.2rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div id="loadingState" class="loading"><div class="spinner"></div>Yükleniyor...</div>
+
+<div id="formContent" style="display:none;">
+<div class="top-bar">
+<a href="gruplar.html" class="back-link">
+<svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+Gruplar
+</a>
+<h1><span class="red">Yeni</span> Grup</h1>
+</div>
+
+<div class="message" id="message"></div>
+
+<div class="card">
+<div class="field">
+<label for="groupName">Grup Adı *</label>
+<input type="text" id="groupName" maxlength="50" placeholder="Örn: Şiir Kulübü">
+</div>
+
+<div class="field">
+<label for="groupDesc">Açıklama</label>
+<textarea id="groupDesc" maxlength="200" placeholder="Grup ne hakkında?"></textarea>
+</div>
+
+<div class="field">
+<label>Üyeler (opsiyonel)</label>
+<div class="search-input-wrap">
+<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+<input type="text" class="search-input" id="userSearchInput" placeholder="Üye ara...">
+</div>
+<div class="selected-members" id="selectedMembers"></div>
+<div class="user-list" id="userList">
+<div class="loading" style="padding:1rem;font-size:0.85rem;">Yükleniyor...</div>
+</div>
+</div>
+
+<div class="btn-row">
+<button class="btn btn-cancel" onclick="window.location.href='gruplar.html'">İptal</button>
+<button class="btn btn-primary" id="submitBtn">Oluştur</button>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+<script src="avatares.js"></script>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
+
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var currentUser = null;
+var allUsers = [];
+var filteredUsers = [];
+var selectedUserIds = [];
+var searchQuery = '';
+
+var ICON_ERROR = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+var ICON_CHECK = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+
+function escapeHtml(str) {
+if (!str) return '';
+return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function getAvatar(profile, size) {
+  if (window.renderAvatar) return window.renderAvatar(profile, size || 34);
+  var initial = (profile.full_name || 'K').charAt(0).toUpperCase();
+  return '<div style="width:' + (size || 34) + 'px;height:' + (size || 34) + 'px;border-radius:50%;background:linear-gradient(135deg, var(--bordo), var(--bordo-dark));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:' + Math.round((size || 34) * 0.42) + 'px;">' + initial + '</div>';
+}
+
+(async function init() {
+var sessionRes = await supabaseClient.auth.getSession();
+if (!sessionRes.data.session) { window.location.href = 'giris.html'; return; }
+currentUser = sessionRes.data.session.user;
+
+var profRes = await supabaseClient.from('profiles').select('status').eq('id', currentUser.id).single();
+if (!profRes.data || profRes.data.status !== 'approved') { window.location.href = 'giris.html'; return; }
+
+var usersRes = await supabaseClient.from('profiles').select('id, full_name, username, avatar').eq('status', 'approved').neq('id', currentUser.id).order('full_name', { ascending: true }).limit(200);
+allUsers = usersRes.data || [];
+filteredUsers = allUsers.slice();
+
+renderUserList();
+
+document.getElementById('loadingState').style.display = 'none';
+document.getElementById('formContent').style.display = 'block';
+
+document.getElementById('userSearchInput').addEventListener('input', function() {
+searchQuery = this.value.trim().toLowerCase();
+filteredUsers = allUsers.filter(function(u) {
+return (u.full_name || '').toLowerCase().indexOf(searchQuery) !== -1 || (u.username || '').toLowerCase().indexOf(searchQuery) !== -1;
+});
+renderUserList();
+});
+
+document.getElementById('submitBtn').addEventListener('click', createGroup);
+})();
+
+function renderUserList() {
+var list = document.getElementById('userList');
+if (!filteredUsers.length) {
+list.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">Kullanıcı yok.</div>';
+return;
+}
+var html = '';
+filteredUsers.forEach(function(u) {
+var selected = selectedUserIds.indexOf(u.id) !== -1;
+html += '<div class="user-row' + (selected ? ' selected' : '') + '" data-id="' + u.id + '">';
+html += getAvatar(u, 34);
+html += '<div class="user-row-info">';
+html += '<div class="user-row-name">' + escapeHtml(u.full_name) + '</div>';
+html += '<div class="user-row-username">@' + escapeHtml(u.username) + '</div>';
+html += '</div>';
+html += '<div class="user-row-check">' + ICON_CHECK + '</div>';
+html += '</div>';
+});
+list.innerHTML = html;
+list.querySelectorAll('.user-row').forEach(function(row) {
+row.addEventListener('click', function() {
+var id = this.getAttribute('data-id');
+var idx = selectedUserIds.indexOf(id);
+if (idx === -1) selectedUserIds.push(id);
+else selectedUserIds.splice(idx, 1);
+renderUserList();
+renderSelectedMembers();
+});
+});
+}
+
+function renderSelectedMembers() {
+var container = document.getElementById('selectedMembers');
+if (!selectedUserIds.length) { container.innerHTML = ''; return; }
+var html = '';
+selectedUserIds.forEach(function(id) {
+var u = allUsers.find(function(x) { return x.id === id; });
+if (!u) return;
+html += '<div class="member-chip">' + escapeHtml(u.full_name) + ' <button data-id="' + id + '">×</button></div>';
+});
+container.innerHTML = html;
+container.querySelectorAll('button').forEach(function(btn) {
+btn.addEventListener('click', function(e) {
+e.stopPropagation();
+var id = this.getAttribute('data-id');
+var idx = selectedUserIds.indexOf(id);
+if (idx !== -1) selectedUserIds.splice(idx, 1);
+renderUserList();
+renderSelectedMembers();
+});
+});
+}
+
+async function createGroup() {
+var name = document.getElementById('groupName').value.trim();
+var desc = document.getElementById('groupDesc').value.trim();
+var messageDiv = document.getElementById('message');
+var btn = document.getElementById('submitBtn');
+
+messageDiv.style.display = 'none';
+if (!name) {
+messageDiv.className = 'message error';
+messageDiv.innerHTML = ICON_ERROR + '<span>Grup adı gerekli.</span>';
+return;
+}
+
+btn.disabled = true;
+btn.textContent = 'Oluşturuluyor...';
+
+var groupRes = await supabaseClient.from('groups').insert([{ name: name, description: desc || null, type: 'user', created_by: currentUser.id }]).select().single();
+
+if (groupRes.error) {
+messageDiv.className = 'message error';
+messageDiv.innerHTML = ICON_ERROR + '<span>Hata: ' + escapeHtml(groupRes.error.message) + '</span>';
+btn.disabled = false;
+btn.textContent = 'Oluştur';
+return;
+}
+
+var groupId = groupRes.data.id;
+
+await supabaseClient.from('group_members').insert([{ group_id: groupId, user_id: currentUser.id, role: 'admin' }]);
+
+if (selectedUserIds.length) {
+var members = selectedUserIds.map(function(uid) { return { group_id: groupId, user_id: uid, role: 'member' }; });
+await supabaseClient.from('group_members').insert(members);
+}
+
+window.location.href = 'grup.html?id=' + groupId;
+}
+})();
+</script>
+</body>
+</html>

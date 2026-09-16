@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('katran-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Alıntı Paylaş • Katran Dergi</title>
+<link rel="stylesheet" href="tema.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Inter', -apple-system, sans-serif;
+background: var(--bg, #0a0808);
+color: var(--text, #f4efe8);
+min-height: 100vh;
+padding: 1.5rem 1rem 100px;
+transition: background 0.3s ease, color 0.3s ease;
+}
+.container { max-width: 600px; margin: 0 auto; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.back-link {
+color: var(--text-muted, #a89e94);
+text-decoration: none;
+font-size: 0.85rem;
+padding: 0.4rem 0.9rem;
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 60px;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+transition: all 0.2s;
+background: var(--bg-elev, rgba(255,255,255,0.03));
+}
+.back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.back-link:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); }
+h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--text, #f4efe8); }
+h1 .red { color: var(--bordo, #8b2e3e); }
+
+.card {
+background: var(--bg-elev, rgba(255,255,255,0.03));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 20px;
+padding: 1.5rem;
+margin-bottom: 1rem;
+}
+.field { margin-bottom: 1.2rem; }
+.field label {
+display: block;
+font-size: 0.8rem;
+color: var(--text-muted, #a89e94);
+margin-bottom: 0.5rem;
+font-weight: 600;
+}
+.field label .required { color: var(--bordo, #8b2e3e); }
+.field input,
+.field textarea {
+width: 100%;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 12px;
+padding: 0.8rem 1rem;
+color: var(--text, #f4efe8);
+font-family: inherit;
+font-size: 0.95rem;
+transition: all 0.2s;
+}
+.field input::placeholder,
+.field textarea::placeholder { color: var(--text-dim, #7a7068); }
+.field input:focus,
+.field textarea:focus { outline: none; border-color: var(--bordo, #8b2e3e); background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.field textarea {
+min-height: 130px;
+resize: vertical;
+line-height: 1.7;
+font-family: 'Playfair Display', serif;
+font-style: italic;
+font-size: 1.05rem;
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.char-count { text-align: right; color: var(--text-dim, #7a7068); font-size: 0.72rem; margin-top: 0.3rem; }
+
+/* Kitap seçici */
+.book-search-box { position: relative; }
+.book-results {
+background: var(--bg, #0a0808);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+border-radius: 12px;
+margin-top: 0.5rem;
+max-height: 250px;
+overflow-y: auto;
+display: none;
+box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.5));
+}
+.book-results.open { display: block; }
+.book-result {
+display: flex;
+gap: 0.7rem;
+padding: 0.7rem 1rem;
+cursor: pointer;
+transition: background 0.15s;
+border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
+}
+.book-result:last-child { border-bottom: none; }
+.book-result:hover { background: var(--bordo-glow, rgba(139,46,62,0.15)); }
+.book-result-cover {
+width: 32px;
+height: 48px;
+border-radius: 3px;
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+object-fit: cover;
+flex-shrink: 0;
+}
+.book-result-info { flex: 1; min-width: 0; }
+.book-result-title { font-weight: 600; font-size: 0.85rem; color: var(--text, #f4efe8); margin-bottom: 0.15rem; }
+.book-result-author { color: var(--text-muted, #a89e94); font-size: 0.75rem; }
+
+/* Seçili kitap */
+.selected-book {
+background: var(--bg-elev-2, rgba(255,255,255,0.06));
+border-radius: 12px;
+padding: 0.8rem;
+display: none;
+align-items: center;
+gap: 0.8rem;
+margin-top: 0.5rem;
+}
+.selected-book.show { display: flex; }
+.selected-book-cover {
+width: 50px;
+height: 75px;
+border-radius: 4px;
+background: linear-gradient(135deg, var(--bordo, #8b2e3e), var(--bordo-dark, #6b1f2e));
+object-fit: cover;
+flex-shrink: 0;
+}
+.selected-book-info { flex: 1; min-width: 0; }
+.selected-book-title { font-weight: 700; font-size: 0.9rem; color: var(--text, #f4efe8); margin-bottom: 0.15rem; }
+.selected-book-author { color: var(--text-muted, #a89e94); font-size: 0.8rem; }
+.selected-book-remove {
+background: transparent;
+border: none;
+color: var(--text-dim, #7a7068);
+cursor: pointer;
+padding: 0.4rem;
+border-radius: 50%;
+display: flex;
+transition: all 0.2s;
+}
+.selected-book-remove svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+.selected-book-remove:hover { color: var(--accent, #e03131); background: var(--accent-glow, rgba(224,49,49,0.15)); }
+
+.btn-row { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.2rem; }
+.btn {
+padding: 0.75rem 1.5rem;
+border-radius: 60px;
+border: none;
+font-weight: 700;
+font-size: 0.9rem;
+cursor: pointer;
+font-family: inherit;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+transition: all 0.2s;
+}
+.btn-primary { background: var(--bordo, #8b2e3e); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--bordo-dark, #6b1f2e); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-cancel {
+background: transparent;
+color: var(--text-muted, #a89e94);
+border: 1px solid var(--border, rgba(255,255,255,0.08));
+}
+.btn-cancel:hover { color: var(--bordo, #8b2e3e); border-color: var(--bordo, #8b2e3e); }
+
+.message {
+padding: 1rem;
+border-radius: 10px;
+margin-bottom: 1.2rem;
+display: none;
+font-size: 0.9rem;
+}
+.message.error {
+background: rgba(224,49,49,0.15);
+border: 1px solid rgba(224,49,49,0.4);
+color: #ff8a8a;
+display: block;
+}
+.message.success {
+background: rgba(76,175,80,0.1);
+border: 1px solid rgba(76,175,80,0.3);
+color: #a5d6a7;
+display: block;
+}
+
+.loading { text-align: center; padding: 3rem; color: var(--text-muted, #a89e94); }
+.spinner {
+width: 32px;
+height: 32px;
+border: 3px solid var(--border, rgba(255,255,255,0.08));
+border-top-color: var(--bordo, #8b2e3e);
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast {
+position: fixed;
+bottom: 100px;
+left: 50%;
+transform: translateX(-50%) translateY(100px);
+background: var(--bordo, #8b2e3e);
+color: #fff;
+padding: 0.8rem 1.5rem;
+border-radius: 60px;
+font-weight: 600;
+font-size: 0.9rem;
+transition: transform 0.3s;
+z-index: 9999;
+max-width: 90%;
+text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { background: #e03131; }
+
+@media (max-width: 520px) {
+.field-row { grid-template-columns: 1fr; }
+h1 { font-size: 1.3rem; }
+.card { padding: 1.2rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="top-bar">
+<a href="paylas.html" class="back-link">
+<svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+Geri
+</a>
+<h1><span class="red">Alıntı</span> Paylaş</h1>
+</div>
+
+<div id="loadingState" class="loading"><div class="spinner"></div>Yükleniyor...</div>
+
+<div id="formContent" style="display:none;">
+<div class="message" id="message"></div>
+
+<div class="card">
+  <!-- KİTAP SEÇİCİ -->
+  <div class="field">
+    <label>Kitap <span class="required">*</span></label>
+    <div class="book-search-box">
+      <input type="text" id="bookSearch" placeholder="Kitap adı veya yazar ara..." autocomplete="off">
+      <div class="book-results" id="bookResults"></div>
+      <div class="selected-book" id="selectedBook">
+        <img class="selected-book-cover" id="selectedBookCover" alt="">
+        <div class="selected-book-info">
+          <div class="selected-book-title" id="selectedBookTitle"></div>
+          <div class="selected-book-author" id="selectedBookAuthor"></div>
+        </div>
+        <button class="selected-book-remove" id="removeBook">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="quoteText">Alıntı metni <span class="required">*</span></label>
+    <textarea id="quoteText" maxlength="500" placeholder="Okuduğun bölümden bir alıntı yaz..."></textarea>
+    <div class="char-count" id="quoteCount">0 / 500</div>
+  </div>
+
+  <div class="field">
+    <label for="quotePage">Sayfa numarası</label>
+    <input type="number" id="quotePage" min="1" max="9999" placeholder="Örn: 42">
+  </div>
+</div>
+
+<div class="card">
+  <div class="field">
+    <label for="postComment">İstersen bir yorum ekle</label>
+    <textarea id="postComment" maxlength="300" placeholder="Bu alıntı hakkında ne düşünüyorsun? (opsiyonel)" style="min-height: 80px; font-family: 'Inter', sans-serif; font-style: normal; font-size: 0.95rem;"></textarea>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button class="btn btn-cancel" onclick="window.location.href='paylas.html'">İptal</button>
+  <button class="btn btn-primary" id="submitBtn">Paylaş</button>
+</div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="tema.js"></script>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://bdxvgtxregsonbvhvdav.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJkeHZndHhyZWdzb25idmh2ZGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0MzM4ODcsImV4cCI6MjEwNTAwOTg4N30.7gQGqcvDzTKpQyjnRkmcCrwPny3m5pfUOy4BWk7O0CQ';
+
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var currentUser = null;
+var selectedBook = null;
+var searchTimeout = null;
+
+function escapeHtml(str) {
+if (!str) return '';
+return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function toast(msg, isError) {
+var t = document.getElementById('toast');
+t.textContent = msg;
+t.className = 'toast show' + (isError ? ' error' : '');
+setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+function showMsg(msg, type) {
+var m = document.getElementById('message');
+m.className = 'message ' + type;
+m.textContent = msg;
+}
+
+// BAŞLAT
+(async function init() {
+var sessionRes = await supabaseClient.auth.getSession();
+if (!sessionRes.data.session) { window.location.href = 'giris.html'; return; }
+currentUser = sessionRes.data.session.user;
+
+var profRes = await supabaseClient.from('profiles').select('status').eq('id', currentUser.id).single();
+if (!profRes.data || profRes.data.status !== 'approved') {
+window.location.href = 'giris.html';
+return;
+}
+
+document.getElementById('loadingState').style.display = 'none';
+document.getElementById('formContent').style.display = 'block';
+
+// Kitap arama
+document.getElementById('bookSearch').addEventListener('input', function() {
+var q = this.value.trim();
+clearTimeout(searchTimeout);
+if (q.length < 2) {
+document.getElementById('bookResults').classList.remove('open');
+return;
+}
+searchTimeout = setTimeout(function() { searchBook(q); }, 400);
+});
+
+// Alıntı karakter sayacı
+document.getElementById('quoteText').addEventListener('input', function() {
+document.getElementById('quoteCount').textContent = this.value.length + ' / 500';
+});
+
+// Kitap kaldır
+document.getElementById('removeBook').addEventListener('click', function() {
+selectedBook = null;
+document.getElementById('selectedBook').classList.remove('show');
+document.getElementById('bookSearch').value = '';
+document.getElementById('bookSearch').style.display = 'block';
+});
+
+// Gönder
+document.getElementById('submitBtn').addEventListener('click', submitQuote);
+})();
+
+async function searchBook(query) {
+  var results = document.getElementById('bookResults');
+  results.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">Aranıyor...</div>';
+  results.classList.add('open');
+  
+  // Önce DB'deki kitaplarda ara
+  var dbRes = await supabaseClient
+    .from('books')
+    .select('id, title, author, cover_url')
+    .or('title.ilike.%' + query + '%,author.ilike.%' + query + '%')
+    .limit(10);
+  
+  var books = dbRes.data || [];
+  
+  // DB'de az sonuç varsa Open Library'den çek
+  if (books.length < 5) {
+    try {
+      var olRes = await fetch('https://openlibrary.org/search.json?q=' + encodeURIComponent(query) + '&limit=10');
+      var olData = await olRes.json();
+      var docs = olData.docs || [];
+      
+      // OL sonuçlarını DB'ye cache'le
+      var newBooks = [];
+      docs.forEach(function(doc) {
+        if (!doc.title) return;
+        var extId = doc.key ? doc.key.replace('/works/', '') : null;
+        if (!extId) return;
+        var already = books.some(function(b) { return b.id === extId; });
+        if (already) return;
+        var coverId = doc.cover_i;
+        var coverUrl = coverId ? 'https://covers.openlibrary.org/b/id/' + coverId + '-M.jpg' : null;
+        newBooks.push({
+          external_id: extId,
+          source: 'openlibrary',
+          title: doc.title,
+          author: (doc.author_name && doc.author_name[0]) || null,
+          cover_url: coverUrl,
+          page_count: doc.number_of_pages_median || null,
+          published_year: doc.first_publish_year || null
+        });
+      });
+      
+      if (newBooks.length) {
+        var insRes = await supabaseClient.from('books').insert(newBooks).select('id, title, author, cover_url');
+        (insRes.data || []).forEach(function(b) { books.push(b); });
+      }
+    } catch (e) { console.warn(e); }
+  }
+  
+  if (!books.length) {
+    results.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.85rem;">Sonuç bulunamadı.</div>';
+    return;
+  }
+  
+  var html = '';
+  books.forEach(function(b) {
+    var cover = b.cover_url
+      ? '<img class="book-result-cover" src="' + escapeHtml(b.cover_url) + '" alt="">'
+      : '<div class="book-result-cover" style="display:flex;align-items:center;justify-content:center;font-family:Playfair Display,serif;font-weight:900;color:#fff;">' + escapeHtml((b.title || '?').charAt(0).toUpperCase()) + '</div>';
+    html += '<div class="book-result" onclick="selectBook(\'' + b.id + '\', \'' + escapeHtml(b.title).replace(/'/g, "\\'") + '\', \'' + escapeHtml(b.author || '').replace(/'/g, "\\'") + '\', \'' + (b.cover_url || '') + '\')">';
+    html += cover;
+    html += '<div class="book-result-info">';
+    html += '<div class="book-result-title">' + escapeHtml(b.title) + '</div>';
+    if (b.author) html += '<div class="book-result-author">' + escapeHtml(b.author) + '</div>';
+    html += '</div></div>';
+  });
+  results.innerHTML = html;
+}
+
+window.selectBook = function(id, title, author, coverUrl) {
+  selectedBook = { id: id, title: title, author: author, cover_url: coverUrl };
+  document.getElementById('bookResults').classList.remove('open');
+  document.getElementById('bookSearch').style.display = 'none';
+  
+  var coverEl = document.getElementById('selectedBookCover');
+  if (coverUrl) {
+    coverEl.src = coverUrl;
+    coverEl.style.display = 'block';
+  } else {
+    coverEl.style.display = 'none';
+  }
+  document.getElementById('selectedBookTitle').textContent = title;
+  document.getElementById('selectedBookAuthor').textContent = author || 'Bilinmeyen';
+  document.getElementById('selectedBook').classList.add('show');
+};
+
+async function submitQuote() {
+  var text = document.getElementById('quoteText').value.trim();
+  var page = document.getElementById('quotePage').value.trim();
+  var comment = document.getElementById('postComment').value.trim();
+  
+  if (!selectedBook) { showMsg('Lütfen bir kitap seç.', 'error'); return; }
+  if (!text) { showMsg('Alıntı metni gerekli.', 'error'); return; }
+  if (text.length < 10) { showMsg('Alıntı en az 10 karakter olmalı.', 'error'); return; }
+  
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Paylaşılıyor...';
+  
+  var res = await supabaseClient.from('posts').insert([{
+    user_id: currentUser.id,
+    type: 'quote',
+    content: text,
+    quote_author: selectedBook.author || 'Bilinmeyen',
+    quote_book: selectedBook.title,
+    quote_page: page ? parseInt(page) : null,
+    book_id: selectedBook.id,
+    analysis_content: comment || null
+  }]);
+  
+  if (res.error) {
+    showMsg('Hata: ' + res.error.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Paylaş';
+    return;
+  }
+  
+  showMsg('Alıntın paylaşıldı! Akışa yönlendiriliyorsun...', 'success');
+  setTimeout(function() { window.location.href = 'akis.html'; }, 1000);
+}
+})();
+</script>
+</body>
+</html>
